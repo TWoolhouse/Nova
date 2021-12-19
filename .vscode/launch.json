@@ -5,16 +5,16 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Launch TestBed",
+			"name": "Launch Flask",
 			"type": "cppvsdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/bin/test_bed.exe",
+			"program": "${workspaceFolder}/bin/flask.exe",
 			"args": [],
 			"stopAtEntry": false,
-			"cwd": "${workspaceFolder}/TestBed",
+			"cwd": "${workspaceFolder}/Flask",
 			"environment": [],
 			"console": "integratedTerminal",
-			"preLaunchTask": "Build TestBed"
+			"preLaunchTask": "Build Flask"
 		}
 	]
 }

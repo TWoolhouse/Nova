@@ -2,16 +2,24 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "shell",
 			"label": "Build Engine",
-			"command": "${workspaceFolder}/tools/build.bat",
+			"detail": "Compile Nova Engine (Windows)",
 			"args": [
-				"src",
-				"nova.dll",
-				"nova"
+				"nova",
+				"dll",
 			],
 			"options": {
 				"cwd": "${workspaceFolder}/Nova"
+			},
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/build.bat",
+			"group": "build",
+			"presentation": {
+				"reveal": "silent",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": false
 			},
 			"problemMatcher": [
 				"$msCompile",
@@ -30,54 +38,64 @@
 					"fileLocation": "autoDetect",
 					"source": "cpp"
 				}
+			]
+		}, {
+			"label": "Build Flask",
+			"detail": "Compile Flask TestBed (Windows)",
+			"args": [
+				"flask",
+				"exe",
 			],
+			"options": {
+				"cwd": "${workspaceFolder}/Flask"
+			},
+			"dependsOn": [
+				"Build Engine",
+			],
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/build.bat",
 			"group": "build",
-			"detail": "Compile Nova Engine (Windows)",
 			"presentation": {
 				"reveal": "silent",
 				"focus": false,
 				"panel": "shared",
 				"showReuseMessage": false,
 				"clear": false
-			}
-		},
-		{
-			"type": "shell",
-			"label": "Build TestBed",
-			"command": "${workspaceFolder}/tools/build.bat",
-			"args": [
-				"src",
-				"test_bed.exe",
-				"testbed"
-			],
-			"options": {
-				"cwd": "${workspaceFolder}/TestBed"
 			},
 			"problemMatcher": [
 				"$msCompile",
 				{
 					"owner": "cpp",
-					"pattern": [
-						{
-							"regexp": "^(.*?)\\((\\d+)\\)\\s*:\\s+(error|warning|fatal error)\\s+(\\w+\\s*:\\s+.*)$",
-							"file": 1,
-							"line": 2,
-							"severity": 3,
-							"message": 4
-						}
-					],
+					"pattern": {
+						"regexp": "^(.*)\\((\\d+)\\)\\s*:\\s+(error|warning|fatal error)\\s+(\\w+\\s*:\\s+.*)$",
+						"file": 1,
+						"line": 2,
+						"severity": 3,
+						"message": 4
+					},
 					"background": {
 						"activeOnStart": true
 					},
 					"fileLocation": "autoDetect",
 					"source": "cpp"
 				}
+			]
+		}, {
+			"label": "Build Flask.Test",
+			"detail": "Compile Flask TestBed (Windows)",
+			"args": [
+				"flask_test",
+				"exe",
 			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
+			"options": {
+				"cwd": "${workspaceFolder}/Flask.Test"
 			},
-			"detail": "Compile TestBed (Windows)",
+			"dependsOn": [
+				"Build Engine",
+			],
+			"type": "shell",
+			"command": "${workspaceFolder}/tools/build.bat",
+			"group": "build",
 			"presentation": {
 				"reveal": "silent",
 				"focus": false,
@@ -85,24 +103,24 @@
 				"showReuseMessage": false,
 				"clear": false
 			},
-			"dependsOn": [
-				"Build Engine"
+			"problemMatcher": [
+				"$msCompile",
+				{
+					"owner": "cpp",
+					"pattern": {
+						"regexp": "^(.*)\\((\\d+)\\)\\s*:\\s+(error|warning|fatal error)\\s+(\\w+\\s*:\\s+.*)$",
+						"file": 1,
+						"line": 2,
+						"severity": 3,
+						"message": 4
+					},
+					"background": {
+						"activeOnStart": true
+					},
+					"fileLocation": "autoDetect",
+					"source": "cpp"
+				}
 			]
 		},
-		{
-			"label": "Build All",
-			"group": "build",
-			"detail": "Compile All Projects",
-			"presentation": {
-				"reveal": "silent",
-				"focus": false,
-				"panel": "shared",
-				"showReuseMessage": false,
-				"clear": false
-			},
-			"dependsOn": [
-				"Build TestBed"
-			]
-		}
 	]
 }
