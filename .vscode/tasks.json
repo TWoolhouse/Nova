@@ -1,0 +1,108 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Build Engine",
+			"command": "${workspaceFolder}/tools/build.bat",
+			"args": [
+				"src",
+				"nova.dll",
+				"nova"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/Nova"
+			},
+			"problemMatcher": [
+				"$msCompile",
+				{
+					"owner": "cpp",
+					"pattern": {
+						"regexp": "^(.*)\\((\\d+)\\)\\s*:\\s+(error|warning|fatal error)\\s+(\\w+\\s*:\\s+.*)$",
+						"file": 1,
+						"line": 2,
+						"severity": 3,
+						"message": 4
+					},
+					"background": {
+						"activeOnStart": true
+					},
+					"fileLocation": "autoDetect",
+					"source": "cpp"
+				}
+			],
+			"group": "build",
+			"detail": "Compile Nova Engine (Windows)",
+			"presentation": {
+				"reveal": "silent",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": false
+			}
+		},
+		{
+			"type": "shell",
+			"label": "Build TestBed",
+			"command": "${workspaceFolder}/tools/build.bat",
+			"args": [
+				"src",
+				"test_bed.exe",
+				"testbed"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/TestBed"
+			},
+			"problemMatcher": [
+				"$msCompile",
+				{
+					"owner": "cpp",
+					"pattern": [
+						{
+							"regexp": "^(.*?)\\((\\d+)\\)\\s*:\\s+(error|warning|fatal error)\\s+(\\w+\\s*:\\s+.*)$",
+							"file": 1,
+							"line": 2,
+							"severity": 3,
+							"message": 4
+						}
+					],
+					"background": {
+						"activeOnStart": true
+					},
+					"fileLocation": "autoDetect",
+					"source": "cpp"
+				}
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "Compile TestBed (Windows)",
+			"presentation": {
+				"reveal": "silent",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": false
+			},
+			"dependsOn": [
+				"Build Engine"
+			]
+		},
+		{
+			"label": "Build All",
+			"group": "build",
+			"detail": "Compile All Projects",
+			"presentation": {
+				"reveal": "silent",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": false
+			},
+			"dependsOn": [
+				"Build TestBed"
+			]
+		}
+	]
+}
