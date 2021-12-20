@@ -1,23 +1,20 @@
 {
-	"enableConfigurationSquiggles": true,
 	"configurations": [
 		{
-			"name": "Win32",
+			"name": "Nova",
 			"defines": [
-				"_DEBUG",
 				"UNICODE",
 				"_UNICODE",
-				"__STDC_WANT_SECURE_LIB__",
-
-				"NOVA_EXPORT"
+				"_DEBUG",
+				"DEBUG"
 			],
 			"includePath": [
-				"${workspaceFolder}/Nova/src/"
+				"${workspaceFolder}/Nova"
 			],
 			"cStandard": "c17",
 			"cppStandard": "c++20",
-			"intelliSenseMode": "windows-msvc-x64",
-			"compilerPath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\Hostx64\\x64\\cl.exe"
+			"compilerPath": "${default}",
+			"intelliSenseMode": "windows-msvc-x64"
 		}
 	],
 	"version": 4

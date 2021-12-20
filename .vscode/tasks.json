@@ -1,126 +1,42 @@
 {
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Build Engine",
-			"detail": "Compile Nova Engine (Windows)",
+			"label": "VS2019-Premake",
+			"command": "premake5",
 			"args": [
-				"nova",
-				"dll",
+				"--file=${workspaceFolder}/premake.lua",
+				"vs2019"
 			],
-			"options": {
-				"cwd": "${workspaceFolder}/Nova"
-			},
-			"type": "shell",
-			"command": "${workspaceFolder}/tools/build.bat",
-			"group": "build",
+			"type": "process",
 			"presentation": {
-				"reveal": "silent",
-				"focus": false,
-				"panel": "shared",
-				"showReuseMessage": false,
-				"clear": false
+				"reveal": "always"
 			},
-			"problemMatcher": [
-				"$msCompile",
-				{
-					"owner": "cpp",
-					"pattern": {
-						"regexp": "^(.*)\\((\\d+)\\)\\s*:\\s+(error|warning|fatal error)\\s+(\\w+\\s*:\\s+.*)$",
-						"file": 1,
-						"line": 2,
-						"severity": 3,
-						"message": 4
-					},
-					"background": {
-						"activeOnStart": true
-					},
-					"fileLocation": "autoDetect",
-					"source": "cpp"
-				}
-			]
+			"group": "build"
 		}, {
-			"label": "Build Flask",
-			"detail": "Compile Flask TestBed (Windows)",
-			"args": [
-				"flask",
-				"exe",
-			],
-			"options": {
-				"cwd": "${workspaceFolder}/Flask"
-			},
-			"dependsOn": [
-				"Build Engine",
-			],
+			"label": "VS2019-Build",
 			"type": "shell",
-			"command": "${workspaceFolder}/tools/build.bat",
-			"group": "build",
-			"presentation": {
-				"reveal": "silent",
-				"focus": false,
-				"panel": "shared",
-				"showReuseMessage": false,
-				"clear": false
-			},
-			"problemMatcher": [
-				"$msCompile",
-				{
-					"owner": "cpp",
-					"pattern": {
-						"regexp": "^(.*)\\((\\d+)\\)\\s*:\\s+(error|warning|fatal error)\\s+(\\w+\\s*:\\s+.*)$",
-						"file": 1,
-						"line": 2,
-						"severity": 3,
-						"message": 4
-					},
-					"background": {
-						"activeOnStart": true
-					},
-					"fileLocation": "autoDetect",
-					"source": "cpp"
-				}
-			]
-		}, {
-			"label": "Build Flask.Test",
-			"detail": "Compile Flask TestBed (Windows)",
+			"command": "msbuild",
 			"args": [
-				"flask_test",
-				"exe",
+				// Ask msbuild to generate full paths for file names.
+				// "/property:GenerateFullPaths=true",
+				// "/t:build",
+				// Do not generate summary otherwise it leads to duplicate errors in Problems panel
+				"/consoleloggerparameters:NoSummary",
+				"project/vs2019/Nova.sln",
 			],
-			"options": {
-				"cwd": "${workspaceFolder}/Flask.Test"
+			"group": {
+				"kind": "build",
+				"isDefault": true
 			},
-			"dependsOn": [
-				"Build Engine",
-			],
-			"type": "shell",
-			"command": "${workspaceFolder}/tools/build.bat",
-			"group": "build",
 			"presentation": {
-				"reveal": "silent",
-				"focus": false,
-				"panel": "shared",
-				"showReuseMessage": false,
-				"clear": false
+				// Reveal the output only if unrecognized errors occur.
+				"reveal": "always"
 			},
-			"problemMatcher": [
-				"$msCompile",
-				{
-					"owner": "cpp",
-					"pattern": {
-						"regexp": "^(.*)\\((\\d+)\\)\\s*:\\s+(error|warning|fatal error)\\s+(\\w+\\s*:\\s+.*)$",
-						"file": 1,
-						"line": 2,
-						"severity": 3,
-						"message": 4
-					},
-					"background": {
-						"activeOnStart": true
-					},
-					"fileLocation": "autoDetect",
-					"source": "cpp"
-				}
-			]
-		},
+			// Use the standard MS compiler pattern to detect errors, warnings and infos
+			"problemMatcher": "$msCompile",
+		}
 	]
 }
