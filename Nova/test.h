@@ -1,3 +1,3 @@
-#include "pc.h"
+#include "npch.h"
 
 NOVAPI void t(int a);
