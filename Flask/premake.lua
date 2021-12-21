@@ -1,4 +1,5 @@
 project "Flask"
+	location "./"
 	targetname "flask"
 	filter "configurations:Debug"
 		kind "ConsoleApp"

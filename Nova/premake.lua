@@ -1,4 +1,5 @@
 project "Nova"
+	location "./"
 	language "C++"
 	cppdialect "C++20"
 	targetname "nova"

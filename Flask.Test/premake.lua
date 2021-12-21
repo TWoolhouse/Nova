@@ -1,4 +1,5 @@
 project "Flask.Test"
+	location "./"
 	targetname "flask.test"
 	kind "ConsoleApp"
 	language "C++"
