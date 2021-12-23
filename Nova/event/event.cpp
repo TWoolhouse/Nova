@@ -2,8 +2,9 @@
 #include "event.h"
 
 namespace Nova::event {
-	
+
 	typename decltype(Base::callbacks) Base::callbacks;
+	typename decltype(Register::counter) Register::counter = 0;
 
 	constexpr bool bit_isset(const Type bitset, const TypeSize index) {
 		return (static_cast<TypeSize>(bitset) & (1 << index));

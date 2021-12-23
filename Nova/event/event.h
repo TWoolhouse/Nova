@@ -36,23 +36,24 @@ namespace Nova::event {
 	class Base;
 	struct Register {
 		template<typename F, typename T>
-		Register(const Type tag, F func, T& member) : func(std::bind(func, &member, std::placeholders::_1)) {
+		Register(const Type tag, F func, T& member) : uid(++counter), func(std::bind(func, &member, std::placeholders::_1)) {
 			enroll(tag);
 		}
 		template<typename F>
-		Register(const Type tag, F func) : func(func) {
+		Register(const Type tag, F func) : uid(++counter), func(func) {
 			enroll(tag);
 		}
 
 		inline bool operator()(Base& event) { return func(event); }
 
-		bool operator==(const Register& other) {
-			using Func = bool(*)(Base&);
-			return func.target<Func>() == other.func.target<Func>();
+		auto operator==(const Register& other) const {
+			return uid == other.uid;
 		}
 
 	protected:
-		std::function<bool(Base&)> func;
+		NOVAPI static size_t counter;
+		const size_t uid;
+		const std::function<bool(Base&)> func;
 		NOVAPI void enroll(const Type tag);
 	};
 
