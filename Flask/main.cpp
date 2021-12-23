@@ -1,9 +1,23 @@
 #include "fpch.h"
-#include <test.h>
 #include <core/application.h>
-#define NOVA_ENTRY
-#include <core/entry.h>
+#include <event/event.h>
 
-Nova::Application* Nova::Application::Create() {
-	return new Nova::Application("Flask");
+bool t(Nova::Event::Base& e) {
+	nova_bark_info("LOL");
+	return false;
 }
+
+class Game : public Nova::Application {
+public:
+	Game() : Application("Flask") {
+		auto re = Nova::Event::Register(Nova::Event::Type::Keyboard, &t);
+		auto e = Nova::Event::Base();
+		Nova::Event::fire(e);
+	}
+
+	void update() {}
+	void render() {}
+};
+
+#define NOVA_ENTRY Game
+#include <core/entry.h>
