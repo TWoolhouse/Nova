@@ -14,30 +14,31 @@
 			"presentation": {
 				"reveal": "always"
 			},
-			"group": "build"
-		}, {
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
 			"label": "VS2019-Build",
 			"type": "shell",
 			"command": "msbuild",
 			"args": [
-				// Ask msbuild to generate full paths for file names.
-				// "/property:GenerateFullPaths=true",
-				// "/t:build",
-				// Do not generate summary otherwise it leads to duplicate errors in Problems panel
 				"/m",
 				"/consoleloggerparameters:NoSummary",
-				"project/vs2019/Nova.sln",
+				"project/vs2019/Nova.sln"
 			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
+			"group": "build",
 			"presentation": {
-				// Reveal the output only if unrecognized errors occur.
 				"reveal": "always"
 			},
-			// Use the standard MS compiler pattern to detect errors, warnings and infos
-			"problemMatcher": "$msCompile",
+			"problemMatcher": "$msCompile"
+		}, {
+			"label": "VS2019-Compile",
+			"dependsOn" : [
+				"VS2019-Premake",
+				"VS2019-Build"
+			],
+			"dependsOrder": "sequence",
+			"group": "build",
 		}
 	]
 }
