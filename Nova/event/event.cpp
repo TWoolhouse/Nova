@@ -1,7 +1,7 @@
 #include "npch.h"
 #include "event.h"
 
-namespace Nova::Event {
+namespace Nova::event {
 	
 	typename decltype(Base::callbacks) Base::callbacks;
 
@@ -17,9 +17,9 @@ namespace Nova::Event {
 		}
 	}
 
-	bool Base::fire(const Type etype) {
+	bool Base::fire() {
 		for (uint8_t i = 0; i < Base::callbacks.size(); i++) {
-			if (bit_isset(etype, i)) {
+			if (bit_isset(tag, i)) {
 				for (auto& func : Base::callbacks[i]) {
 					if (func(*this)) return true;
 				}
@@ -29,3 +29,4 @@ namespace Nova::Event {
 	}
 
 }
+

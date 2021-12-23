@@ -2,20 +2,19 @@
 
 #include "npch.h"
 
-namespace Nova::Event {
+namespace Nova::event {
 	class Base;
 	struct Register;
 }
-bool operator==(const Nova::Event::Register& a, const Nova::Event::Register& b);
 
-namespace Nova::Event {
+namespace Nova::event {
 
 	using TypeSize = uint16_t;
 
 	enum class Type : TypeSize {
 		None = 0b000000000000,
-		KeyboardPress = 0b000000000001,
-		KeyboardRelease = 0b000000000010,
+		KeyPress = 0b000000000001,
+		KeyRelease = 0b000000000010,
 		MouseButtonPress = 0b000000000100,
 		MouseButtonRelease = 0b000000001000,
 		MouseScroll = 0b000000010000,
@@ -31,7 +30,7 @@ namespace Nova::Event {
 		WindowFocus = WindowFocusGain | WindowFocusLost,
 		WindowResize = WindowResizeScreen | WindowResizeFrame,
 		Window = WindowFocus | WindowClose | WindowMove | WindowResize,
-		Keyboard = KeyboardPress | KeyboardRelease,
+		Key = KeyPress | KeyRelease,
 	};
 
 	class Base;
@@ -45,8 +44,12 @@ namespace Nova::Event {
 			enroll(tag);
 		}
 
-		friend bool ::operator==(const Nova::Event::Register& a, const Nova::Event::Register& b);
 		inline bool operator()(Base& event) { return func(event); }
+
+		bool operator==(const Register& other) {
+			using Func = bool(*)(Base&);
+			return func.target<Func>() == other.func.target<Func>();
+		}
 
 	protected:
 		std::function<bool(Base&)> func;
@@ -59,24 +62,29 @@ namespace Nova::Event {
 	class Base {
 	public:
 		static constexpr auto type = Type::None;
+		const Type tag;
+		Base(const Type tag) : tag(tag) {}
 	private:
 		friend Register;
-		friend bool fire(Base&, const Type);
+		friend bool fire(Base&);
 		// Length of Base::Type Unique Count
 		static std::array<std::deque<Register>, 12> callbacks;
 		
-		template<Able T> friend bool fire(T&);
-		template<Able T>
-		inline bool fire() { return fire(T::type); }
-		NOVAPI bool fire(const Type etype);
+		NOVAPI bool fire();
 	};
 
-	template<Able T>
-	inline bool fire(T& event) { return event.fire<T>(); }
+	inline bool fire(Base& event) { return event.fire(); }
 
 }
 
-bool operator==(const Nova::Event::Register& a, const Nova::Event::Register& b) {
-	using Func = bool(*)(Nova::Event::Base&);
-	return a.func.target<Func>() == a.func.target<Func>();
+inline constexpr bool operator&(const Nova::event::Type a, const Nova::event::Type b) {
+	return static_cast<Nova::event::TypeSize>(a) & static_cast<Nova::event::TypeSize>(b);
 }
+
+template<class CharT>
+struct std::formatter<Nova::event::Type, CharT> : std::formatter<Nova::event::TypeSize, CharT> {
+	template<class FormatContext>
+	auto format(Nova::event::Type tag, FormatContext& fc) {
+		return std::formatter<Nova::event::TypeSize, CharT>::format(static_cast<Nova::event::TypeSize>(tag), fc);
+	}
+};

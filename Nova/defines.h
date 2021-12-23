@@ -62,6 +62,7 @@ namespace Nova {}
 
 #include <array>
 #include <deque>
+#include <bitset>
 
 using cstr = const char*;
 using namespace std::string_view_literals;
