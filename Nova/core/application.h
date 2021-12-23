@@ -1,6 +1,5 @@
 #pragma once
 #include "npch.h"
-#include "entry.h"
 #include <vendor/gtest/gtest.h>
 
 #ifdef NOVA_DEBUG
@@ -17,12 +16,24 @@ int NOVA_MAIN(int argc, char const* argv[]);
 namespace Nova {
 	class NOVAPI Application {
 	public:
-		static Application* Create();
 		Application(const std::string_view& name);
 		virtual ~Application();
 
-	protected:
+		virtual void update() = 0;
+		virtual void render() = 0;
+
+		inline void terminate() { running = false;};
+
+	private:
 		friend int ::NOVA_MAIN(int argc, char const* argv[]);
-		void execute() {}
+		void execute();
+
+	protected:
+		bool running = false;
+		struct Window {
+			unsigned int width, height;
+		};
+	public:
+		Window window;
 	};
 }
