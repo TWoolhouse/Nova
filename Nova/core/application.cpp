@@ -1,11 +1,13 @@
 #include "npch.h"
 #include "application.h"
 #include "platform/platform.h"
+#include "event/window.h"
 
 namespace Nova {
 	Application::Application(const std::string_view& name) : window({ 720, 480 }) {
 		Bark::Initialize();
 		platform::Initialize(name, window.width, window.height);
+		event::Register(event::Type::WindowClose, [this](event::Base&) -> bool { this->terminate(); return true; });
 	}
 
 	Application::~Application() {
@@ -17,11 +19,8 @@ namespace Nova {
 		running = true;
 		try {
 			while (running) {
-				for (size_t i = 0; i < 10000; ++i) { // temp loop as we can't kill
-					render();
-					platform::pump_messages();
-				}
-				running = false;
+				render();
+				platform::pump_messages();
 			}
 		} catch (const std::exception& exc) {
 			running = false;

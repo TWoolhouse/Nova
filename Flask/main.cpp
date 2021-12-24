@@ -1,18 +1,15 @@
 #include "fpch.h"
 #include <core/application.h>
 #include <event/event.h>
-
-bool t(Nova::Event::Base& e) {
-	nova_bark_info("LOL");
-	return false;
-}
+#include <event/key.h>
+#include <event/mouse.h>
+#include <event/window.h>
+#include <input/poll.h>
 
 class Game : public Nova::Application {
 public:
 	Game() : Application("Flask") {
-		auto re = Nova::Event::Register(Nova::Event::Type::Keyboard, &t);
-		auto e = Nova::Event::Base();
-		Nova::Event::fire(e);
+		nova_bark_debug("Creating Flask");
 	}
 
 	void update() {}
