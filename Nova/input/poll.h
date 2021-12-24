@@ -5,8 +5,8 @@
 #include "event/mouse.h"
 
 namespace Nova::input {
-	NOVAPI bool poll(const Key key);
-	NOVAPI bool poll(const Mouse button);
-	NOVAPI MousePos poll();
+	NODISCARD NOVAPI bool poll(const Key key);
+	NODISCARD NOVAPI bool poll(const Mouse button);
+	NODISCARD NOVAPI MousePos poll();
 
 }

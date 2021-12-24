@@ -1,10 +1,149 @@
 #include "npch.h"
 #ifdef NOVA_OS_WINDOWS
 #include "platform.h"
+#include "platform_input.h"
 #include "platform_events.h"
 
 #include <Windows.h>
 #include <windowsx.h>
+
+constexpr Nova::input::Key Nova::plat::input::key(const unsigned int code) {
+	switch (code) {
+	case 48:	return Nova::input::Key::N0;
+	case 49:	return Nova::input::Key::N1;
+	case 50:	return Nova::input::Key::N2;
+	case 51:	return Nova::input::Key::N3;
+	case 52:	return Nova::input::Key::N4;
+	case 53:	return Nova::input::Key::N5;
+	case 54:	return Nova::input::Key::N6;
+	case 55:	return Nova::input::Key::N7;
+	case 56:	return Nova::input::Key::N8;
+	case 57:	return Nova::input::Key::N9;
+	case 65:	return Nova::input::Key::A;
+	case 66:	return Nova::input::Key::B;
+	case 67:	return Nova::input::Key::C;
+	case 68:	return Nova::input::Key::D;
+	case 69:	return Nova::input::Key::E;
+	case 70:	return Nova::input::Key::F;
+	case 71:	return Nova::input::Key::G;
+	case 72:	return Nova::input::Key::H;
+	case 73:	return Nova::input::Key::I;
+	case 74:	return Nova::input::Key::J;
+	case 75:	return Nova::input::Key::K;
+	case 76:	return Nova::input::Key::L;
+	case 77:	return Nova::input::Key::M;
+	case 78:	return Nova::input::Key::N;
+	case 79:	return Nova::input::Key::O;
+	case 80:	return Nova::input::Key::P;
+	case 81:	return Nova::input::Key::Q;
+	case 82:	return Nova::input::Key::R;
+	case 83:	return Nova::input::Key::S;
+	case 84:	return Nova::input::Key::T;
+	case 85:	return Nova::input::Key::U;
+	case 86:	return Nova::input::Key::V;
+	case 87:	return Nova::input::Key::W;
+	case 88:	return Nova::input::Key::X;
+	case 89:	return Nova::input::Key::Y;
+	case 90:	return Nova::input::Key::Z;
+	case VK_SHIFT:
+	case VK_LSHIFT:	return Nova::input::Key::LSHIFT;
+	case VK_CONTROL:
+	case VK_LCONTROL:	return Nova::input::Key::LCTRL;
+	case VK_MENU:
+	case VK_LMENU:	return Nova::input::Key::LALT;
+	case VK_LWIN:	return Nova::input::Key::LSUPER;
+	case VK_RSHIFT:	return Nova::input::Key::RSHIFT;
+	case VK_RCONTROL:	return Nova::input::Key::RCTRL;
+	case VK_RMENU:	return Nova::input::Key::RALT;
+	case VK_RWIN:	return Nova::input::Key::RSUPER;
+	case VK_ESCAPE:	return Nova::input::Key::ESCAPE;
+	case VK_RETURN:	return Nova::input::Key::ENTER;
+	case VK_TAB:	return Nova::input::Key::TAB;
+	case VK_BACK:	return Nova::input::Key::BACKSPACE;
+	case VK_SPACE:	return Nova::input::Key::SPACE;
+	case VK_OEM_1:	return Nova::input::Key::SEMICOLON;
+	case VK_OEM_COMMA:	return Nova::input::Key::COMMA;
+	case VK_OEM_PLUS:	return Nova::input::Key::EQUAL;
+	case VK_OEM_MINUS:	return Nova::input::Key::MINUS;
+	case VK_OEM_2:	return Nova::input::Key::SLASH;
+	case VK_OEM_7:	return Nova::input::Key::HASH;
+	case VK_OEM_4:	return Nova::input::Key::LBRACKET;
+	case VK_OEM_6:	return Nova::input::Key::RBRACKET;
+	case VK_OEM_5:	return Nova::input::Key::BACKSLASH;
+	case VK_OEM_3:	return Nova::input::Key::APOSTROPHE;
+	case VK_OEM_8:	return Nova::input::Key::GRAVE_ACCENT;
+	case VK_OEM_PERIOD:	return Nova::input::Key::PERIOD;
+	case VK_INSERT:	return Nova::input::Key::INSERT;
+	case VK_DELETE:	return Nova::input::Key::DEL;
+	case VK_RIGHT:	return Nova::input::Key::RIGHT;
+	case VK_LEFT:	return Nova::input::Key::LEFT;
+	case VK_DOWN:	return Nova::input::Key::DOWN;
+	case VK_UP:	return Nova::input::Key::UP;
+	case VK_PRIOR:	return Nova::input::Key::PGUP;
+	case VK_NEXT:	return Nova::input::Key::PGDN;
+	case VK_HOME:	return Nova::input::Key::HOME;
+	case VK_END:	return Nova::input::Key::END;
+	case VK_CAPITAL:	return Nova::input::Key::CAPS_LOCK;
+	case VK_SCROLL:	return Nova::input::Key::SCROLL_LOCK;
+	case VK_NUMLOCK:	return Nova::input::Key::NUM_LOCK;
+	case VK_PRINT:	return Nova::input::Key::PRINT_SCREEN;
+	case VK_PAUSE:	return Nova::input::Key::PAUSE;
+	case VK_NUMPAD0:	return Nova::input::Key::KP_0;
+	case VK_NUMPAD1:	return Nova::input::Key::KP_1;
+	case VK_NUMPAD2:	return Nova::input::Key::KP_2;
+	case VK_NUMPAD3:	return Nova::input::Key::KP_3;
+	case VK_NUMPAD4:	return Nova::input::Key::KP_4;
+	case VK_NUMPAD5:	return Nova::input::Key::KP_5;
+	case VK_NUMPAD6:	return Nova::input::Key::KP_6;
+	case VK_NUMPAD7:	return Nova::input::Key::KP_7;
+	case VK_NUMPAD8:	return Nova::input::Key::KP_8;
+	case VK_NUMPAD9:	return Nova::input::Key::KP_9;
+	case VK_ADD:	return Nova::input::Key::KP_ADD;
+	case VK_DIVIDE:	return Nova::input::Key::KP_DIVIDE;
+	case VK_SUBTRACT:	return Nova::input::Key::KP_SUBTRACT;
+	case VK_MULTIPLY:	return Nova::input::Key::KP_MULTIPLY;
+	case VK_F1:	return Nova::input::Key::F1;
+	case VK_F2:	return Nova::input::Key::F2;
+	case VK_F3:	return Nova::input::Key::F3;
+	case VK_F4:	return Nova::input::Key::F4;
+	case VK_F5:	return Nova::input::Key::F5;
+	case VK_F6:	return Nova::input::Key::F6;
+	case VK_F7:	return Nova::input::Key::F7;
+	case VK_F8:	return Nova::input::Key::F8;
+	case VK_F9:	return Nova::input::Key::F9;
+	case VK_F10:	return Nova::input::Key::F10;
+	case VK_F11:	return Nova::input::Key::F11;
+	case VK_F12:	return Nova::input::Key::F12;
+	case VK_F13:	return Nova::input::Key::F13;
+	case VK_F14:	return Nova::input::Key::F14;
+	case VK_F15:	return Nova::input::Key::F15;
+	case VK_F16:	return Nova::input::Key::F16;
+	case VK_F17:	return Nova::input::Key::F17;
+	case VK_F18:	return Nova::input::Key::F18;
+	case VK_F19:	return Nova::input::Key::F19;
+	case VK_F20:	return Nova::input::Key::F20;
+	case VK_F21:	return Nova::input::Key::F21;
+	case VK_F22:	return Nova::input::Key::F22;
+	case VK_F23:	return Nova::input::Key::F23;
+	case VK_F24:	return Nova::input::Key::F24;
+
+	default:
+		return Nova::input::Key::NONE;
+	}
+}
+
+constexpr Nova::input::Mouse Nova::plat::input::mouse(const unsigned int code) {
+	switch (code) {
+	case VK_LBUTTON:	return Nova::input::Mouse::Left;
+	case VK_RBUTTON:	return Nova::input::Mouse::Right;
+	case VK_MBUTTON:	return Nova::input::Mouse::Middle;
+	case VK_XBUTTON1:	return Nova::input::Mouse::VB1;
+	case VK_XBUTTON2:	return Nova::input::Mouse::VB2;
+
+	default:
+		return Nova::input::Mouse::NONE;
+	}
+}
 
 struct State {
 	HINSTANCE instance;
@@ -69,7 +208,7 @@ void Nova::platform::Termintate() {
 	delete state;
 }
 
-void Nova::platform::pump_messages() {
+void Nova::platform::process_events() {
 	MSG msg;
 	while (PeekMessageA(&msg, state->hwnd, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&msg);
@@ -90,41 +229,37 @@ LRESULT CALLBACK proc_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		PostQuitMessage(0);
 		return 0;
 	case WM_SIZE: {
-			// Get the updated size.
-			// RECT r;
-			// GetClientRect(hwnd, &r);
-			// u32 width = r.right - r.left;
-			// u32 height = r.bottom - r.top;
-
-			// TODO: Fire an event for window resize.
+			RECT r;
+			GetClientRect(hwnd, &r);
+			Nova::event::WindowResizeScreen(r.right - r.left, r.bottom - r.top).fire();
 		} break;
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
-		Nova::pevent::key_down(Nova::input::Key(wparam));
+		Nova::plat::event::key_down(Nova::plat::input::key(wparam));
 		break;
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
-		Nova::pevent::key_up(Nova::input::Key(wparam));
+		Nova::plat::event::key_up(Nova::plat::input::key(wparam));
 		break;
 	case WM_MOUSEMOVE:
-		Nova::pevent::mouse_move(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
+		Nova::plat::event::mouse_move(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
 		break;
 	case WM_MOUSEWHEEL:
 		if (const auto z = GET_WHEEL_DELTA_WPARAM(wparam))
 			Nova::event::MouseScroll((z < 0) ? -1 : 1);
 		break;
 	case WM_LBUTTONDOWN:
-		Nova::pevent::mouse_down(Nova::input::Mouse::Left);	break;
+		Nova::plat::event::mouse_down(Nova::input::Mouse::Left);	break;
 	case WM_MBUTTONDOWN:
-		Nova::pevent::mouse_down(Nova::input::Mouse::Middle);	break;
+		Nova::plat::event::mouse_down(Nova::input::Mouse::Middle);	break;
 	case WM_RBUTTONDOWN:
-		Nova::pevent::mouse_down(Nova::input::Mouse::Right);	break;
+		Nova::plat::event::mouse_down(Nova::input::Mouse::Right);	break;
 	case WM_LBUTTONUP:
-		Nova::pevent::mouse_up(Nova::input::Mouse::Left);	break;
+		Nova::plat::event::mouse_up(Nova::input::Mouse::Left);	break;
 	case WM_MBUTTONUP:
-		Nova::pevent::mouse_up(Nova::input::Mouse::Middle);	break;
+		Nova::plat::event::mouse_up(Nova::input::Mouse::Middle);	break;
 	case WM_RBUTTONUP:
-		Nova::pevent::mouse_up(Nova::input::Mouse::Right);	break;
+		Nova::plat::event::mouse_up(Nova::input::Mouse::Right);	break;
 
 	default:
 		return DefWindowProcA(hwnd, msg, wparam, lparam);

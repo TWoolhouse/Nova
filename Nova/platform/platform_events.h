@@ -4,28 +4,28 @@
 #include "event/window.h"
 #include "input/state.h"
 
-namespace Nova::pevent {
-	void key_down(const input::Key key) {
-		input::set(key, true);
-		event::KeyPress(key).fire();
+namespace Nova::plat::event {
+	void key_down(const Nova::input::Key key) {
+		Nova::input::set(key, true);
+		Nova::event::KeyPress(key).fire();
 	}
 
-	void key_up(const input::Key key) {
-		input::set(key, false);
-		event::KeyRelease(key).fire();
+	void key_up(const Nova::input::Key key) {
+		Nova::input::set(key, false);
+		Nova::event::KeyRelease(key).fire();
 	}
 
 	void mouse_move(const unsigned int x, const unsigned int y) {
-		input::MousePos pos(x, y);
-		input::set(pos);
-		event::MouseMove(pos).fire();
+		Nova::input::MousePos pos(x, y);
+		Nova::input::set(pos);
+		Nova::event::MouseMove(pos).fire();
 	}
-	void mouse_down(const input::Mouse button) {
-		input::set(button, true);
-		event::MouseButtonPress(button).fire();
+	void mouse_down(const Nova::input::Mouse button) {
+		Nova::input::set(button, true);
+		Nova::event::MouseButtonPress(button).fire();
 	}
-	void mouse_up(const input::Mouse button) {
-		input::set(button, false);
-		event::MouseButtonRelease(button).fire();
+	void mouse_up(const Nova::input::Mouse button) {
+		Nova::input::set(button, false);
+		Nova::event::MouseButtonRelease(button).fire();
 	}
 }

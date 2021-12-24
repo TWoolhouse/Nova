@@ -6,10 +6,9 @@ namespace Nova::input {
 	enum class Key {
 		NONE = 0,
 
-		LSHIFT = 1, LCTRL, LALT, RSHIFT, RCTRL, ALTGR, LSUPER, RSUPER,
-		BACKSPACE, TAB, ENTER, ESCAPE, INSERT, DELETE, PGUP, PGDN, END, HOME,
+		LSHIFT = 1, LCTRL, LALT, RSHIFT, RCTRL, RALT, LSUPER, RSUPER,
+		BACKSPACE, TAB, ENTER, ESCAPE, INSERT, DEL, PGUP, PGDN, END, HOME,
 		LEFT, UP, RIGHT, DOWN, CAPS_LOCK, SCROLL_LOCK, NUM_LOCK, PRINT_SCREEN, PAUSE,
-		LMENU, RMENU,
 
 		N0 = 48, N1, N2, N3, N4, N5, N6, N7, N8, N9,
 		A = 65, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
@@ -26,3 +25,5 @@ namespace Nova::input {
 	};
 
 }
+
+formatter_enum(Nova::input::Key, unsigned int);

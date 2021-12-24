@@ -32,6 +32,13 @@ namespace Nova::event {
 		Window = WindowFocus | WindowClose | WindowMove | WindowResize,
 		Key = KeyPress | KeyRelease,
 	};
+}
+
+inline constexpr bool operator&(const Nova::event::Type a, const Nova::event::Type b) {
+	return static_cast<Nova::event::TypeSize>(a) & static_cast<Nova::event::TypeSize>(b);
+}
+
+namespace Nova::event {
 
 	class Base;
 	struct Handle {
@@ -65,26 +72,17 @@ namespace Nova::event {
 		const Type tag;
 		Base(const Type tag) : tag(tag) {}
 		NOVAPI bool fire();
+		template<Able T>
+		inline T* cast() { return ((tag & T::type) ? static_cast<T*>(this) : nullptr); }
 	private:
 		friend Handle;
 		friend bool fire(Base&);
 		// Length of Base::Type Unique Count
 		static std::array<std::deque<Handle>, 12> callbacks;
-		
 	};
 
 	inline bool fire(Base& event) { return event.fire(); }
 
 }
 
-inline constexpr bool operator&(const Nova::event::Type a, const Nova::event::Type b) {
-	return static_cast<Nova::event::TypeSize>(a) & static_cast<Nova::event::TypeSize>(b);
-}
-
-template<class CharT>
-struct std::formatter<Nova::event::Type, CharT> : std::formatter<Nova::event::TypeSize, CharT> {
-	template<class FormatContext>
-	auto format(Nova::event::Type tag, FormatContext& fc) {
-		return std::formatter<Nova::event::TypeSize, CharT>::format(static_cast<Nova::event::TypeSize>(tag), fc);
-	}
-};
+formatter_enum(Nova::event::Type, Nova::event::TypeSize);
