@@ -1,6 +1,5 @@
 #pragma once
 #include "npch.h"
-#include <vendor/gtest/gtest.h>
 
 #ifdef NOVA_DEBUG
 #define NOVA_MAIN main
