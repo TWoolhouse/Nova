@@ -49,6 +49,17 @@
 #define NOVA_RELEASE
 #endif
 
+#define NODISCARD [[nodiscard]]
+
+#define formatter_enum(EnumName, BaseName) \
+template<class CharT> \
+struct std::formatter<EnumName, CharT> : std::formatter<BaseName, CharT> { \
+	template<class FormatContext> \
+	auto format(EnumName _enum, FormatContext& fc) { \
+		return std::formatter<BaseName, CharT>::format(static_cast<BaseName>(_enum), fc); \
+	} \
+}
+
 namespace Nova {}
 
 #include <type_traits>
