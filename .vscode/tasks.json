@@ -32,8 +32,22 @@
 			},
 			"problemMatcher": "$msCompile"
 		}, {
+			"label": "Python Single Header",
+			"type": "shell",
+			"command": "python",
+			"args": [
+				"${workspaceFolder}/premake/include.py",
+				"Nova/nova.h",
+				"nova_single.h"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"group": "build"
+		}, {
 			"label": "VS2019-Compile",
 			"dependsOn" : [
+				"Python Single Header",
 				"VS2019-Premake",
 				"VS2019-Build"
 			],
