@@ -1,7 +1,7 @@
 #pragma once
 #include "npch.h"
 
-namespace Nova::Input {
+namespace Nova::input {
 
 	enum class Key {
 		NONE = 0,
