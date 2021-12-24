@@ -4,7 +4,7 @@
 
 namespace Nova::event {
 	class Base;
-	struct Register;
+	struct Handle;
 }
 
 namespace Nova::event {
@@ -34,28 +34,27 @@ namespace Nova::event {
 	};
 
 	class Base;
-	struct Register {
-		template<typename F, typename T>
-		Register(const Type tag, F func, T& member) : uid(++counter), func(std::bind(func, &member, std::placeholders::_1)) {
-			enroll(tag);
-		}
+	struct Handle {
 		template<typename F>
-		Register(const Type tag, F func) : uid(++counter), func(func) {
+		Handle(const Type tag, F func) : uid(++counter), func(func) {
 			enroll(tag);
 		}
-
 		inline bool operator()(Base& event) { return func(event); }
-
-		auto operator==(const Register& other) const {
-			return uid == other.uid;
-		}
-
+		inline auto operator==(const Handle& other) const { return uid == other.uid; }
 	protected:
 		NOVAPI static size_t counter;
 		const size_t uid;
 		const std::function<bool(Base&)> func;
 		NOVAPI void enroll(const Type tag);
 	};
+	template<typename F, typename T>
+	Handle Register(const Type tag, F func, T& member) {
+		return Handle(tag, std::bind(func, &member, std::placeholders::_1));
+	}
+	template<typename F>
+	Handle Register(const Type tag, F func) {
+		return Handle(tag, func);
+	}
 
 	template<typename T>
 	concept Able = std::is_base_of_v<Base, T>;
@@ -65,13 +64,13 @@ namespace Nova::event {
 		static constexpr auto type = Type::None;
 		const Type tag;
 		Base(const Type tag) : tag(tag) {}
+		NOVAPI bool fire();
 	private:
-		friend Register;
+		friend Handle;
 		friend bool fire(Base&);
 		// Length of Base::Type Unique Count
-		static std::array<std::deque<Register>, 12> callbacks;
+		static std::array<std::deque<Handle>, 12> callbacks;
 		
-		NOVAPI bool fire();
 	};
 
 	inline bool fire(Base& event) { return event.fire(); }

@@ -27,10 +27,18 @@ namespace Nova::event {
 	class MouseMove : public Base {
 	public:
 		static constexpr auto type = Type::MouseMove;
+		MouseMove(const input::MousePos pos) : Base(type), pos(pos) {}
 		MouseMove(const unsigned int x, const unsigned int y) : Base(type), pos(std::make_pair(x, y)) {}
 		const input::MousePos pos;
 		const unsigned int& x = pos.first;
 		const unsigned int& y = pos.second;
+	};
+
+	class MouseScroll : public Base {
+	public:
+		static constexpr auto type = Type::MouseScroll;
+		MouseScroll(const int8_t z) : Base(type), dir(z) {}
+		const int8_t dir;
 	};
 
 }
