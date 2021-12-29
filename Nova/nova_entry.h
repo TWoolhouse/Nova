@@ -1,6 +1,7 @@
 #pragma once
-#include "npch.h"
+#ifndef NOVAPI
 #include "core/application.h"
+#endif // !NOVAPI
 
 #ifdef NOVA_ENTRY
 int NOVA_MAIN(int argc, char const* argv[]) {

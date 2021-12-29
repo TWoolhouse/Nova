@@ -9,6 +9,8 @@ root = mainfile.parent
 
 INCLUDE = "#include"
 def expand(out: TextIO, filename: Path):
+	REL_NAME = filename.as_posix()[len(root.as_posix())+1:]
+	out.write(f"// File: {REL_NAME}\n\n")
 	print("Import>", filename)
 	with filename.open() as file:
 		for line in file:
@@ -34,6 +36,7 @@ def expand(out: TextIO, filename: Path):
 				done.add(filename.as_posix())
 				continue
 			out.write(line)
+	out.write(f"// File: !{REL_NAME}\n")
 
 with (root / (sys.argv[2] if len(sys.argv) > 1 else "out.h")).open("w") as file:
 	file.write("#pragma once\n")
