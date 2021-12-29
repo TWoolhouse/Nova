@@ -6,7 +6,9 @@
 				"UNICODE",
 				"_UNICODE",
 				"_DEBUG",
-				"DEBUG"
+				"DEBUG",
+
+				"NOVA_EXPORT"
 			],
 			"includePath": [
 				"${workspaceFolder}/Nova"
