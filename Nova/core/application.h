@@ -1,5 +1,6 @@
 #pragma once
 #include "npch.h"
+#include "deltatime.h"
 
 #ifdef NOVA_DEBUG
 #define NOVA_MAIN main
@@ -33,6 +34,9 @@ namespace Nova {
 			unsigned int width, height;
 		};
 	public:
+		// Application Instance
+		static Application* I;
+		static Clock clock;
 		Window window;
 	};
 }

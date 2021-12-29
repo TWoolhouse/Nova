@@ -4,14 +4,19 @@
 #include "event/window.h"
 
 namespace Nova {
+
+	typename decltype(Application::I) Application::I = nullptr;
+	typename decltype(Application::clock) Application::clock{};
+
 	Application::Application(const std::string_view& name) : window({ 720, 480 }) {
+		I = this;
 		Bark::Initialize();
 		platform::Initialize(name, window.width, window.height);
-		
+
 		// Events
-		event::Register(event::Type::WindowClose, [this](event::Base&)->bool { this->terminate(); return false; });
-		event::Register(event::Type::WindowResizeScreen, [this](event::Base& bevent)->bool {
-			const auto e = bevent.cast<event::WindowResizeScreen>();
+		event::dispatcher.subscribe(event::Type::WindowClose, [this](event::Handle&)->bool { this->terminate(); return false; });
+		event::dispatcher.subscribe(event::Type::WindowResizeScreen, [this](event::Handle& event)->bool {
+			const auto e = event.cast<event::WindowResizeScreen>();
 			this->window.width = e->width;
 			this->window.height = e->height;
 			return false;
@@ -27,6 +32,7 @@ namespace Nova {
 		running = true;
 		try {
 			while (running) {
+				clock.update();
 				render();
 				platform::process_events();
 			}
