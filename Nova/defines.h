@@ -51,12 +51,12 @@
 
 #define NODISCARD [[nodiscard]]
 
-#define formatter_enum(EnumName, BaseName) \
+#define formatter_enum(EnumName) \
 template<class CharT> \
-struct std::formatter<EnumName, CharT> : std::formatter<BaseName, CharT> { \
+struct std::formatter<EnumName, CharT> : std::formatter<std::underlying_type_t<EnumName>, CharT> { \
 	template<class FormatContext> \
 	auto format(EnumName _enum, FormatContext& fc) { \
-		return std::formatter<BaseName, CharT>::format(static_cast<BaseName>(_enum), fc); \
+		return std::formatter<std::underlying_type_t<EnumName>, CharT>::format(static_cast<std::underlying_type_t<EnumName>>(_enum), fc); \
 	} \
 }
 
@@ -71,6 +71,7 @@ namespace Nova {}
 #include <exception>
 #include <functional>
 
+#include <ranges>
 #include <array>
 #include <deque>
 #include <bitset>

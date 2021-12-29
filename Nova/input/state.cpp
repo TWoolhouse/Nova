@@ -28,5 +28,4 @@ namespace Nova::input {
 		position = pos;
 	}
 
-
 }

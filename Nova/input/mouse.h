@@ -14,4 +14,4 @@ namespace Nova::input {
 
 }
 
-formatter_enum(Nova::input::Mouse, uint8_t);
+formatter_enum(Nova::input::Mouse);

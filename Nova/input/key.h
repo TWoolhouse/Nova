@@ -3,7 +3,7 @@
 
 namespace Nova::input {
 
-	enum class Key {
+	enum class Key : unsigned char {
 		NONE = 0,
 
 		LSHIFT = 1, LCTRL, LALT, RSHIFT, RCTRL, RALT, LSUPER, RSUPER,
@@ -26,4 +26,4 @@ namespace Nova::input {
 
 }
 
-formatter_enum(Nova::input::Key, unsigned int);
+formatter_enum(Nova::input::Key);
