@@ -1,17 +1,10 @@
 #pragma once
-
 #include "npch.h"
-
-namespace Nova::event {
-	class Base;
-	struct Handle;
-}
+#include "eden/eden.h"
 
 namespace Nova::event {
 
-	using TypeSize = uint16_t;
-
-	enum class Type : TypeSize {
+	enum class Type : uint16_t {
 		None = 0b000000000000,
 		KeyPress = 0b000000000001,
 		KeyRelease = 0b000000000010,
@@ -32,57 +25,13 @@ namespace Nova::event {
 		Window = WindowFocus | WindowClose | WindowMove | WindowResize,
 		Key = KeyPress | KeyRelease,
 	};
-}
 
-inline constexpr bool operator&(const Nova::event::Type a, const Nova::event::Type b) {
-	return static_cast<Nova::event::TypeSize>(a) & static_cast<Nova::event::TypeSize>(b);
-}
-
-namespace Nova::event {
-
-	class Base;
-	struct Handle {
-		template<typename F>
-		Handle(const Type tag, F func) : uid(++counter), func(func) {
-			enroll(tag);
-		}
-		inline bool operator()(Base& event) { return func(event); }
-		inline auto operator==(const Handle& other) const { return uid == other.uid; }
-	protected:
-		NOVAPI static size_t counter;
-		const size_t uid;
-		const std::function<bool(Base&)> func;
-		NOVAPI void enroll(const Type tag);
+	struct Handle : eden::Event<Type> {
+		Handle(const Descriptor des) : Eden(des) {}
+		bool NOVAPI fire();
 	};
-	template<typename F, typename T>
-	Handle Register(const Type tag, F func, T& member) {
-		return Handle(tag, std::bind(func, &member, std::placeholders::_1));
-	}
-	template<typename F>
-	Handle Register(const Type tag, F func) {
-		return Handle(tag, func);
-	}
-
-	template<typename T>
-	concept Able = std::is_base_of_v<Base, T>;
-
-	class Base {
-	public:
-		static constexpr auto type = Type::None;
-		const Type tag;
-		Base(const Type tag) : tag(tag) {}
-		NOVAPI bool fire();
-		template<Able T>
-		inline T* cast() { return ((tag & T::type) ? static_cast<T*>(this) : nullptr); }
-	private:
-		friend Handle;
-		friend bool fire(Base&);
-		// Length of Base::Type Unique Count
-		static std::array<std::deque<Handle>, 12> callbacks;
-	};
-
-	inline bool fire(Base& event) { return event.fire(); }
+	extern NOVAPI eden::Dispatcher<Handle, 12> dispatcher;
 
 }
 
-formatter_enum(Nova::event::Type, Nova::event::TypeSize);
+formatter_enum(Nova::event::Type);
