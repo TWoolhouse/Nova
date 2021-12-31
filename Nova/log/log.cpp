@@ -1,24 +1,36 @@
 #include "npch.h"
 #include "log.h"
 
+#include "colours.h"
 #include <iostream>
 
 #ifdef nova_assert
 #include <intrin.h>
 #endif // nova_assert
 
-namespace Nova::Bark {
+namespace Nova::bark {
 
 	void Initialize() {
-		nova_bark_info("Nova Bark Initialized");
+		nova_bark_init("[Bark] Done!");
 	}
 	void Terminate() {
-		nova_bark_info("Nova Bark Terminated");
+		nova_bark_term("[Bark] ...");
+		std::cout << Colour::Default; std::cerr << Colour::Default;
 	}
 
 	void submit(const Level level, const std::string& msg) {
-		static constexpr std::string_view levels[static_cast<char>(Level::MAX)] = {"Debug", "Info", "Warn", "Error", "Fatal"};
-		(level < Level::Error ? std::cout : std::cerr) << levels[static_cast<char>(level)] << ": " << msg << std::endl;
+		static constexpr std::pair<std::string_view, Colour> levels[static_cast<char>(Level::MAX)] = {
+			{"Debug", Colour::Green},
+			{"Trace", Colour::Cyan},
+			{"Info", Colour::White},
+			{"Init", Colour::Blue},
+			{"Term", Colour::Magenta},
+			{"Warn", Colour::Yellow},
+			{"Error", Colour::Red},
+			{"Fatal", Colour::BRed},
+		};
+		const auto& lvl = levels[static_cast<char>(level)];
+		(level < Level::Error ? std::cout : std::cerr) << lvl.second << "[" << lvl.first << "] " << msg << std::endl;
 	}
 
 	#ifdef nova_assert
