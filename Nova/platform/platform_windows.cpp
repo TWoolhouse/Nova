@@ -1,8 +1,8 @@
 #include "npch.h"
 #ifdef NOVA_OS_WINDOWS
-#include "platform.h"
-#include "platform_input.h"
-#include "platform_events.h"
+#include "application.h"
+#include "input.h"
+#include "events.h"
 
 #include <Windows.h>
 #include <windowsx.h>
@@ -153,6 +153,25 @@ struct State {
 LRESULT CALLBACK proc_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 void Nova::platform::Initialize(const std::string_view& name, const unsigned int width, const unsigned int height) {
+	// CONSOLE SETUP
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (hOut != INVALID_HANDLE_VALUE) {
+		DWORD dwMode = 0;
+		if (!GetConsoleMode(hOut, &dwMode)) {
+			// return GetLastError();
+			// FATAL
+		}
+
+		dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+		if (!SetConsoleMode(hOut, dwMode)) {
+			// return GetLastError();
+			// FATAL
+		}
+	}
+
+	nova_bark_init("[Platform] <Windows> ...");
+
+	// WINDOW CREATION
 	constexpr auto wnd_cls_name = "nova_window_class"sv;
 	state = new State{ GetModuleHandleA(0), 0 };
 
@@ -200,12 +219,16 @@ void Nova::platform::Initialize(const std::string_view& name, const unsigned int
 
 	ShowWindow(state->hwnd, SW_SHOW);
 
+	nova_bark_init("[Platform] Done!");
+
 }
 
 void Nova::platform::Termintate() {
+	nova_bark_term("[Platform] ...");
 	if (state->hwnd)
 		DestroyWindow(state->hwnd);
 	delete state;
+	nova_bark_term("[Platform] Done!");
 }
 
 void Nova::platform::process_events() {
@@ -266,5 +289,20 @@ LRESULT CALLBACK proc_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	}
 	return 0;
 }
+
+#ifdef NOVA_ABYSS_VULKAN
+#include "abyss/vulkan/surface.h"
+#include <vulkan/vulkan_win32.h>
+namespace Nova::abyss{
+	void create_surface_platform(Context& cxt) {
+		VkWin32SurfaceCreateInfoKHR create_info{
+			.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
+			.hinstance = state->instance,
+			.hwnd = state->hwnd
+		};
+		const auto result = vkCreateWin32SurfaceKHR(cxt, &create_info, nullptr, reinterpret_cast<decltype(cxt.surface)::CType*>(&cxt.surface));
+	}
+}
+#endif // NOVA_ABYSS_VULKAN
 
 #endif // NOVA_OS_WINDOWS

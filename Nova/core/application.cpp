@@ -1,7 +1,10 @@
 #include "npch.h"
 #include "application.h"
-#include "platform/platform.h"
+#include "platform/application.h"
 #include "event/window.h"
+
+#include "abyss/vulkan/context.h"
+#include "abyss/vulkan/device.h"
 
 namespace Nova {
 
@@ -10,7 +13,7 @@ namespace Nova {
 
 	Application::Application(const std::string_view& name) : window({ 720, 480 }) {
 		I = this;
-		Bark::Initialize();
+		bark::Initialize();
 		platform::Initialize(name, window.width, window.height);
 
 		// Events
@@ -21,11 +24,17 @@ namespace Nova {
 			this->window.height = e->height;
 			return false;
 		});
+
+		abyss::Context aby{ name };
+		abyss::Device::slct_dvc(aby);
+
+		nova_bark_init("[Application] Done!");
 	}
 
 	Application::~Application() {
+		nova_bark_term("[Application] ...");
 		platform::Termintate();
-		Bark::Terminate();
+		bark::Terminate();
 	}
 
 	void Application::execute() {
