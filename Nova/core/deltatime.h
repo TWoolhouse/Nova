@@ -5,7 +5,10 @@
 namespace Nova {
 
 	struct Clock {
-		Clock(const double physics = 1.f / 240.f) : time_physics(physics), time_prev(), time_now(), time_dt(fsec(time_now - time_now).count()) {};
+		Clock(const double physics = 1.f / 240.f)
+			: time_physics(physics), time_prev(), time_now(), time_dt(fsec(time_now - time_now).count()) {
+			update();
+		};
 		inline double dt() const { return time_dt; };
 		constexpr double phys() const { return time_physics; };
 		void update() {
