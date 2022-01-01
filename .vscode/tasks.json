@@ -4,11 +4,11 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "VS2019-Premake",
+			"label": "VS2022-Premake",
 			"command": "premake5",
 			"args": [
 				"--file=${workspaceFolder}/premake.lua",
-				"vs2019"
+				"vs2022"
 			],
 			"type": "process",
 			"presentation": {
@@ -18,13 +18,13 @@
 			"problemMatcher": []
 		},
 		{
-			"label": "VS2019-Build",
+			"label": "VS2022-Build",
 			"type": "shell",
 			"command": "msbuild",
 			"args": [
 				"/m",
 				"/consoleloggerparameters:NoSummary",
-				"project/vs2019/Nova.sln"
+				"project/vs2022/Nova.sln"
 			],
 			"group": "build",
 			"presentation": {
@@ -45,11 +45,11 @@
 			},
 			"group": "build"
 		}, {
-			"label": "VS2019-Compile",
+			"label": "VS2022-Compile",
 			"dependsOn" : [
 				"Python Single Header",
-				"VS2019-Premake",
-				"VS2019-Build"
+				"VS2022-Premake",
+				"VS2022-Build"
 			],
 			"dependsOrder": "sequence",
 			"group": "build",

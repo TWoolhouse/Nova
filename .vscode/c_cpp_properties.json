@@ -11,7 +11,8 @@
 				"NOVA_EXPORT"
 			],
 			"includePath": [
-				"${workspaceFolder}/Nova"
+				"${workspaceFolder}/Nova",
+				"${env:VULKAN_SDK}/Include"
 			],
 			"cStandard": "c17",
 			"cppStandard": "c++20",
