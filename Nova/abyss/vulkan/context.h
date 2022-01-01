@@ -5,6 +5,8 @@ namespace Nova::abyss {
 
 	struct Context {
 		Context(const std::string_view& name);
+		Context(const Context&) = delete;
+		Context& operator=(const Context&) = delete;
 		~Context();
 		vk::Instance instance;
 		vk::SurfaceKHR surface;
