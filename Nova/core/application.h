@@ -17,6 +17,8 @@ namespace Nova {
 	class NOVAPI Application {
 	public:
 		Application(const std::string_view& name);
+		Application(const Application&) = delete;
+		Application& operator=(const Application&) = delete;
 		virtual ~Application();
 
 		virtual void update() = 0;

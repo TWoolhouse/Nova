@@ -12,6 +12,7 @@ namespace Nova {
 	typename decltype(Application::clock) Application::clock{};
 
 	Application::Application(const std::string_view& name) : window({ 720, 480 }) {
+		nova_assert(!I, "Creating multiple Applications is not allowed!");
 		I = this;
 		bark::Initialize();
 		platform::Initialize(name, window.width, window.height);
@@ -26,7 +27,7 @@ namespace Nova {
 		});
 
 		abyss::Context aby{ name };
-		abyss::Device::slct_dvc(aby);
+		abyss::Device device(aby);
 
 		nova_bark_init("[Application] Done!");
 	}
