@@ -30,7 +30,7 @@ namespace Nova::abyss {
 		VkDebugUtilsMessengerCallbackDataEXT const* pCallbackData,
 		void* /*pUserData*/)
 	{
-		static constexpr auto header = "Vk: {}"sv;
+		static constexpr auto header = "[Vk] {}"sv;
 		switch (static_cast<vk::DebugUtilsMessageSeverityFlagBitsEXT>(messageSeverity)) {
 		case (vk::DebugUtilsMessageSeverityFlagBitsEXT::eError):
 			nova_bark_error(header, pCallbackData->pMessage);
