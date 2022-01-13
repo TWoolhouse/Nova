@@ -22,8 +22,5 @@ project "Nova"
 	libdirs { vk_sdk .. "/Lib" }
 	defines { "NOVA_ABYSS_VULKAN" }
 
-
-
-
 	defines { "NOVA_EXPORT" }
 	dofile "../premake/config.lua"

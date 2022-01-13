@@ -1,5 +1,5 @@
 #include "fpch.h"
-#include <vendor/gtest/gtest.h>
+#include <gtest/gtest.h>
 
 TEST(SuiteName, TestName) {
 	EXPECT_EQ(1, 1);

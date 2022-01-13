@@ -15,6 +15,7 @@ project "Flask.Test"
 	-- pchheader "fpch.h"
 	-- pchsource "core/pch.cpp"
 
+	includedirs { "../vendor/*/include/" }
 	links { "gtestd.lib", "gtest_maind.lib" }
 
 	removeconfigurations { "Release" }

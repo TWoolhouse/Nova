@@ -9,7 +9,7 @@ workspace "Nova"
 	characterset "Unicode"
 	defines { "UNICODE", "_UNICODE" }
 
-	libdirs { "lib/" }
+	libdirs { "vendor/*/lib/" }
 
 local projects = {
 	"Nova",
