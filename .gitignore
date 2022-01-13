@@ -1,9 +1,9 @@
 .vs/
-project/
+/project/
 *.vcxproj*
 
 # Vendor
-**/vendor/*/*/
+/vendor/
 
 # Output Directories
 /bin/
