@@ -1,7 +1,8 @@
 #include "npch.h"
+#ifdef NOVA_ABYSS_VULKAN
 #include "surface.h"
 
-namespace Nova::abyss {
+namespace Nova::abyss::vkn {
 
 	void create_surface(Context& cxt) {
 		nvk_tracec(Creating, "Surface");
@@ -14,4 +15,4 @@ namespace Nova::abyss {
 	// Implemented in platform_*.cpp
 
 }
-
+#endif // NOVA_ABYSS_VULKAN

@@ -2,9 +2,7 @@
 #include "application.h"
 #include "platform/application.h"
 #include "event/window.h"
-
-#include "abyss/vulkan/context.h"
-#include "abyss/vulkan/device.h"
+#include "abyss/abyss.h"
 
 namespace Nova {
 
@@ -26,8 +24,7 @@ namespace Nova {
 			return false;
 		});
 
-		abyss::Context aby{ name };
-		abyss::Device device(aby);
+		abyss::Initialize(name);
 
 		nova_bark_init("[Application] Done!");
 	}

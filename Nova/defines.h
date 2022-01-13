@@ -74,6 +74,7 @@ namespace Nova {}
 #include <ranges>
 #include <array>
 #include <deque>
+#include <set>
 #include <bitset>
 
 using cstr = const char*;

@@ -2,7 +2,7 @@
 #include "vk.h"
 #include "context.h"
 
-namespace Nova::abyss {
+namespace Nova::abyss::vkn {
 
 	vk::DebugUtilsMessengerCreateInfoEXT debug_info();
 	void create_debugger(const Context& cxt);

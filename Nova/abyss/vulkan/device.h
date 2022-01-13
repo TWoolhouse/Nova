@@ -2,7 +2,7 @@
 #include "vk.h"
 #include "context.h"
 
-namespace Nova::abyss {
+namespace Nova::abyss::vkn {
 
 	class Device {
 	public:

@@ -1,7 +1,7 @@
 #pragma once
 #include "vk.h"
 
-namespace Nova::abyss {
+namespace Nova::abyss::vkn {
 
 	struct Context {
 		Context(const std::string_view& name);

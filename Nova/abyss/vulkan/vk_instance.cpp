@@ -1,10 +1,11 @@
 #include "npch.h"
+#ifdef NOVA_ABYSS_VULKAN
 #include "instance.h"
 #include "debug.h"
 
 constexpr auto engine_name = "Nova"sv;
 
-namespace Nova::abyss {
+namespace Nova::abyss::vkn {
 
 	void log_enumerations() {
 		auto extensions = vk::enumerateInstanceExtensionProperties();
@@ -62,8 +63,8 @@ namespace Nova::abyss {
 		// Log Layers
 		#ifdef __N_OVA_BARK_STATE_DEBUG
 		log_enumerations();
-		#endif // __N_OVA_BARK_STATE_DEBUG 
-		
+		#endif // __N_OVA_BARK_STATE_DEBUG
+
 		#ifdef __N_OVA_BARK_STATE_INFO
 		nova_bark_info("Vulkan Extensions:");
 		for (const auto& ext : extensions)
@@ -102,3 +103,4 @@ namespace Nova::abyss {
 	}
 
 }
+#endif // NOVA_ABYSS_VULKAN

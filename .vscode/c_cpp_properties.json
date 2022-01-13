@@ -1,13 +1,14 @@
 {
 	"configurations": [
 		{
-			"name": "Nova",
+			"name": "Nova - Vulkan MSVC",
 			"defines": [
 				"UNICODE",
 				"_UNICODE",
 				"_DEBUG",
 				"DEBUG",
 
+				"NOVA_ABYSS_VULKAN",
 				"NOVA_EXPORT"
 			],
 			"includePath": [

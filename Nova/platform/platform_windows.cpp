@@ -293,7 +293,7 @@ LRESULT CALLBACK proc_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 #ifdef NOVA_ABYSS_VULKAN
 #include "abyss/vulkan/surface.h"
 #include <vulkan/vulkan_win32.h>
-namespace Nova::abyss{
+namespace Nova::abyss::vkn {
 	void create_surface_platform(Context& cxt) {
 		VkWin32SurfaceCreateInfoKHR create_info{
 			.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,

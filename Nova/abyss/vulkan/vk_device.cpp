@@ -1,14 +1,17 @@
 #include "npch.h"
+#ifdef NOVA_ABYSS_VULKAN
 #include "device.h"
 
-namespace Nova::abyss {
+namespace Nova::abyss::vkn {
 
 	Device::Device(Context& cxt) : cxt(cxt) {
 		select_physical();
 		create_logical();
 	}
 
-	Device::~Device() {}
+	Device::~Device() {
+		logical.destroy(cxt.alloc);
+	}
 
 	void Device::select_physical() {
 		nvk_tracec(Selecting, "Physical");
@@ -30,6 +33,20 @@ namespace Nova::abyss {
 
 	void Device::create_logical() {
 		nvk_tracec(Creating, "Logical");
+
+		auto indices = std::views::transform(queues, [](const auto& q) { return q.index; });
+		const auto unique_queues = std::set<decltype(Q::index)>(indices.begin(), indices.end());
+
+
+		std::vector<vk::DeviceQueueCreateInfo> queue_create_infos;
+		for (const auto& index : unique_queues) {
+			constexpr auto queues = std::array{ 1.0f };
+			queue_create_infos.emplace_back(vk::DeviceQueueCreateFlags{}, index, queues);
+		}
+
+		const auto create_info = vk::DeviceCreateInfo(vk::DeviceCreateFlags{}, queue_create_infos);
+
+		logical = physical.createDevice(create_info, cxt.alloc);
 
 	}
 
@@ -63,3 +80,4 @@ namespace Nova::abyss {
 	}
 
 }
+#endif // NOVA_ABYSS_VULKAN

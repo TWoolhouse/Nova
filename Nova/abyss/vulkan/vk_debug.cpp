@@ -1,4 +1,5 @@
 #include "npch.h"
+#ifdef NOVA_ABYSS_VULKAN
 #include "debug.h"
 
 PFN_vkCreateDebugUtilsMessengerEXT create_debug_messenger;
@@ -20,7 +21,7 @@ inline VKAPI_ATTR void VKAPI_CALL vkDestroyDebugUtilsMessengerEXT(
 	return destroy_debug_messenger(instance, messenger, pAllocator);
 }
 
-namespace Nova::abyss {
+namespace Nova::abyss::vkn {
 
 	vk::DebugUtilsMessengerEXT debugger;
 
@@ -62,7 +63,7 @@ namespace Nova::abyss {
 			| vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance
 			| vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation
 			; // message_types
-		
+
 		return {
 			{}, log_severity, message_types, debug_callback
 		};
@@ -87,3 +88,4 @@ namespace Nova::abyss {
 	}
 
 }
+#endif // NOVA_ABYSS_VULKAN

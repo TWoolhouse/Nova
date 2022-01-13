@@ -1,9 +1,10 @@
 #include "npch.h"
+#ifdef NOVA_ABYSS_VULKAN
 #include "context.h"
 #include "instance.h"
 #include "surface.h"
 
-namespace Nova::abyss {
+namespace Nova::abyss::vkn {
 
 	Context::Context(const std::string_view& name) : alloc(nullptr) {
 		nova_bark_init("[Abyss] <Vulkan> ...");
@@ -20,3 +21,4 @@ namespace Nova::abyss {
 	}
 
 }
+#endif // NOVA_ABYSS_VULKAN
