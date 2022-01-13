@@ -15,10 +15,8 @@
 
 #ifdef NOVA_DEBUG
 #define nova_assert(cond, msg) ::Nova::bark::assertion(cond, msg, __FILE__, __LINE__)
-#define __n_ova_assert(cond) ::Nova::bark::assertion(cond, "NO MESSAGE"sv, __FILE__, __LINE__)
 #else // !NOVA_DEBUG
 #define nova_assert(cond, msg)
-#define __n_ova_assert(cond)
 #endif // NOVA_DEBUG
 
 namespace Nova::bark {
