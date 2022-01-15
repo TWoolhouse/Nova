@@ -1,5 +1,5 @@
 #pragma once
-#include "log/log.h"
+#include "bark/bark.h"
 
 namespace Nova::meta {
 
@@ -27,6 +27,5 @@ namespace Nova::meta {
 			nova_bark_debug("Destructor {}", x);
 		}
 	};
-
 
 }

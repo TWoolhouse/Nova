@@ -1,4 +1,5 @@
 #include "npch.h"
+#include "bark/bark.h"
 #include "application.h"
 #include "platform/application.h"
 #include "event/window.h"
@@ -11,6 +12,8 @@ namespace Nova {
 
 	Application::Application(const std::string_view& name) : window({ 720, 480 }) {
 		nova_assert(!I, "Creating multiple Applications is not allowed!");
+		nova_bark_timer("Startup");
+		clock.update();
 		I = this;
 		bark::Initialize();
 		platform::Initialize(name, window.width, window.height);
@@ -26,6 +29,7 @@ namespace Nova {
 
 		abyss::Initialize(name);
 
+		clock.update();
 		nova_bark_init("[Application] Done!");
 	}
 

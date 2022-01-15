@@ -1,5 +1,5 @@
 #pragma once
-#include "defines.h"
+#include "meta/head.h"
 
 namespace Nova {
 	class platform {

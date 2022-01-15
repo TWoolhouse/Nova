@@ -1,6 +1,6 @@
 #pragma once
-#include "npch.h"
-#include "meta/blocklist.h"
+#include "meta/head.h"
+#include "nvtl/blocklist.h"
 
 #define nova_eden_bind(func, member) ::std::bind(func, &member, std::placeholders::_1)
 
@@ -38,7 +38,7 @@ namespace Nova::eden {
 		using Descriptor = Event::Descriptor;
 		using DType = std::underlying_type_t<Descriptor>;
 		using FuncType = std::function<bool(Event&)>;
-		std::array<meta::BlockList<FuncType>, C> lists;
+		std::array<nvtl::BlockList<FuncType>, C> lists;
 
 		constexpr bool bit_isset(const Descriptor bitset, const DType index) {
 			return (static_cast<DType>(bitset) & (1 << index));

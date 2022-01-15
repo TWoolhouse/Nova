@@ -1,4 +1,5 @@
 #pragma once
+#include "lib.h"
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
 #define NOVA_OS_WINDOWS
@@ -51,31 +52,7 @@
 
 #define NODISCARD [[nodiscard]]
 
-#define formatter_enum(EnumName) \
-template<class CharT> \
-struct std::formatter<EnumName, CharT> : std::formatter<std::underlying_type_t<EnumName>, CharT> { \
-	template<class FormatContext> \
-	auto format(EnumName _enum, FormatContext& fc) { \
-		return std::formatter<std::underlying_type_t<EnumName>, CharT>::format(static_cast<std::underlying_type_t<EnumName>>(_enum), fc); \
-	} \
-}
-
 namespace Nova {}
-
-#include <type_traits>
-#include <concepts>
-
-#include <string>
-#include <string_view>
-
-#include <exception>
-#include <functional>
-
-#include <ranges>
-#include <array>
-#include <deque>
-#include <set>
-#include <bitset>
 
 using cstr = const char*;
 using namespace std::string_view_literals;

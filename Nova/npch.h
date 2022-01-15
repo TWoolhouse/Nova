@@ -1,6 +1,7 @@
 #pragma once
-#include "defines.h"
-#include "log/log.h"
+#include "meta/head.h"
+#include "bark/bark.h"
+#include "nvtl/nvtl.h"
 
 #ifdef NOVA_EXPORT
 	#if defined(NOVA_ABYSS_VULKAN)

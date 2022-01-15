@@ -1,4 +1,5 @@
 #include "npch.h"
+#include "meta/head.h"
 #ifdef NOVA_OS_WINDOWS
 #include "application.h"
 #include "input.h"
@@ -233,10 +234,13 @@ void Nova::platform::Termintate() {
 
 void Nova::platform::process_events() {
 	MSG msg;
+	unsigned int count = 0;
 	while (PeekMessageA(&msg, state->hwnd, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&msg);
 		DispatchMessageA(&msg);
+		++count;
 	}
+	if (count) nova_bark_debug("Events: {}", count);
 }
 
 LRESULT CALLBACK proc_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {

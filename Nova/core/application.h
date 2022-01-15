@@ -1,6 +1,6 @@
 #pragma once
-#include "npch.h"
-#include "deltatime.h"
+#include "meta/head.h"
+#include "blip/blip.h"
 
 #ifdef NOVA_DEBUG
 #define NOVA_MAIN main
@@ -38,7 +38,8 @@ namespace Nova {
 	public:
 		// Application Instance
 		static Application* I;
-		static Clock clock;
+		static blip::Clock clock;
 		Window window;
 	};
+
 }

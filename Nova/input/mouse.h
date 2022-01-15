@@ -1,5 +1,5 @@
 #pragma once
-#include "npch.h"
+#include "meta/head.h"
 
 namespace Nova::input {
 

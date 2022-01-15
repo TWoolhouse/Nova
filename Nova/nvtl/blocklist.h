@@ -1,8 +1,9 @@
 #pragma once
-#include "defines.h"
-#include "concept.h"
+#include "meta/head.h"
+#include "meta/concept.h"
+#include "bark/bark.h"
 
-namespace Nova::meta {
+namespace Nova::nvtl {
 
 	template<typename T>
 	class BlockList {
@@ -182,7 +183,7 @@ namespace Nova::meta {
 			Block(BlockHead* previous, BlockHead* next) : BlockHead(previous, next, Count) {}
 			Block(BlockHead* previous, BlockHead* next, std::array<T, Count>&& arr)
 				: BlockHead(previous, next, Count), buff(std::forward<decltype(arr)>(arr)) {}
-			template<typename ...Ts> requires (sizeof...(Ts) > 0) && all_convertable<T, Ts...>
+			template<typename ...Ts> requires (sizeof...(Ts) > 0) && meta::all_convertable<T, Ts...>
 			Block(BlockHead* previous, BlockHead* next, Ts&&... args)
 				: BlockHead(previous, next, Count), buff({std::move(args)...}) {}
 			Block(const Block& other, BlockHead* previous=nullptr, BlockHead* next=nullptr)
@@ -258,7 +259,7 @@ namespace Nova::meta {
 			}
 		}
 
-		template<typename ...Ts> requires (sizeof...(Ts) > 0) && all_convertable<T, Ts...>
+		template<typename ...Ts> requires (sizeof...(Ts) > 0) && meta::all_convertable<T, Ts...>
 		Block<sizeof...(Ts)>* emplace_back(Ts&&... elems) {
 			if (!first) {
 				first = last = new Block<sizeof...(Ts)>(nullptr, nullptr, std::forward<Ts>(elems)...);

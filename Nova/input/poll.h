@@ -1,5 +1,5 @@
 #pragma once
-#include "npch.h"
+#include "meta/head.h"
 #include "key.h"
 #include "mouse.h"
 #include "event/mouse.h"

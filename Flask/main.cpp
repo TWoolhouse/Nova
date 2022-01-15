@@ -18,8 +18,8 @@ public:
 	void update() {}
 	void render() {
 		static constexpr auto req = 1.f / 240.f;
-		if (clock.dt() > req)
-		nova_bark_debug("FPS: {} Frame Time: {}", 1 / clock.dt(), clock.dt());
+		if (clock > req)
+		nova_bark_debug("FPS: {} Frame Time: {}", 1 / clock, clock);
 	}
 };
 

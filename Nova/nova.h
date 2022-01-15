@@ -2,8 +2,8 @@
 
 #include "npch.h"
 
-#include "defines.h"
-#include "log/log.h"
+#include "meta/head.h"
+#include "bark/bark.h"
 
 #include "event/key.h"
 #include "event/mouse.h"

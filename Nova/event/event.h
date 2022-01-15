@@ -1,5 +1,5 @@
 #pragma once
-#include "npch.h"
+#include "meta/head.h"
 #include "eden/eden.h"
 
 namespace Nova::event {
