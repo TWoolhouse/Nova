@@ -19,3 +19,9 @@ struct std::formatter<EnumName, CharT> : std::formatter<std::underlying_type_t<E
 		return std::formatter<std::underlying_type_t<EnumName>, CharT>::format(static_cast<std::underlying_type_t<EnumName>>(_enum), fc); \
 	} \
 }
+
+#ifdef NOVA_DEBUG
+#define nova_debug_exc(clause) clause
+#else // !NOVA_DEBUG
+#define nova_debug_exc(clause)
+#endif // NOVA_DEBUG

@@ -234,13 +234,13 @@ void Nova::platform::Termintate() {
 
 void Nova::platform::process_events() {
 	MSG msg;
-	unsigned int count = 0;
+	nova_debug_exc(unsigned int count = 0);
 	while (PeekMessageA(&msg, state->hwnd, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&msg);
 		DispatchMessageA(&msg);
-		++count;
+		nova_debug_exc(++count);
 	}
-	if (count) nova_bark_debug("Events: {}", count);
+	nova_debug_exc(if (count) nova_bark_debug("Events: {}", count));
 }
 
 LRESULT CALLBACK proc_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
