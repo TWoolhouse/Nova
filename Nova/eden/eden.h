@@ -77,6 +77,7 @@ namespace Nova::eden {
 			return false;
 		}
 
+		// TODO: Removing events
 		//void remove(Ticket ticket) {
 		//	lists
 		//}
