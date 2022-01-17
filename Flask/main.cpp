@@ -9,7 +9,7 @@ bool simple_quit(Nova::event::Handle& event) {
 	return false;
 }
 
-class Game : public Nova::Application {
+class Game : public Nova::core::Application {
 public:
 	Game() : Application("Flask") {
 		Nova::event::dispatcher.subscribe(Nova::event::Type::KeyPress, &simple_quit);

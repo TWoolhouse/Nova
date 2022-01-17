@@ -13,7 +13,7 @@
 #endif
 int NOVA_MAIN(int argc, char const* argv[]);
 
-namespace Nova {
+namespace Nova::core {
 	class NOVAPI Application {
 	public:
 		Application(const std::string_view& name);

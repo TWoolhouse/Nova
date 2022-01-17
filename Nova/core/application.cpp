@@ -5,7 +5,7 @@
 #include "event/window.h"
 #include "abyss/abyss.h"
 
-namespace Nova {
+namespace Nova::core {
 
 	typename decltype(Application::I) Application::I = nullptr;
 	typename decltype(Application::clock) Application::clock{};
@@ -35,6 +35,7 @@ namespace Nova {
 
 	Application::~Application() {
 		nova_bark_term("[Application] ...");
+		abyss::Terminate();
 		platform::Termintate();
 		bark::Terminate();
 	}
