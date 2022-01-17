@@ -1,18 +1,22 @@
 #include "npch.h"
 #ifdef NOVA_ABYSS_VULKAN
-#include "../abyss.h"
-#include "context.h"
-#include "device.h"
+#include "abyss.h"
 
 namespace Nova::abyss {
+	namespace vkn {
 
-	void Initialize(const std::string_view& name) {
-		abyss::vkn::Context aby{ name };
-		abyss::vkn::Device device(aby);
+		Abyss::Abyss(const std::string_view& name) : cxt(name), device(cxt) {}
+
 	}
 
-	void Terminate() {
 
+
+	static vkn::Abyss* abyss;
+	void Initialize(const std::string_view& name) {
+		abyss = new vkn::Abyss(name);
+	}
+	void Terminate() {
+		delete abyss;
 	}
 
 }

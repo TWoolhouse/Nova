@@ -5,14 +5,15 @@
 namespace Nova::abyss::vkn {
 
 	class Device {
+	protected:
+		Context& cxt;
 	public:
-		Device(Context& cxt);
-		~Device();
-
 		vk::PhysicalDevice physical;
 		vk::Device logical;
 
-		vk::PhysicalDeviceProperties physical_properties;
+		vk::PhysicalDeviceProperties prop;
+		vk::PhysicalDeviceFeatures features;
+		vk::PhysicalDeviceMemoryProperties memory;
 
 		struct Q {
 			uint8_t index;
@@ -38,11 +39,13 @@ namespace Nova::abyss::vkn {
 		typename decltype(std::views::filter(*reinterpret_cast<std::array<Q, sizeof(Queues) / sizeof(Q)>*>(&queue), &lambda)) queues =
 			std::views::filter(*reinterpret_cast<std::array<Q, sizeof(Queues) / sizeof(Q)>*>(&queue), &lambda);
 
-	protected:
-		Context& cxt;
+		Device(Context& cxt);
+		~Device();
 
+	protected:
 		void select_physical();
 		void create_logical();
+		void get_queues();
 
 		bool is_device_suitable(const vk::PhysicalDevice& device);
 	};

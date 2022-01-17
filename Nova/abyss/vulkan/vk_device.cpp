@@ -7,10 +7,35 @@ namespace Nova::abyss::vkn {
 	Device::Device(Context& cxt) : cxt(cxt) {
 		select_physical();
 		create_logical();
+
+		// Features is overwritten after the requested are used
+		features = physical.getFeatures();
+
+		// Moved to the swapchain
+		//const auto capability = physical.getSurfaceCapabilitiesKHR(cxt.surface);
+		//const auto formats = physical.getSurfaceFormatsKHR(cxt.surface);
+		//const auto modes = physical.getSurfacePresentModesKHR(cxt.surface);
+
+		for (auto& queue : queues) {
+			logical.getQueue(queue.index, 0, &queue.queue);
+		}
+		
 	}
 
 	Device::~Device() {
 		logical.destroy(cxt.alloc);
+	}
+
+	constexpr std::string_view get_device_type(const vk::PhysicalDeviceType type) {
+		switch (type) {
+		case vk::PhysicalDeviceType::eDiscreteGpu:	return "Discrete GPU";
+		case vk::PhysicalDeviceType::eIntegratedGpu:	return "Integrated GPU";
+		case vk::PhysicalDeviceType::eVirtualGpu:	return "Virtual GPU";
+		case vk::PhysicalDeviceType::eCpu:	return "CPU";
+		case vk::PhysicalDeviceType::eOther:
+		default:
+			return "Unknown";
+		}
 	}
 
 	void Device::select_physical() {
@@ -23,12 +48,41 @@ namespace Nova::abyss::vkn {
 
 			if (is_device_suitable(device)) {
 				physical = device;
-				physical_properties = physical.getProperties();
 				break;
 			}
 		}
 		nova_assert(physical, "No Physical Device matches the requirements");
-		nova_bark_info("VK Device: {}", physical_properties.deviceName);
+		
+		prop = physical.getProperties();
+		memory = physical.getMemoryProperties();
+
+		// Output Device Properties
+		#ifdef __N_OVA_BARK_STATE_INFO
+		{
+			std::stringstream memory_info_local, memory_info_shared;
+			for (auto it = memory.memoryHeaps.begin(), cend = memory.memoryHeaps.begin() + memory.memoryHeapCount; it != cend; ++it) {
+				const auto& heap = *it;
+				const auto size = heap.size / 1024.f / 1024.f / 1024.f;
+				auto& stream = (heap.flags & vk::MemoryHeapFlagBits::eDeviceLocal) ? memory_info_local : memory_info_shared;
+				stream << "\n\t\t" << size << " GiB ";
+			}
+
+			std::string memory_info_local_str = memory_info_local.str(), memory_info_shared_str = memory_info_shared.str();
+
+			nova_bark_info("VK Device:\n\tName: {}\n\tType: {}\n\tAPI Version: {}.{}.{}\n\tDriver Version: {}.{}.{}\n\tLocal Memory:{}\n\tShared Memory:{}",
+				prop.deviceName,
+				get_device_type(prop.deviceType),
+				VK_VERSION_MAJOR(prop.apiVersion),
+				VK_VERSION_MINOR(prop.apiVersion),
+				VK_VERSION_PATCH(prop.apiVersion),
+				VK_VERSION_MAJOR(prop.driverVersion),
+				VK_VERSION_MINOR(prop.driverVersion),
+				VK_VERSION_PATCH(prop.driverVersion),
+				memory_info_local_str.empty() ? " 0 B" : memory_info_local_str,
+				memory_info_shared_str.empty() ? " 0 B" : memory_info_shared_str
+			);
+		}
+		#endif // __N_OVA_BARK_STATE_INFO
 	}
 
 	void Device::create_logical() {
@@ -44,8 +98,11 @@ namespace Nova::abyss::vkn {
 			queue_create_infos.emplace_back(vk::DeviceQueueCreateFlags{}, index, queues);
 		}
 
-		const auto create_info = vk::DeviceCreateInfo(vk::DeviceCreateFlags{}, queue_create_infos);
+		features.samplerAnisotropy = true;
 
+		std::vector<cstr> extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+
+		const auto create_info = vk::DeviceCreateInfo(vk::DeviceCreateFlags{}, queue_create_infos, {}, extensions, &features);
 		logical = physical.createDevice(create_info, cxt.alloc);
 
 	}
