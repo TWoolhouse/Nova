@@ -240,7 +240,7 @@ void Nova::platform::process_events() {
 		DispatchMessageA(&msg);
 		nova_debug_exc(++count);
 	}
-	nova_debug_exc(if (count) nova_bark_debug("Events: {}", count));
+	// nova_debug_exc(if (count) nova_bark_debug("Events: {}", count));
 }
 
 LRESULT CALLBACK proc_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
