@@ -20,4 +20,6 @@
 #include "abyss/abyss.h"
 #include "verglas/verglas.h"
 
+#include "mlb/mlb.h"
+
 #include "core/application.h"

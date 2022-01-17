@@ -1,13 +1,6 @@
 #pragma once
 #include "defines.h"
 
-template<typename T> requires(!requires (T o) {
-	std::format("{}"sv, o);
-})
-std::ostream& operator<<(std::ostream& stream, const T& obj) {
-	return stream << std::format("{}"sv, obj);
-}
-
 #define __C_ONCAT(x, y) x##y
 #define CONCAT(x, y) __C_ONCAT(x, y)
 

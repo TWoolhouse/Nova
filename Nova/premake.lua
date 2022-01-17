@@ -15,6 +15,9 @@ project "Nova"
 	pchheader "npch.h"
 	pchsource "meta/pch.cpp"
 
+	-- NOVA Building
+	defines { "NOVA_EXPORT" }
+
 	-- Vulkan
 	local vk_sdk = os.getenv("VULKAN_SDK")
 	includedirs { vk_sdk .. "/Include" }
@@ -22,5 +25,7 @@ project "Nova"
 	libdirs { vk_sdk .. "/Lib" }
 	defines { "NOVA_ABYSS_VULKAN" }
 
-	defines { "NOVA_EXPORT" }
+	-- Config
+
+	dofile "../premake/nova_self.lua"
 	dofile "../premake/config.lua"

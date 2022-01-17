@@ -11,4 +11,12 @@ filter "configurations:Release"
 	stringpooling "on"
 	intrinsics "on"
 	inlining "Auto"
+	flags {
+		"LinkTimeOptimization",
+		"MultiProcessorCompile",
+	}
+
+filter { "configurations:Release", "action:vs*" }
+	buildoptions { "/Ot" }
+
 filter {}
