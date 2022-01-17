@@ -52,3 +52,21 @@ API: VULKAN, OPENGL, DIRECTX
 #error NOVA_ABYSS_DIRECTX is not currently supported!
 #endif // NOVA_ABYSS_API
 #endif // NOVA_EXPORT
+
+//---------------------------------------------------------------\\
+//-------------------------NOVA_PLATFORM-------------------------\\
+//---------------------------------------------------------------\\
+
+// NOVA_OS_<API>
+
+#ifdef NOVA_EXPORT
+#if defined(NOVA_OS_WINDOWS)
+// Supported!
+#elif defined(NOVA_OS_LINUX)
+#error NOVA_OS_LINUX is not currently supported!
+#elif defined(NOVA_OS_UNIX)
+#error NOVA_OS_UNIX is not currently supported!
+#elif defined(NOVA_OS_APPLE)
+#error NOVA_OS_APPLE is not currently supported!
+#endif // NOVA_OS_PLATFORM
+#endif // NOVA_EXPORT
