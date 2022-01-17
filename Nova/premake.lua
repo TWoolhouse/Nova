@@ -13,7 +13,7 @@ project "Nova"
 	includedirs { "./" }
 
 	pchheader "npch.h"
-	pchsource "core/pch.cpp"
+	pchsource "meta/pch.cpp"
 
 	-- Vulkan
 	local vk_sdk = os.getenv("VULKAN_SDK")
