@@ -9,11 +9,13 @@
 				"DEBUG",
 
 				"NOVA_ABYSS_VULKAN",
+				"NOVA_MLB_GLM",
 				"NOVA_EXPORT"
 			],
 			"includePath": [
 				"${workspaceFolder}/Nova",
-				"${env:VULKAN_SDK}/Include"
+				"${env:VULKAN_SDK}/Include",
+				"${workspaceFolder}/vendor/glm/include"
 			],
 			"cStandard": "c17",
 			"cppStandard": "c++20",
