@@ -15,6 +15,12 @@ namespace Nova::abyss::vkn {
 		vk::PhysicalDeviceFeatures features;
 		vk::PhysicalDeviceMemoryProperties memory;
 
+		struct SwapChainInfo {
+			vk::SurfaceCapabilitiesKHR capabilities;
+			std::vector<vk::SurfaceFormatKHR> formats;
+			std::vector<vk::PresentModeKHR> present_modes;
+		} swapchain;
+
 		struct Q {
 			uint8_t index;
 			vk::QueueFlags type;

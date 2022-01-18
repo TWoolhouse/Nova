@@ -12,9 +12,12 @@ namespace Nova::abyss::vkn {
 		features = physical.getFeatures();
 
 		// Moved to the swapchain
-		//const auto capability = physical.getSurfaceCapabilitiesKHR(cxt.surface);
-		//const auto formats = physical.getSurfaceFormatsKHR(cxt.surface);
-		//const auto modes = physical.getSurfacePresentModesKHR(cxt.surface);
+		// TODO: Remove
+		swapchain = {
+			physical.getSurfaceCapabilitiesKHR(cxt.surface),
+			physical.getSurfaceFormatsKHR(cxt.surface),
+			physical.getSurfacePresentModesKHR(cxt.surface)
+		};
 
 		for (auto& queue : queues) {
 			logical.getQueue(queue.index, 0, &queue.queue);
