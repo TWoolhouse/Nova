@@ -245,13 +245,13 @@ void Nova::platform::process_events() {
 
 LRESULT CALLBACK proc_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	switch (msg) {
-	case WM_ERASEBKGND:
+	[[unlikely]] case WM_ERASEBKGND:
 		// Notify the OS that erasing will be handled by the application to prevent flicker.
 		return 1;
-	case WM_CLOSE:
+	[[unlikely]] case WM_CLOSE:
 		Nova::event::WindowClose().fire();
 		return 0;
-	case WM_DESTROY:
+	[[unlikely]] case WM_DESTROY:
 		// Clean Up Tasks
 		PostQuitMessage(0);
 		return 0;
@@ -260,19 +260,19 @@ LRESULT CALLBACK proc_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 			GetClientRect(hwnd, &r);
 			Nova::event::WindowResizeScreen(r.right - r.left, r.bottom - r.top).fire();
 		} break;
-	case WM_KEYDOWN:
-	case WM_SYSKEYDOWN:
+	[[likely]] case WM_KEYDOWN:
+	[[likely]] case WM_SYSKEYDOWN:
 		Nova::plat::event::key_down(Nova::plat::input::key(wparam));
 		break;
-	case WM_KEYUP:
-	case WM_SYSKEYUP:
+	[[likely]] case WM_KEYUP:
+	[[likely]] case WM_SYSKEYUP:
 		Nova::plat::event::key_up(Nova::plat::input::key(wparam));
 		break;
-	case WM_MOUSEMOVE:
+	[[likely]] case WM_MOUSEMOVE:
 		Nova::plat::event::mouse_move(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
 		break;
 	case WM_MOUSEWHEEL:
-		if (const auto z = GET_WHEEL_DELTA_WPARAM(wparam))
+		if (const auto z = GET_WHEEL_DELTA_WPARAM(wparam)) [[likely]]
 			Nova::event::MouseScroll((z < 0) ? -1 : 1);
 		break;
 	case WM_LBUTTONDOWN:

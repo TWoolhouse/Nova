@@ -48,10 +48,10 @@ namespace Nova::nvtl {
 					return tmp;
 				}
 
-				NODISCARD inline bool operator!=(const iterator_type& other) const noexcept {
+				inline NODISCARD bool operator!=(const iterator_type& other) const noexcept {
 					return curr != other.curr;
 				}
-				NODISCARD inline bool operator==(const iterator_type& other) const noexcept {
+				inline NODISCARD bool operator==(const iterator_type& other) const noexcept {
 					return !operator!=(other);
 				}
 
@@ -95,10 +95,10 @@ namespace Nova::nvtl {
 					return tmp;
 				}
 
-				NODISCARD inline bool operator!=(const iterator_type& other) const noexcept {
+				inline NODISCARD bool operator!=(const iterator_type& other) const noexcept {
 					return curr != other.curr;
 				}
-				NODISCARD inline bool operator==(const iterator_type& other) const noexcept {
+				inline NODISCARD bool operator==(const iterator_type& other) const noexcept {
 					return !operator!=(other);
 				}
 
@@ -157,10 +157,10 @@ namespace Nova::nvtl {
 					return tmp;
 				}
 
-				NODISCARD inline bool operator!=(const iterator_type& other) const noexcept {
+				inline NODISCARD bool operator!=(const iterator_type& other) const noexcept {
 					return curr != other.curr;
 				}
-				NODISCARD inline bool operator==(const iterator_type& other) const noexcept {
+				inline NODISCARD bool operator==(const iterator_type& other) const noexcept {
 					return !operator!=(other);
 				}
 
@@ -251,9 +251,9 @@ namespace Nova::nvtl {
 
 				template<size_t Size>
 		void push_back(std::array<T, Size>&& arr) {
-			if (!first) {
+			if (!first) [[unlikely]] {
 				first = last = new Block<Size>(nullptr, nullptr, std::forward(arr));
-			} else {
+			} else [[likely]] {
 				last->next = new Block<Size>(last, nullptr, std::forward(arr));
 				last = last->next;
 			}
@@ -261,9 +261,9 @@ namespace Nova::nvtl {
 
 		template<typename ...Ts> requires (sizeof...(Ts) > 0) && meta::all_convertable<T, Ts...>
 		Block<sizeof...(Ts)>* emplace_back(Ts&&... elems) {
-			if (!first) {
+			if (!first) [[unlikely]] {
 				first = last = new Block<sizeof...(Ts)>(nullptr, nullptr, std::forward<Ts>(elems)...);
-			} else {
+			} else [[likely]] {
 				last->next = new Block<sizeof...(Ts)>(last, nullptr, std::forward<Ts>(elems)...);
 				last = last->next;
 			}
@@ -273,9 +273,9 @@ namespace Nova::nvtl {
 		template<size_t Size>
 		Block<Size>* emplace_back(Block<Size>* block) {
 			using BlockS = Block<Size>;
-			if (!first) {
+			if (!first) [[unlikely]] {
 				first = last = new BlockS(*block);
-			} else {
+			} else [[likely]] {
 				last->next = new BlockS(*block, last, nullptr);
 				last = last->next;
 			}
@@ -287,7 +287,10 @@ namespace Nova::nvtl {
 			#ifdef NOVA_DEBUG
 			bool flag = false;
 			for (auto it = blocks.rbegin(), end = blocks.rend(); it != end; ++it) {
-				if (it == ptr)	flag = true;
+				if (it == ptr)	{
+					flag = true;
+					break;
+				}
 			}
 			nova_assert(flag, "Block Pointer is not Valid!");
 			#endif // NOVA_DEBUG

@@ -5,7 +5,7 @@
 #define nova_eden_bind(func, member) ::std::bind(func, &member, std::placeholders::_1)
 
 template<typename E> requires std::is_enum_v<E>
-NODISCARD inline constexpr bool operator&(const E a, const E b) {
+inline NODISCARD constexpr bool operator&(const E a, const E b) {
 	return static_cast<std::underlying_type_t<E>>(a) & static_cast<std::underlying_type_t<E>>(b);
 }
 
@@ -56,9 +56,9 @@ namespace Nova::eden {
 			decltype(lists[0].emplace_back(functions...)) ptr = nullptr;
 			for (DType i = 0; i < lists.size(); ++i) {
 				if (bit_isset(descriptor, i)) {
-					if (ptr) {
+					if (ptr) [[unlikely]] {
 						lists[i].emplace_back(ptr);
-					} else {
+					} else [[likely]] {
 						ptr = lists[i].emplace_back(functions...);
 					}
 				}

@@ -37,7 +37,7 @@ namespace Nova::bark {
 
 	#ifdef nova_assert
 	void assertion(bool condition, const std::string_view msg, const std::string_view file, const int line) {
-		if (condition) ; else {
+		if (condition) [[likely]] ; else {
 			nova_bark_fatal("{}@{}\nAssertion: {}", file, line, msg);
 		}
 	}
