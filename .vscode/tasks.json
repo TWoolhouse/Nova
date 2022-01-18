@@ -45,7 +45,7 @@
 			},
 			"group": "build"
 		}, {
-			"label": "VS2022-Compile",
+			"label": "VS2022-Full",
 			"dependsOn" : [
 				"Python Single Header",
 				"VS2022-Premake",
