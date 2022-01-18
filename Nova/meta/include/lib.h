@@ -3,6 +3,16 @@
 #include <type_traits>
 #include <concepts>
 
+#include <span>
+#include <ranges>
+#include <array>
+#include <deque>
+#include <set>
+#include <bitset>
+
+#include <exception>
+#include <functional>
+
 #include <string>
 #include <format>
 #include <sstream>
@@ -10,12 +20,4 @@
 
 #include <iosfwd>
 
-#include <exception>
-#include <functional>
-
-#include <span>
-#include <ranges>
-#include <array>
-#include <deque>
-#include <set>
-#include <bitset>
+#include <thread>

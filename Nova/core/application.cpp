@@ -47,6 +47,7 @@ namespace Nova::core {
 				clock.update();
 				render();
 				platform::process_events();
+				std::this_thread::yield();
 			}
 		} catch (const std::exception& exc) {
 			running = false;
