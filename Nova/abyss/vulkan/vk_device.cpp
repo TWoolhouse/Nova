@@ -22,7 +22,7 @@ namespace Nova::abyss::vkn {
 		for (auto& queue : queues) {
 			logical.getQueue(queue.index, 0, &queue.queue);
 		}
-		
+
 	}
 
 	Device::~Device() {
@@ -42,7 +42,7 @@ namespace Nova::abyss::vkn {
 	}
 
 	void Device::select_physical() {
-		nvk_tracec(Selecting, "Physical");
+		nvk_trace("Physical", "Selecting"sv, "Selected"sv);
 		const auto devices = cxt.instance.enumeratePhysicalDevices();
 		nova_assert(!devices.empty(), "No Vulkan Devices Found!");
 
@@ -55,12 +55,12 @@ namespace Nova::abyss::vkn {
 			}
 		}
 		nova_assert(physical, "No Physical Device matches the requirements");
-		
+
 		prop = physical.getProperties();
 		memory = physical.getMemoryProperties();
 
 		// Output Device Properties
-		#ifdef __N_OVA_BARK_STATE_INFO
+		#if __N_OVA_BARK_STATE_INFO == 1
 		{
 			std::stringstream memory_info_local, memory_info_shared;
 			for (auto it = memory.memoryHeaps.begin(), cend = memory.memoryHeaps.begin() + memory.memoryHeapCount; it != cend; ++it) {
@@ -89,11 +89,10 @@ namespace Nova::abyss::vkn {
 	}
 
 	void Device::create_logical() {
-		nvk_tracec(Creating, "Logical");
+		nvk_tracec("Logical");
 
 		auto indices = std::views::transform(queues, [](const auto& q) { return q.index; });
 		const auto unique_queues = std::set<decltype(Q::index)>(indices.begin(), indices.end());
-
 
 		std::vector<vk::DeviceQueueCreateInfo> queue_create_infos;
 		for (const auto& index : unique_queues) {

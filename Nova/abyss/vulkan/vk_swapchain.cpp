@@ -7,7 +7,7 @@ namespace Nova::abyss::vkn {
 
 	Swapchain::Swapchain(Context& cxt, Device& device, const unsigned int width, const unsigned int height) : cxt(cxt), device(device),
 		format(), present_mode(vk::PresentModeKHR::eFifo) {
-		nvk_tracec(Creating, "Swapchain");
+		nvk_tracec("Swapchain");
 
 		bool found = false;
 		for (const auto& format : device.swapchain.formats) {
@@ -72,14 +72,12 @@ namespace Nova::abyss::vkn {
 		);
 
 		handle = device.logical.createSwapchainKHR(create_info, cxt.alloc);
-		nvk_tracef(Created, "Swapchain");
 
 	}
 
 	Swapchain::~Swapchain() {
-		nvk_tracec(Destroying, "Swapchain");
+		nvk_traced("Swapchain");
 		device.logical.destroySwapchainKHR(handle, cxt.alloc);
-		nvk_tracef(Destroyed, "Swapchain");
 	}
 
 	Image& Swapchain::acquire_next_image(const uint64_t timeout) {

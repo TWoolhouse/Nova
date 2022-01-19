@@ -304,6 +304,7 @@ namespace Nova::abyss::vkn {
 			.hinstance = state->instance,
 			.hwnd = state->hwnd
 		};
+		nova_bark_debug("VK Surface: Windows");
 		const auto result = vkCreateWin32SurfaceKHR(cxt, &create_info, nullptr, reinterpret_cast<decltype(cxt.surface)::CType*>(&cxt.surface));
 	}
 }

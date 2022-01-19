@@ -70,7 +70,7 @@ namespace Nova::abyss::vkn {
 	}
 
 	void create_debugger(const Context& cxt) {
-		nvk_tracec(Creating, "Debugger");
+		nvk_tracec("Debugger");
 		create_debug_messenger =
 			reinterpret_cast<decltype(create_debug_messenger)>(cxt.instance.getProcAddr("vkCreateDebugUtilsMessengerEXT"));
 		nova_assert(create_debug_messenger, "Unable to find function: vkCreateDebugUtilsMessengerEXT");
@@ -80,7 +80,6 @@ namespace Nova::abyss::vkn {
 		nova_assert(destroy_debug_messenger, "Unable to find function: vkDestroyDebugUtilsMessengerEXT");
 
 		debugger = cxt.instance.createDebugUtilsMessengerEXT(debug_info(), cxt.alloc);
-		nvk_tracef(Created, "Debugger");
 	}
 
 	void destroy_debugger(const Context& cxt) {

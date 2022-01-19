@@ -30,7 +30,7 @@ namespace Nova::abyss::vkn {
 	}
 
 	void create_instance(Context& cxt, const std::string_view& name) {
-		nvk_tracec(Creating, "Instance");
+		nvk_tracec("Instance");
 
 		vk::ApplicationInfo app_info{
 			name.data(),
@@ -61,11 +61,11 @@ namespace Nova::abyss::vkn {
 		vk::InstanceCreateInfo create_info{ {}, &app_info, layers, extensions };
 
 		// Log Layers
-		#ifdef __N_OVA_BARK_STATE_DEBUG
+		#if __N_OVA_BARK_STATE_DEBUG == 1
 		log_enumerations();
 		#endif // __N_OVA_BARK_STATE_DEBUG
 
-		#ifdef __N_OVA_BARK_STATE_INFO
+		#if __N_OVA_BARK_STATE_INFO == 1
 		nova_bark_info("Vulkan Extensions:");
 		for (const auto& ext : extensions)
 			nova_bark_info("\t{}", ext);
@@ -87,19 +87,16 @@ namespace Nova::abyss::vkn {
 		create_debugger(cxt);
 		#endif // NOVA_DEBUG
 
-		nvk_tracef(Created, "Instance");
 	}
 
 	void destroy_instance(const Context& cxt) {
-		nvk_tracec(Destroying, "Instance");
+		nvk_traced("Instance");
 
 		#ifdef NOVA_DEBUG
 		destroy_debugger(cxt);
 		#endif // NOVA_DEBUG
 
 		cxt.instance.destroy();
-
-		nvk_tracef(Destroyed, "Instance");
 	}
 
 }
