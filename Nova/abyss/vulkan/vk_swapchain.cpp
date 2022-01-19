@@ -10,7 +10,7 @@ namespace Nova::abyss::vkn {
 		nvk_tracec("Swapchain");
 
 		bool found = false;
-		for (const auto& format : device.swapchain.formats) {
+		for (const auto& format : device.formats) {
 			if (format.format == vk::Format::eR8G8B8A8Unorm && format.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear) {
 				found = true;
 				this->format = format;
@@ -20,24 +20,24 @@ namespace Nova::abyss::vkn {
 
 		if (!found) {
 			nova_bark_debug("VK Swapchain Format Default: Unavailable");
-			this->format = device.swapchain.formats.front();
+			this->format = device.formats.front();
 		}
 
-		if (std::ranges::find(device.swapchain.present_modes, vk::PresentModeKHR::eMailbox) != device.swapchain.present_modes.cend()) {
+		if (std::ranges::find(device.present_modes, vk::PresentModeKHR::eMailbox) != device.present_modes.cend()) {
 			this->present_mode = vk::PresentModeKHR::eMailbox;
 		} nova_debug_exc(else { nova_bark_debug("VK Present Mode: Mailbox Unavailable"); })
 
 		vk::Extent2D extent{ width, height };
-		if (device.swapchain.capabilities.currentExtent.width == std::numeric_limits<decltype(extent.width)>::max()) {
-			extent.width = mlb::clamp(extent.width, device.swapchain.capabilities.minImageExtent.width, device.swapchain.capabilities.maxImageExtent.width);
-			extent.height = mlb::clamp(extent.height, device.swapchain.capabilities.minImageExtent.height, device.swapchain.capabilities.maxImageExtent.height);
+		if (device.capabilities.currentExtent.width == std::numeric_limits<decltype(extent.width)>::max()) {
+			extent.width = mlb::clamp(extent.width, device.capabilities.minImageExtent.width, device.capabilities.maxImageExtent.width);
+			extent.height = mlb::clamp(extent.height, device.capabilities.minImageExtent.height, device.capabilities.maxImageExtent.height);
 		}
 		else {
-			extent = device.swapchain.capabilities.currentExtent;
+			extent = device.capabilities.currentExtent;
 		}
 
 		constexpr auto IMAGES = 3u;
-		unsigned int image_count = mlb::clamp(IMAGES, device.swapchain.capabilities.minImageCount, device.swapchain.capabilities.maxImageCount ? device.swapchain.capabilities.maxImageCount : IMAGES);
+		unsigned int image_count = mlb::clamp(IMAGES, device.capabilities.minImageCount, device.capabilities.maxImageCount ? device.capabilities.maxImageCount : IMAGES);
 
 		std::vector<unsigned int> qfamily_indices;
 		if (device.queue.graphics.index != device.queue.present.index) {
@@ -48,7 +48,7 @@ namespace Nova::abyss::vkn {
 
 		vk::CompositeAlphaFlagBitsKHR alpha = vk::CompositeAlphaFlagBitsKHR::eOpaque;
 		for (const auto& a : { vk::CompositeAlphaFlagBitsKHR::ePreMultiplied, vk::CompositeAlphaFlagBitsKHR::ePostMultiplied, vk::CompositeAlphaFlagBitsKHR::eInherit }) {
-			if (device.swapchain.capabilities.supportedCompositeAlpha & a) {
+			if (device.capabilities.supportedCompositeAlpha & a) {
 				alpha = a;
 				break;
 			}
@@ -64,7 +64,7 @@ namespace Nova::abyss::vkn {
 			vk::ImageUsageFlagBits::eColorAttachment,
 			(qfamily_indices.empty() ? vk::SharingMode::eExclusive : vk::SharingMode::eConcurrent),
 			qfamily_indices,
-			device.swapchain.capabilities.currentTransform,
+			device.capabilities.currentTransform,
 			alpha,
 			present_mode,
 			true, // TODO: What is this!

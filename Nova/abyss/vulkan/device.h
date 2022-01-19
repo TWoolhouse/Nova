@@ -15,16 +15,15 @@ namespace Nova::abyss::vkn {
 		vk::PhysicalDeviceFeatures features;
 		vk::PhysicalDeviceMemoryProperties memory;
 
-		struct SwapChainInfo {
-			vk::SurfaceCapabilitiesKHR capabilities;
-			std::vector<vk::SurfaceFormatKHR> formats;
-			std::vector<vk::PresentModeKHR> present_modes;
-		} swapchain;
+		vk::SurfaceCapabilitiesKHR capabilities;
+		std::vector<vk::SurfaceFormatKHR> formats;
+		std::vector<vk::PresentModeKHR> present_modes;
 
 		struct Q {
 			uint8_t index;
 			vk::QueueFlags type;
 			uint8_t count;
+			nova_debug_exc(std::string_view name);
 			vk::Queue queue;
 		};
 		struct Queues {
@@ -34,10 +33,10 @@ namespace Nova::abyss::vkn {
 			static constexpr auto Required = Invalid;
 			static constexpr decltype(Q::index) Ignore = std::numeric_limits<decltype(Q::index)>::max() - 2;
 		public:
-			Q graphics{ Required, vk::QueueFlagBits::eGraphics };
-			Q transfer{ Required, vk::QueueFlagBits::eTransfer };
-			Q compute{ Ignore, vk::QueueFlagBits::eCompute };
-			Q present{ Required };
+			Q graphics{ Required, vk::QueueFlagBits::eGraphics, 1, nova_debug_exc("Graphics"sv) };
+			Q transfer{ Required, vk::QueueFlagBits::eTransfer, 1, nova_debug_exc("Transfer"sv) };
+			Q compute{ Ignore, vk::QueueFlagBits::eCompute, 1, nova_debug_exc("Compute"sv) };
+			Q present{ Required, vk::QueueFlagBits{0}, 1, nova_debug_exc("Present"sv)};
 		} queue;
 	private:
 		inline static constexpr bool lambda(const Q& q) { return q.index != Queues::Ignore; }
@@ -51,8 +50,8 @@ namespace Nova::abyss::vkn {
 	protected:
 		void select_physical();
 		void create_logical();
-		void get_queues();
 
+		void set_required_features();
 		bool is_device_suitable(const vk::PhysicalDevice& device);
 	};
 

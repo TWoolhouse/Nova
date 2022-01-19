@@ -5,19 +5,16 @@
 namespace Nova::abyss::vkn {
 
 	Device::Device(Context& cxt) : cxt(cxt) {
+		set_required_features();
 		select_physical();
 		create_logical();
 
 		// Features is overwritten after the requested are used
 		features = physical.getFeatures();
 
-		// Moved to the swapchain
-		// TODO: Remove
-		swapchain = {
-			physical.getSurfaceCapabilitiesKHR(cxt.surface),
-			physical.getSurfaceFormatsKHR(cxt.surface),
-			physical.getSurfacePresentModesKHR(cxt.surface)
-		};
+		capabilities = physical.getSurfaceCapabilitiesKHR(cxt.surface);
+		formats = physical.getSurfaceFormatsKHR(cxt.surface);
+		present_modes = physical.getSurfacePresentModesKHR(cxt.surface);
 
 		for (auto& queue : queues) {
 			logical.getQueue(queue.index, 0, &queue.queue);
@@ -35,7 +32,7 @@ namespace Nova::abyss::vkn {
 		case vk::PhysicalDeviceType::eIntegratedGpu:	return "Integrated GPU";
 		case vk::PhysicalDeviceType::eVirtualGpu:	return "Virtual GPU";
 		case vk::PhysicalDeviceType::eCpu:	return "CPU";
-		case vk::PhysicalDeviceType::eOther:
+		case vk::PhysicalDeviceType::eOther: [[fallthrough]];
 		default:
 			return "Unknown";
 		}
@@ -94,13 +91,19 @@ namespace Nova::abyss::vkn {
 		auto indices = std::views::transform(queues, [](const auto& q) { return q.index; });
 		const auto unique_queues = std::set<decltype(Q::index)>(indices.begin(), indices.end());
 
+		#if __N_OVA_BARK_STATE_INFO == 1
+		nova_bark_info("VK Queues:");
+		for (const auto& q : queues) {
+			nova_bark_info("\t{} {}x @ {}", q.name, q.count, q.index);
+		}
+		nova_bark_info("VK Unique Queues: {}", unique_queues.size());
+		#endif // __N_OVA_BARK_STATE_INFO
+
 		std::vector<vk::DeviceQueueCreateInfo> queue_create_infos;
 		for (const auto& index : unique_queues) {
 			constexpr auto queues = std::array{ 1.0f };
 			queue_create_infos.emplace_back(vk::DeviceQueueCreateFlags{}, index, queues);
 		}
-
-		features.samplerAnisotropy = true;
 
 		std::vector<cstr> extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
@@ -108,6 +111,20 @@ namespace Nova::abyss::vkn {
 		logical = physical.createDevice(create_info, cxt.alloc);
 
 	}
+
+	#if __N_OVA_BARK_STATE_INFO == 1
+	#define SET_FEATURE_V(fname, value) if constexpr (value) nova_bark_info("\t{}", #fname); CONCAT(features., fname) = value
+	#else // !__N_OVA_BARK_STATE_INFO
+	#define SET_FEATURE(fname, value) CONCAT(features., fname) = value
+	#endif // __N_OVA_BARK_STATE_INFO
+	#define SET_FEATURE(fname) SET_FEATURE_V(fname, true)
+
+	void Device::set_required_features() {
+		nova_bark_info("VK Required Device Features:");
+		SET_FEATURE(samplerAnisotropy, true);
+	}
+	#undef SET_FEATURE_V
+	#undef SET_FEATURE
 
 	bool Device::is_device_suitable(const vk::PhysicalDevice& device) {
 		const auto queue_families = device.getQueueFamilyProperties();
