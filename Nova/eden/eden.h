@@ -82,6 +82,12 @@ namespace Nova::eden {
 		//	lists
 		//}
 
+		void clear() {
+			for (auto& list : lists) {
+				list.clear();
+			}
+		}
+
 	};
 
 }

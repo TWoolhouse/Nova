@@ -12,9 +12,10 @@ namespace Nova::core {
 
 	Application::Application(const std::string_view& name) : window({ 720, 480 }) {
 		nova_assert(!I, "Creating multiple Applications is not allowed!");
+		I = this;
+
 		nova_bark_timer("Startup");
 		clock.update();
-		I = this;
 		bark::Initialize();
 		platform::Initialize(name, window.width, window.height);
 
@@ -37,7 +38,10 @@ namespace Nova::core {
 		nova_bark_term("[Application] ...");
 		abyss::Terminate();
 		platform::Termintate();
+		event::dispatcher.clear();
 		bark::Terminate();
+
+		I = nullptr;
 	}
 
 	void Application::execute() {

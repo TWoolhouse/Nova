@@ -196,12 +196,7 @@ namespace Nova::nvtl {
 	public:
 		BlockList() : first(nullptr), last(nullptr), blocks(*this) {};
 		~BlockList() {
-			decltype(first) block = nullptr;
-			while (first) {
-				block = first->next;
-				delete first;
-				first = block;
-			}
+			clear();
 		}
 
 		using iterator = BlockHead::iterator;
@@ -217,11 +212,11 @@ namespace Nova::nvtl {
 		inline NODISCARD const_iterator end() const { return cend(); }
 
 		inline NODISCARD reverse_iterator rbegin() { return reverse_iterator(end()); }
-		inline NODISCARD const_reverse_iterator crbegin() const { return const_reverse_iterator(cend()); }
-		inline NODISCARD const_reverse_iterator rbegin() const { return crbegin(); }
+		//inline NODISCARD const_reverse_iterator crbegin() const { return const_reverse_iterator(cend()); }
+		//inline NODISCARD const_reverse_iterator rbegin() const { return crbegin(); }
 		inline NODISCARD reverse_iterator rend() { return reverse_iterator(begin()); }
-		inline NODISCARD const_reverse_iterator crend() const { return const_reverse_iterator(cbegin()); }
-		inline NODISCARD const_reverse_iterator rend() const { return crend(); }
+		//inline NODISCARD const_reverse_iterator crend() const { return const_reverse_iterator(cbegin()); }
+		//inline NODISCARD const_reverse_iterator rend() const { return crend(); }
 
 		struct blocks {
 			constexpr blocks(BlockList& parent) : parent(parent) {}
@@ -239,11 +234,11 @@ namespace Nova::nvtl {
 			inline NODISCARD const_iterator end() const { return cend(); }
 
 			inline NODISCARD reverse_iterator rbegin() { return reverse_iterator(parent.last); }
-			inline NODISCARD const_reverse_iterator crbegin() const { return const_reverse_iterator(cend()); }
-			inline NODISCARD const_reverse_iterator rbegin() const { return crbegin(); }
+			//inline NODISCARD const_reverse_iterator crbegin() const { return const_reverse_iterator(cend()); }
+			//inline NODISCARD const_reverse_iterator rbegin() const { return crbegin(); }
 			inline NODISCARD reverse_iterator rend() { return reverse_iterator(); }
-			inline NODISCARD const_reverse_iterator crend() const { return const_reverse_iterator(cbegin()); }
-			inline NODISCARD const_reverse_iterator rend() const { return crend(); }
+			//inline NODISCARD const_reverse_iterator crend() const { return const_reverse_iterator(cbegin()); }
+			//inline NODISCARD const_reverse_iterator rend() const { return crend(); }
 
 		private:
 			BlockList& parent;
@@ -301,6 +296,20 @@ namespace Nova::nvtl {
 		}
 	public:
 		inline void remove(void* const ptr) { return remove(static_cast<BlockHead*>(ptr)); }
+
+		NODISCARD bool empty() noexcept {
+			return first == nullptr;
+		}
+
+		void clear() noexcept {
+			decltype(first) block = nullptr;
+			while (first) {
+				block = first->next;
+				delete first;
+				first = block;
+			}
+			last = nullptr;
+		}
 
 	};
 
