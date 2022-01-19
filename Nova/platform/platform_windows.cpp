@@ -146,6 +146,27 @@ constexpr Nova::input::Mouse Nova::plat::input::mouse(const unsigned int code) {
 	}
 }
 
+std::string err_msg() {
+
+	const auto code = GetLastError();
+
+	LPSTR message_buffer = nullptr;
+	size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL, code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&message_buffer, 0, NULL);
+
+	std::string message{ message_buffer, size };
+	LocalFree(message_buffer);
+	return message;
+}
+
+#define NOVA_WINDOW_CHECK(check, message) if (!check) { \
+	constexpr auto msg = CONCAT(message, sv); \
+	nova_bark_fatal("{} Error: {} {}", msg, GetLastError(), err_msg()); \
+	MessageBoxA(state->hwnd, msg.data(), "Error", MB_ICONERROR | MB_OK); \
+	throw std::runtime_error(msg.data()); \
+	return; \
+}
+
 struct State {
 	HINSTANCE instance;
 	HWND hwnd;
@@ -191,10 +212,8 @@ void Nova::platform::Initialize(const std::string_view& name, const unsigned int
 	};
 
 	if (!RegisterClassExA(&wc)) {
-		constexpr auto msg = "Window Registration Failed"sv;
-		nova_bark_fatal("{} Error:{}", msg, GetLastError());
-		MessageBoxA(state->hwnd, msg.data(), "Error", MB_ICONERROR | MB_OK);
-		return;
+		if (GetLastError() != ERROR_CLASS_ALREADY_EXISTS)
+			NOVA_WINDOW_CHECK(true, "Window Registration Failed");
 	}
 
 	constexpr auto wstyle = WS_OVERLAPPED | WS_SYSMENU | WS_CAPTION | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_THICKFRAME;
@@ -211,12 +230,7 @@ void Nova::platform::Initialize(const std::string_view& name, const unsigned int
 		0, 0, state->instance, 0
 	);
 
-	if (state->hwnd == 0) {
-		constexpr auto msg = "Window Creation Failed"sv;
-		nova_bark_fatal("{} Error:{}", msg, GetLastError());
-		MessageBoxA(state->hwnd, msg.data(), "Error", MB_ICONERROR | MB_OK);
-		return;
-	}
+	NOVA_WINDOW_CHECK(state->hwnd != 0, "Window Creation Failed");
 
 	ShowWindow(state->hwnd, SW_SHOW);
 
