@@ -12,8 +12,8 @@ project "Flask.Test"
 	files { "**.h", "**.cpp" }
 	includedirs { "./" }
 
-	-- pchheader "fpch.h"
-	-- pchsource "core/pch.cpp"
+	pchheader "tpch.h"
+	pchsource "pch.cpp"
 
 	includedirs { "../vendor/*/include/" }
 	links { "gtestd.lib", "gtest_maind.lib" }
