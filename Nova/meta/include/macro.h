@@ -14,7 +14,7 @@ struct std::formatter<EnumName, CharT> : std::formatter<std::underlying_type_t<E
 }
 
 #ifdef NOVA_DEBUG
-#define nova_debug_exc(clause) clause
+#define nova_debug_exc(expr) expr
 #else // !NOVA_DEBUG
-#define nova_debug_exc(clause)
+#define nova_debug_exc(expr)
 #endif // NOVA_DEBUG

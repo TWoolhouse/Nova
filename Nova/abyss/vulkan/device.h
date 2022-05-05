@@ -5,9 +5,8 @@
 namespace Nova::abyss::vkn {
 
 	class Device {
-	protected:
-		Context& cxt;
 	public:
+		Context& cxt;
 		vk::PhysicalDevice physical;
 		vk::Device logical;
 

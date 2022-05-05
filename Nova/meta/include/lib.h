@@ -19,5 +19,6 @@
 #include <string_view>
 
 #include <iosfwd>
+#include <fstream>
 
 #include <thread>

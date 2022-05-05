@@ -309,17 +309,17 @@ LRESULT CALLBACK proc_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 #ifdef NOVA_ABYSS_VULKAN
-#include "abyss/vulkan/surface.h"
+#include "abyss/vulkan/context.h"
 #include <vulkan/vulkan_win32.h>
 namespace Nova::abyss::vkn {
-	void create_surface_platform(Context& cxt) {
+	void Context::create_surface() {
 		VkWin32SurfaceCreateInfoKHR create_info{
 			.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
 			.hinstance = state->instance,
 			.hwnd = state->hwnd
 		};
 		nova_bark_debug("VK Surface: Windows");
-		const auto result = vkCreateWin32SurfaceKHR(cxt, &create_info, nullptr, reinterpret_cast<decltype(cxt.surface)::CType*>(&cxt.surface));
+		VK_CHECK(vkCreateWin32SurfaceKHR(instance, &create_info, reinterpret_cast<std::remove_reference_t<decltype(*alloc)>::NativeType*>(alloc), reinterpret_cast<decltype(surface)::CType*>(&surface)));
 	}
 }
 #endif // NOVA_ABYSS_VULKAN

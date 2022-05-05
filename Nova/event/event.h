@@ -28,7 +28,7 @@ namespace Nova::event {
 
 	struct Handle : eden::Event<Type> {
 		Handle(const Descriptor des) : Eden(des) {}
-		bool NOVAPI fire();
+		NOVAPI bool fire();
 	};
 	extern NOVAPI eden::Dispatcher<Handle, 12> dispatcher;
 

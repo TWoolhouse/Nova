@@ -55,12 +55,12 @@ namespace Nova::bark {
 		return submit(level, std::format(msg, args...));
 	}
 
-	#ifdef nova_assert
+#ifdef nova_assert
 	NOVAPI void assertion(bool condition, const std::string_view msg, const std::string_view file, const int line);
-	#endif // nova_assert
+#endif // nova_assert
 }
 
-#define nova_bark_fatal(message, ...) ::Nova::bark::report(::Nova::bark::Level::Fatal, message, ##__VA_ARGS__); __debugbreak()
+#define nova_bark_fatal(message, ...) ::Nova::bark::report(::Nova::bark::Level::Fatal, message, ##__VA_ARGS__); NOVA_BREAKPOINT()
 #define nova_bark_error(message, ...) ::Nova::bark::report(::Nova::bark::Level::Error, message, ##__VA_ARGS__)
 
 #if __N_OVA_BARK_STATE_WARN == 1

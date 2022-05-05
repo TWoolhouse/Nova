@@ -4,7 +4,13 @@
 
 namespace Nova::abyss::vkn {
 
-	void create_surface(Context& cxt);
-	void create_surface_platform(Context& cxt);
+	struct CommandPool {
+
+	};
+
+	struct CommandBuffer {
+
+	};
+
 
 }

@@ -3,7 +3,10 @@
 
 namespace Nova::abyss {
 
-	void NOVAPI Initialize(const std::string_view& name);
-	void NOVAPI Terminate();
+	NOVAPI void Initialize(const std::string_view& name);
+	NOVAPI void Terminate();
+
+	NOVAPI bool& acquire();
+	NOVAPI void  release();
 
 }

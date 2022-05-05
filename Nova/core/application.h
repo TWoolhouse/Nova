@@ -43,3 +43,5 @@ namespace Nova::core {
 	};
 
 }
+
+#define nova_app ::Nova::core::Application::I

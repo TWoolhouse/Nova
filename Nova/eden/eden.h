@@ -11,8 +11,6 @@ inline NODISCARD constexpr bool operator&(const E a, const E b) {
 
 namespace Nova::eden {
 
-	using Ticket = void* const;
-
 	template<typename D> requires std::is_enum_v<D>
 	struct Event {
 		using Eden = Event;
@@ -38,38 +36,45 @@ namespace Nova::eden {
 		using Descriptor = Event::Descriptor;
 		using DType = std::underlying_type_t<Descriptor>;
 		using FuncType = std::function<bool(Event&)>;
-		std::array<nvtl::BlockList<FuncType>, C> lists;
+		using Container = nvtl::BlockList<FuncType>;
+		std::array<Container, C> list;
 
-		constexpr bool bit_isset(const Descriptor bitset, const DType index) {
+		inline constexpr bool bit_isset(const Descriptor bitset, const DType index) {
 			return (static_cast<DType>(bitset) & (1 << index));
 		}
+
 	public:
 		Dispatcher() {}
 
+		struct Ticket {
+			friend Dispatcher;
+			Ticket() = default;
+			Ticket(Descriptor descriptor) : descriptor(descriptor), blocks() {}
+		protected:
+			Descriptor descriptor;
+			std::vector<void*> blocks;
+		};
+
 		template<typename F, typename T>
-		const Ticket subscribe(const Descriptor desciptor, F func, T& instance) {
+		Ticket subscribe(const Descriptor desciptor, F func, T& instance) {
 			return subscribe(desciptor, nova_eden_bind(func, instance));
 		};
 
 		template<typename ...Fs>
-		const Ticket subscribe(const Descriptor descriptor, const Fs&... functions) {
-			decltype(lists[0].emplace_back(functions...)) ptr = nullptr;
-			for (DType i = 0; i < lists.size(); ++i) {
+		Ticket subscribe(const Descriptor descriptor, const Fs&... functions) {
+			Ticket ticket{};
+			for (DType i = 0; i < list.size(); ++i) {
 				if (bit_isset(descriptor, i)) {
-					if (ptr) [[unlikely]] {
-						lists[i].emplace_back(ptr);
-					} else [[likely]] {
-						ptr = lists[i].emplace_back(functions...);
-					}
+					ticket.blocks.emplace_back(list[i].emplace_back(functions...));
 				}
 			}
-			return ptr;
+			return ticket;
 		}
 
 		bool fire(Event& event) {
-			for (DType i = 0; i < lists.size(); ++i) {
+			for (DType i = 0; i < list.size(); ++i) {
 				if (bit_isset(event.desc, i)) {
-					for (auto& func : lists[i]) {
+					for (auto& func : list[i]) {
 						if (func(event)) return true;
 					}
 				}
@@ -77,13 +82,23 @@ namespace Nova::eden {
 			return false;
 		}
 
-		// TODO: Removing events
-		//void remove(Ticket ticket) {
-		//	lists
-		//}
+		inline void remove(std::initializer_list<Ticket> tickets) {
+			for (auto& ticket : tickets) {
+				remove(ticket);
+			}
+		}
+
+		void remove(Ticket ticket) {
+			auto it = ticket.blocks.begin();
+			for (DType i = 0; i < list.size(); ++i) {
+				if (bit_isset(ticket.descriptor, i)) {
+					list[i].remove(*it++);
+				}
+			}
+		}
 
 		void clear() {
-			for (auto& list : lists) {
+			for (auto& list : list) {
 				list.clear();
 			}
 		}

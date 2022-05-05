@@ -7,19 +7,19 @@ namespace Nova::nvtl {
 
 	template<typename T>
 	class BlockList {
-	protected:
-		struct BlockHead {
-			BlockHead *previous, *next;
+	public:
+		struct Head {
+			Head *previous, *next;
 			size_t count;
-			BlockHead(BlockHead* previous, BlockHead* next, const size_t count) : previous(previous), next(next), count(count) {}
-			BlockHead(const BlockHead& other, BlockHead* previous=nullptr, BlockHead* next=nullptr)
+			Head(Head* previous, Head* next, const size_t count) : previous(previous), next(next), count(count) {}
+			Head(const Head& other, Head* previous=nullptr, Head* next=nullptr)
 				: previous(previous), next(next), count(other.count) {}
-			virtual ~BlockHead() = default;
+			virtual ~Head() = default;
 
 			struct block_iterator {
 				using iterator_type = block_iterator;
 				using difference_type = std::ptrdiff_t;
-				using value_type = BlockHead;
+				using value_type = Head;
 				using reference = value_type&;
 				using pointer = value_type*;
 
@@ -61,10 +61,10 @@ namespace Nova::nvtl {
 
 			struct reverse_block_iterator {
 				using iterator_type = reverse_block_iterator;
-				using difference_type = BlockHead::block_iterator::difference_type;
-				using value_type = BlockHead::block_iterator::value_type;
-				using reference = BlockHead::block_iterator::reference;
-				using pointer = BlockHead::block_iterator::pointer;
+				using difference_type = Head::block_iterator::difference_type;
+				using value_type = Head::block_iterator::value_type;
+				using reference = Head::block_iterator::reference;
+				using pointer = Head::block_iterator::pointer;
 
 				reverse_block_iterator() = default;
 				reverse_block_iterator(pointer block) : curr(block) {}
@@ -114,12 +114,12 @@ namespace Nova::nvtl {
 				using pointer = value_type*;
 
 				iterator() = default;
-				iterator(BlockHead* block) : block(block), first(static_cast<Block<1>*>(block)->buff.data()), last(first + (block ? (block->count ? block->count : 1) : 0)), curr(first) {}
-				iterator(BlockHead* block, const bool) : block(block), first(static_cast<Block<1>*>(block)->buff.data()), last(first + (block ? (block->count ? block->count : 1) : 0)), curr(last) {}
+				iterator(Head* block) : block(block), first(static_cast<Block<1>*>(block)->arr.data()), last(first + (block ? (block->count ? block->count : 1) : 0)), curr(first) {}
+				iterator(Head* block, const bool) : block(block), first(static_cast<Block<1>*>(block)->arr.data()), last(first + (block ? (block->count ? block->count : 1) : 0)), curr(last) {}
 
-				void set_block(BlockHead* next) {
+				void set_block(Head* next) {
 					block = next;
-					first = static_cast<Block<1>*>(block)->buff.data();
+					first = reinterpret_cast<Block<1>*>(block)->arr.data();
 					last = first + block->count;
 				}
 
@@ -165,7 +165,7 @@ namespace Nova::nvtl {
 				}
 
 			protected:
-				BlockHead* block;
+				Head* block;
 				pointer first, last, curr;
 			};
 
@@ -179,36 +179,36 @@ namespace Nova::nvtl {
 		};
 
 		template<size_t Count>
-		struct Block : public BlockHead {
-			Block(BlockHead* previous, BlockHead* next) : BlockHead(previous, next, Count) {}
-			Block(BlockHead* previous, BlockHead* next, std::array<T, Count>&& arr)
-				: BlockHead(previous, next, Count), buff(std::forward<decltype(arr)>(arr)) {}
+		struct Block : public Head {
+			Block(Head* previous, Head* next) : Head(previous, next, Count) {}
+			Block(Head* previous, Head* next, std::array<T, Count>&& arr)
+				: Head(previous, next, Count), arr(std::forward<decltype(arr)>(arr)) {}
 			template<typename ...Ts> requires (sizeof...(Ts) > 0) && meta::all_convertable<T, Ts...>
-			Block(BlockHead* previous, BlockHead* next, Ts&&... args)
-				: BlockHead(previous, next, Count), buff({std::move(args)...}) {}
-			Block(const Block& other, BlockHead* previous=nullptr, BlockHead* next=nullptr)
-				: BlockHead(previous, next, Count), buff(other.buff) {}
-			std::array<T, Count> buff;
+			Block(Head* previous, Head* next, Ts&&... args)
+				: Head(previous, next, Count), arr({std::move(args)...}) {}
+			Block(const Block& other, Head* previous=nullptr, Head* next=nullptr)
+				: Head(previous, next, Count), arr(other.arr) {}
+			std::array<T, Count> arr;
 		};
 
 	protected:
-		BlockHead *first, *last;
+		Head *head, *tail;
 	public:
-		BlockList() : first(nullptr), last(nullptr), blocks(*this) {};
+		BlockList() : head(nullptr), tail(nullptr), blocks(*this) {};
 		~BlockList() {
 			clear();
 		}
 
-		using iterator = BlockHead::iterator;
-		using const_iterator = BlockHead::const_iterator;
-		using reverse_iterator = BlockHead::reverse_iterator;
-		using const_reverse_iterator = BlockHead::const_reverse_iterator;
+		using iterator = Head::iterator;
+		using const_iterator = Head::const_iterator;
+		using reverse_iterator = Head::reverse_iterator;
+		using const_reverse_iterator = Head::const_reverse_iterator;
 
-		inline NODISCARD iterator begin() { return iterator(first); }
-		inline NODISCARD const_iterator cbegin() const { return const_iterator(first); }
+		inline NODISCARD iterator begin() { return iterator(head); }
+		inline NODISCARD const_iterator cbegin() const { return const_iterator(head); }
 		inline NODISCARD const_iterator begin() const { return cbegin(); }
-		inline NODISCARD iterator end() { return iterator(last, false); }
-		inline NODISCARD const_iterator cend() const { return const_iterator(last, false); }
+		inline NODISCARD iterator end() { return iterator(tail, false); }
+		inline NODISCARD const_iterator cend() const { return const_iterator(tail, false); }
 		inline NODISCARD const_iterator end() const { return cend(); }
 
 		inline NODISCARD reverse_iterator rbegin() { return reverse_iterator(end()); }
@@ -221,19 +221,19 @@ namespace Nova::nvtl {
 		struct blocks {
 			constexpr blocks(BlockList& parent) : parent(parent) {}
 
-			using iterator = BlockHead::block_iterator;
-			using const_iterator = BlockHead::const_block_iterator;
-			using reverse_iterator = BlockHead::reverse_block_iterator;
-			using const_reverse_iterator = BlockHead::const_reverse_block_iterator;
+			using iterator = Head::block_iterator;
+			using const_iterator = Head::const_block_iterator;
+			using reverse_iterator = Head::reverse_block_iterator;
+			using const_reverse_iterator = Head::const_reverse_block_iterator;
 
-			inline NODISCARD iterator begin() { return iterator(parent.first); }
-			inline NODISCARD const_iterator cbegin() const { return const_iterator(parent.first); }
+			inline NODISCARD iterator begin() { return iterator(parent.head); }
+			inline NODISCARD const_iterator cbegin() const { return const_iterator(parent.head); }
 			inline NODISCARD const_iterator begin() const { return cbegin(); }
 			inline NODISCARD iterator end() { return iterator(); }
 			inline NODISCARD const_iterator cend() const { return const_iterator(); }
 			inline NODISCARD const_iterator end() const { return cend(); }
 
-			inline NODISCARD reverse_iterator rbegin() { return reverse_iterator(parent.last); }
+			inline NODISCARD reverse_iterator rbegin() { return reverse_iterator(parent.tail); }
 			//inline NODISCARD const_reverse_iterator crbegin() const { return const_reverse_iterator(cend()); }
 			//inline NODISCARD const_reverse_iterator rbegin() const { return crbegin(); }
 			inline NODISCARD reverse_iterator rend() { return reverse_iterator(); }
@@ -244,41 +244,40 @@ namespace Nova::nvtl {
 			BlockList& parent;
 		} blocks;
 
-				template<size_t Size>
-		void push_back(std::array<T, Size>&& arr) {
-			if (!first) [[unlikely]] {
-				first = last = new Block<Size>(nullptr, nullptr, std::forward(arr));
-			} else [[likely]] {
-				last->next = new Block<Size>(last, nullptr, std::forward(arr));
-				last = last->next;
-			}
-		}
+		//template<size_t Size>
+		//void push_back(std::array<T, Size>&& arr) {
+		//	if (!head) [[unlikely]] {
+		//		head = tail = new Block<Size>(nullptr, nullptr, std::forward(arr));
+		//	} else [[likely]] {
+		//		tail->next = new Block<Size>(tail, nullptr, std::forward(arr));
+		//		tail = tail->next;
+		//	}
+		//}
 
 		template<typename ...Ts> requires (sizeof...(Ts) > 0) && meta::all_convertable<T, Ts...>
 		Block<sizeof...(Ts)>* emplace_back(Ts&&... elems) {
-			if (!first) [[unlikely]] {
-				first = last = new Block<sizeof...(Ts)>(nullptr, nullptr, std::forward<Ts>(elems)...);
+			if (!head) [[unlikely]] {
+				head = tail = new Block<sizeof...(Ts)>(nullptr, nullptr, std::forward<Ts>(elems)...);
 			} else [[likely]] {
-				last->next = new Block<sizeof...(Ts)>(last, nullptr, std::forward<Ts>(elems)...);
-				last = last->next;
+				tail->next = new Block<sizeof...(Ts)>(tail, nullptr, std::forward<Ts>(elems)...);
+				tail = tail->next;
 			}
-			return static_cast<Block<sizeof...(Ts)>*>(last);
+			return reinterpret_cast<Block<sizeof...(Ts)>*>(tail);
 		}
 
 		template<size_t Size>
 		Block<Size>* emplace_back(Block<Size>* block) {
-			using BlockS = Block<Size>;
-			if (!first) [[unlikely]] {
-				first = last = new BlockS(*block);
+			if (!head) [[unlikely]] {
+				head = tail = new Block<Size>(*block);
 			} else [[likely]] {
-				last->next = new BlockS(*block, last, nullptr);
-				last = last->next;
+				tail->next = new Block<Size>(*block, tail, nullptr);
+				tail = tail->next;
 			}
-			return static_cast<BlockS*>(last);
+			return reinterpret_cast<Block<Size>*>(tail);
 		}
 
 	protected:
-		void remove(BlockHead* ptr) {
+		void remove(Head* ptr) {
 			#ifdef NOVA_DEBUG
 			bool flag = false;
 			for (auto it = blocks.rbegin(), end = blocks.rend(); it != end; ++it) {
@@ -290,25 +289,26 @@ namespace Nova::nvtl {
 			nova_assert(flag, "Block Pointer is not Valid!");
 			#endif // NOVA_DEBUG
 
-			((ptr == first) ? first : ptr->previous->next) = ptr->next;
-			((ptr == last) ? last : ptr->next->previous) = ptr->previous;
+			((ptr == head) ? head : ptr->previous->next) = ptr->next;
+			((ptr == tail) ? tail : ptr->next->previous) = ptr->previous;
 			delete ptr;
 		}
 	public:
-		inline void remove(void* const ptr) { return remove(static_cast<BlockHead*>(ptr)); }
+		inline void remove(const_iterator iter) { return remove(iter.block); }
+		inline void remove(void* const ptr) { return remove(reinterpret_cast<Head*>(ptr)); }
 
 		NODISCARD bool empty() noexcept {
-			return first == nullptr;
+			return head == nullptr;
 		}
 
 		void clear() noexcept {
-			decltype(first) block = nullptr;
-			while (first) {
-				block = first->next;
-				delete first;
-				first = block;
+			decltype(head) block = nullptr;
+			while (head) {
+				block = head->next;
+				delete head;
+				head = block;
 			}
-			last = nullptr;
+			tail = nullptr;
 		}
 
 	};

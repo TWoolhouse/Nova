@@ -23,6 +23,7 @@ namespace Nova::abyss::vkn {
 	}
 
 	Device::~Device() {
+		nvk_traced("Device");
 		logical.destroy(cxt.alloc);
 	}
 
@@ -91,7 +92,7 @@ namespace Nova::abyss::vkn {
 		auto indices = std::views::transform(queues, [](const auto& q) { return q.index; });
 		const auto unique_queues = std::set<decltype(Q::index)>(indices.begin(), indices.end());
 
-		#if __N_OVA_BARK_STATE_INFO == 1
+		#if __N_OVA_BARK_STATE_INFO == 1 && defined(NOVA_DEBUG)
 		nova_bark_info("VK Queues:");
 		for (const auto& q : queues) {
 			nova_bark_info("\t{} {}x @ {}", q.name, q.count, q.index);
@@ -121,7 +122,7 @@ namespace Nova::abyss::vkn {
 
 	void Device::set_required_features() {
 		nova_bark_info("VK Required Device Features:");
-		SET_FEATURE(samplerAnisotropy, true);
+		SET_FEATURE(samplerAnisotropy);
 	}
 	#undef SET_FEATURE_V
 	#undef SET_FEATURE

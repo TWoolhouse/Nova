@@ -21,7 +21,7 @@ namespace Nova::blip {
 			delta = now - prev;
 		}
 
-		inline NODISCARD constexpr operator Unit() const noexcept{ return delta; }
+		inline NODISCARD constexpr operator Unit() const noexcept { return delta; }
 		inline NODISCARD constexpr operator double() const noexcept { return delta.count(); }
 	};
 

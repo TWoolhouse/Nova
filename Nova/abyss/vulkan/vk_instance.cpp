@@ -1,6 +1,6 @@
 #include "npch.h"
 #ifdef NOVA_ABYSS_VULKAN
-#include "instance.h"
+#include "context.h"
 #include "debug.h"
 
 constexpr auto engine_name = "Nova"sv;
@@ -29,7 +29,7 @@ namespace Nova::abyss::vkn {
 		#endif // OS Extensions
 	}
 
-	void create_instance(Context& cxt, const std::string_view& name) {
+	void Context::create_instance(const std::string_view& name) {
 		nvk_tracec("Instance");
 
 		vk::ApplicationInfo app_info{
@@ -48,7 +48,7 @@ namespace Nova::abyss::vkn {
 		platform_extensions(extensions);
 
 		// Debug Extensions & Layers
-		#ifdef NOVA_DEBUG
+		#if NOVA_ABYSS_DEBUG == 1
 		{
 			// Extensions
 			extensions.emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
@@ -56,7 +56,7 @@ namespace Nova::abyss::vkn {
 			// Layers
 			layers.emplace_back("VK_LAYER_KHRONOS_validation");
 		}
-		#endif // NOVA_DEBUG
+		#endif // NOVA_ABYSS_DEBUG
 
 		vk::InstanceCreateInfo create_info{ {}, &app_info, layers, extensions };
 
@@ -75,28 +75,27 @@ namespace Nova::abyss::vkn {
 		#endif // __N_OVA_BARK_STATE_INFO
 
 		// Set pNext for debug handler
-		#ifdef NOVA_DEBUG
+		#if NOVA_ABYSS_DEBUG == 1
 		auto info = debug_info();
 		create_info.pNext = &info;
-		#endif // NOVA_DEBUG
+		#endif // NOVA_ABYSS_DEBUG
 
-		cxt.instance = vk::createInstance(create_info, cxt.alloc);
-		nova_assert(cxt.instance, "Failed to Create VK Instance");
+		instance = vk::createInstance(create_info, alloc);
+		nova_assert(instance, "Failed to Create VK Instance");
 
-		#ifdef NOVA_DEBUG
-		create_debugger(cxt);
-		#endif // NOVA_DEBUG
-
+		#if NOVA_ABYSS_DEBUG == 1
+		create_debugger(*this);
+		#endif // NOVA_ABYSS_DEBUG
 	}
 
-	void destroy_instance(const Context& cxt) {
+	void Context::destroy_instance() {
 		nvk_traced("Instance");
 
-		#ifdef NOVA_DEBUG
-		destroy_debugger(cxt);
-		#endif // NOVA_DEBUG
+		#if NOVA_ABYSS_DEBUG == 1
+		destroy_debugger(*this);
+		#endif // NOVA_ABYSS_DEBUG
 
-		cxt.instance.destroy();
+		instance.destroy();
 	}
 
 }

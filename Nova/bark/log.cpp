@@ -4,10 +4,6 @@
 #include "colours.h"
 #include <iostream>
 
-#ifdef nova_assert
-#include <intrin.h>
-#endif // nova_assert
-
 namespace Nova::bark {
 
 	void Initialize() {
@@ -35,12 +31,12 @@ namespace Nova::bark {
 			"[" << lvl.first << "] " << msg << std::endl; // Message
 	}
 
-	#ifdef nova_assert
+#ifdef nova_assert
 	void assertion(bool condition, const std::string_view msg, const std::string_view file, const int line) {
-		if (condition) [[likely]] ; else {
+		if (condition) [[likely]]; else {
 			nova_bark_fatal("{}@{}\nAssertion: {}", file, line, msg);
 		}
 	}
-	#endif // nova_assert
+#endif // nova_assert
 
 }

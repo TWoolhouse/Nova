@@ -5,6 +5,8 @@
 #include "event/window.h"
 #include "abyss/abyss.h"
 
+void t();
+
 namespace Nova::core {
 
 	typename decltype(Application::I) Application::I = nullptr;
@@ -20,18 +22,21 @@ namespace Nova::core {
 		platform::Initialize(name, window.width, window.height);
 
 		// Events
-		event::dispatcher.subscribe(event::Type::WindowClose, [this](event::Handle&)->bool { this->terminate(); return false; });
-		event::dispatcher.subscribe(event::Type::WindowResizeScreen, [this](event::Handle& event)->bool {
-			const auto e = event.cast<event::WindowResizeScreen>();
-			this->window.width = e->width;
-			this->window.height = e->height;
-			return false;
-		});
+		auto event_ticket = {
+			event::dispatcher.subscribe(event::Type::WindowClose, [this](event::Handle&)->bool { this->terminate(); return false; }),
+			event::dispatcher.subscribe(event::Type::WindowResizeScreen, [this](event::Handle& event)->bool {
+				const auto e = event.cast<event::WindowResizeScreen>();
+				this->window.width = e->width;
+				this->window.height = e->height;
+				return false;
+			}),
+		};
 
 		abyss::Initialize(name);
 
 		clock.update();
 		nova_bark_init("[Application] Done!");
+		t();
 	}
 
 	Application::~Application() {
@@ -49,8 +54,12 @@ namespace Nova::core {
 		try {
 			while (running) {
 				clock.update();
-				render();
 				platform::process_events();
+
+				abyss::acquire();
+				render();
+				abyss::release();
+				
 				std::this_thread::yield();
 			}
 		} catch (const std::exception& exc) {
