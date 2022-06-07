@@ -56,9 +56,9 @@ namespace Nova::abyss::vkn {
 }
 
 template<class CharT>
-struct std::formatter<vk::Result, CharT> : std::formatter<std::underlying_type_t<vk::Result>, CharT> {
+struct std::formatter<vk::Result, CharT> : public std::formatter<cstr, CharT> {
 	template<class FormatContext>
 	auto format(vk::Result _enum, FormatContext& fc) {
-		return std::format_to(fc.out(), Nova::abyss::vkn::result_string(_enum));
+		return formatter<cstr, CharT>::format(Nova::abyss::vkn::result_string(_enum), fc);
 	}
 };

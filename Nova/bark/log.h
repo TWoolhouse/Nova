@@ -52,7 +52,7 @@ namespace Nova::bark {
 
 	template<typename ...Args>
 	void report(const Level level, const std::string_view msg, Args&&... args) {
-		return submit(level, std::format(msg, args...));
+		return submit(level, std::vformat(msg, std::make_format_args(args...)));
 	}
 
 #ifdef nova_assert
@@ -60,7 +60,7 @@ namespace Nova::bark {
 #endif // nova_assert
 }
 
-#define nova_bark_fatal(message, ...) ::Nova::bark::report(::Nova::bark::Level::Fatal, message, ##__VA_ARGS__); NOVA_BREAKPOINT()
+#define nova_bark_fatal(message, ...) { ::Nova::bark::report(::Nova::bark::Level::Fatal, message, ##__VA_ARGS__); NOVA_BREAKPOINT(); }
 #define nova_bark_error(message, ...) ::Nova::bark::report(::Nova::bark::Level::Error, message, ##__VA_ARGS__)
 
 #if __N_OVA_BARK_STATE_WARN == 1
