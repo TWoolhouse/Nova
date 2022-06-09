@@ -1,27 +1,23 @@
 project "Flask"
-	location "./"
 	targetname "flask"
 	filter "configurations:Debug"
-		kind "ConsoleApp"
+	kind "ConsoleApp"
 	filter "configurations:Release"
-		kind "WindowedApp"
+	kind "WindowedApp"
 	filter {}
-	language "C++"
-	cppdialect "C++20"
-	targetdir "../bin/%{cfg.buildcfg}"
-	objdir "../build/%{cfg.buildcfg}/%{prj.name}"
+
+	location "./"
+	includedirs { "./" }
+	files { "**.h", "**.cpp", "**.ixx" }
 
 	staticruntime "Off" --MultiThreadedDLL
-
-	files { "**.h", "**.cpp" }
-	includedirs { "./" }
 
 	-- pchheader "fpch.h"
 	-- pchsource "core/pch.cpp"
 
 	-- defines { }
-	dofile "../premake/nova.lua"
 	dofile "../premake/config.lua"
+	dofile "../premake/nova.lua"
 
 project "*"
 startproject "Flask"

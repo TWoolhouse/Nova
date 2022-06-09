@@ -1,31 +1,42 @@
 project "Nova"
-	location "./"
-	language "C++"
-	cppdialect "C++20"
 	targetname "nova"
 	kind "SharedLib"
-	targetdir "../bin/%{cfg.buildcfg}"
-	objdir "../build/%{cfg.buildcfg}/%{prj.name}"
+	location "./"
+	includedirs { "./" }
+	files { "**.h", "**.cpp", "**.ixx" }
 
 	staticruntime "Off" --MultiThreadedDLL
-
-	files { "**.h", "**.cpp" }
-	includedirs { "./" }
 
 	pchheader "npch.h"
 	pchsource "meta/pch.cpp"
 
-	-- NOVA Building
+	-- Nova Building
 	defines { "NOVA_EXPORT" }
 
-	-- Vulkan
-	local vk_sdk = os.getenv("VULKAN_SDK")
-	includedirs { vk_sdk .. "/Include" }
-	links { "vulkan-1.lib" }
-	libdirs { vk_sdk .. "/Lib" }
-	defines { "NOVA_ABYSS_VULKAN" }
+	-- Nova Abyss Graphics API
 
-	-- Config
+	-- Vulkan
+	filter "platforms:Vulkan"
+		defines { "NOVA_ABYSS_VULKAN" }
+		local vk_sdk = os.getenv("VULKAN_SDK")
+		includedirs { vk_sdk .. "/Include" }
+		links { "vulkan-1.lib" }
+		libdirs { vk_sdk .. "/Lib" }
+
+	-- OpenGL
+	filter "platforms:OpenGL"
+		defines { "NOVA_ABYSS_OPENGL" }
+		includedirs { "../vendor/glad/include/" }
+		includedirs { "../vendor/glfw/include/" }
+		includedirs { "../vendor/glad/src/" }
+		links { "glfw3.lib" }
+		filter "system:Windows"
+			links { "opengl32.lib" }
+		filter "system:Linux"
+			links { "libGL.so" }
+		filter {}
+
+	filter {}
 
 	dofile "../premake/nova_self.lua"
 	dofile "../premake/config.lua"

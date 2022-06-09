@@ -5,10 +5,21 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Launch Flask (Debug)",
+			"name": "Flask-Vulkan",
 			"type": "cppvsdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/bin/Debug/flask.exe",
+			"program": "${workspaceFolder}/bin/Debug/Vulkan/flask.exe",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}/Flask/",
+			"environment": [],
+			"console": "integratedTerminal"
+		},
+		{
+			"name": "Flask-OpenGL",
+			"type": "cppvsdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/bin/Debug/OpenGL/flask.exe",
 			"args": [],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}/Flask/",
