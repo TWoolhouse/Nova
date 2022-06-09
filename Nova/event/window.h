@@ -23,7 +23,8 @@ namespace Nova::event {
 	class WindowMove : public Handle {
 	public:
 		static constexpr auto descriptor = Descriptor::WindowMove;
-		WindowMove() : Handle(descriptor) {}
+		WindowMove(const unsigned int x, const unsigned int y) : Handle(descriptor), x(x), y(y) {}
+		const unsigned int x, y;
 	};
 
 	class WindowResize : public Handle {

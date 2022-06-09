@@ -37,7 +37,7 @@ namespace Nova::event {
 	class MouseScroll : public Handle {
 	public:
 		static constexpr auto descriptor = Descriptor::MouseScroll;
-		MouseScroll(const int8_t z) : Handle(descriptor), dir(z) {}
+		MouseScroll(const int8_t y) : Handle(descriptor), dir(y) {}
 		const int8_t dir;
 	};
 
