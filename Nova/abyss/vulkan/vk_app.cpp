@@ -15,7 +15,7 @@ namespace Nova::abyss::vkn {
 
 	Application::Application(const std::string_view& name)
 		: cxt(name), device(cxt),
-		swapchain(cxt, device, nova_app->window.width, nova_app->window.height),
+		swapchain(cxt, device, nova_app->window.width(), nova_app->window.height()),
 		renderpass(device, swapchain) {
 		nova_assert(!I, "Creating Multiple Vulkan Applications!");
 		I = this;
@@ -99,7 +99,7 @@ namespace Nova::abyss::vkn {
 			nvk(device).destroyPipeline(pipeline, nvk(alloc));
 			nvk(device).destroyPipelineLayout(layout, nvk(alloc));
 		}
-		I = nullptr; // In vk_abyss.cpp
+		// I = nullptr; // In vk_abyss.cpp
 	}
 
 	bool& Application::acquire() {
@@ -163,7 +163,7 @@ namespace Nova::abyss::vkn {
 	}
 
 	void Application::recreate_swapchain() {
-		swapchain = Swapchain(swapchain, nova_app->window.width, nova_app->window.height);
+		swapchain = Swapchain(swapchain, nova_app->window.width(), nova_app->window.height());
 	}
 
 }

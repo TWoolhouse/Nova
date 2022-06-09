@@ -20,7 +20,7 @@ namespace Nova::abyss::vkn {
 		vk::PresentModeKHR present_mode;
 
 		uint32_t acquire_next_image(const uint64_t timeout, vk::Semaphore& Semaphore);
-		
+
 		~Swapchain();
 	protected:
 		Swapchain(Context& cxt, Device& device, const unsigned int width, const unsigned int height);
@@ -31,6 +31,7 @@ namespace Nova::abyss::vkn {
 		constexpr void choose_present_mode();
 		constexpr void choose_extent();
 		constexpr vk::CompositeAlphaFlagBitsKHR choose_alpha();
+		vk::Format depth_format();
 
 		vk::SwapchainCreateInfoKHR generate_info() noexcept;
 		void init(const vk::SwapchainCreateInfoKHR& info);

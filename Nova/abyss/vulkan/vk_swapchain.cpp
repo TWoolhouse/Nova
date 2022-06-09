@@ -42,14 +42,14 @@ namespace Nova::abyss::vkn {
 
 		unsigned int image_count = mlb::clamp(IMAGES, device.capabilities.minImageCount, device.capabilities.maxImageCount ? device.capabilities.maxImageCount : IMAGES);
 		nova_bark_info("Swapchain Images: {} <= {} <= {}", device.capabilities.minImageCount, image_count, device.capabilities.maxImageCount);
-		
+
 		std::vector<unsigned int> qfamily_indices;
 		if (device.queue.graphics.index != device.queue.present.index) {
 			qfamily_indices.reserve(2);
 			qfamily_indices.push_back(device.queue.graphics.index);
 			qfamily_indices.push_back(device.queue.present.index);
 		}
-		
+
 		return {
 			{},
 			cxt.surface,
@@ -82,10 +82,13 @@ namespace Nova::abyss::vkn {
 				format.format,
 				{},
 				{ vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1 }
-			}, cxt.alloc));
+				}, cxt.alloc));
 		}
 
-		// TODO: Depth Texture
+		// const auto depth_format = this->depth_format();
+		// if (depth_format == vk::Format::eUndefined) {
+		// 	nova_bark_fatal("No Depth format!");
+		// }
 
 	}
 
@@ -103,13 +106,13 @@ namespace Nova::abyss::vkn {
 	uint32_t Swapchain::acquire_next_image(const uint64_t timeout, vk::Semaphore& semaphore) {
 		const auto index = device.logical.acquireNextImageKHR(swapchain, timeout, semaphore);
 		switch (index.result) {
-		case vk::Result::eSuboptimalKHR:
-			break;
-		case vk::Result::eErrorOutOfDateKHR:
-			break;
-		default:
-			nova_assert(index.result == vk::Result::eSuccess, "[VK] Failed to acquire swapchain image");
-			return index.value;
+			case vk::Result::eSuboptimalKHR:
+				break;
+			case vk::Result::eErrorOutOfDateKHR:
+				break;
+			default:
+				nova_assert(index.result == vk::Result::eSuccess, "[VK] Failed to acquire swapchain image");
+				return index.value;
 		}
 		nova_bark_debug("Swapchain State: {}", index.result);
 
@@ -117,8 +120,7 @@ namespace Nova::abyss::vkn {
 	}
 
 	void Swapchain::choose_format() {
-		if (const auto fmt = std::ranges::find_if(device.formats, [](const auto& fmt)
-			{ return fmt.format == vk::Format::eB8G8R8A8Srgb && fmt.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear; }
+		if (const auto fmt = std::ranges::find_if(device.formats, [](const auto& fmt) { return fmt.format == vk::Format::eB8G8R8A8Srgb && fmt.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear; }
 		); fmt != device.formats.cend()) {
 			format = *fmt;
 			return;
@@ -132,12 +134,13 @@ namespace Nova::abyss::vkn {
 			present_mode = vk::PresentModeKHR::eMailbox;
 			nova_bark_info("Present Mode: Mailbox");
 			return;
-		} else if (std::ranges::find(device.present_modes, vk::PresentModeKHR::eFifoRelaxed) != device.present_modes.cend()) {
+		}
+		else if (std::ranges::find(device.present_modes, vk::PresentModeKHR::eFifoRelaxed) != device.present_modes.cend()) {
 			present_mode = vk::PresentModeKHR::eFifoRelaxed;
 			nova_bark_info("Present Mode: FifoRelaxed");
 			return;
 		}
-		
+
 		present_mode = vk::PresentModeKHR::eFifo;
 		nova_bark_info("Present Mode: Fifo");
 
@@ -160,6 +163,23 @@ namespace Nova::abyss::vkn {
 			}
 		}
 		return vk::CompositeAlphaFlagBitsKHR::eOpaque;
+	}
+
+	vk::Format Swapchain::depth_format() {
+		constexpr std::array candidates{
+			vk::Format::eD32Sfloat,
+			vk::Format::eD32SfloatS8Uint,
+			vk::Format::eD24UnormS8Uint,
+		};
+		constexpr auto flags = vk::FormatFeatureFlagBits::eDepthStencilAttachment;
+		for (const auto& candidate : candidates) {
+			const auto properties = device.physical.getFormatProperties(candidate);
+			if ((properties.linearTilingFeatures & flags) == flags)
+				return candidate;
+			else if ((properties.optimalTilingFeatures & flags) == flags)
+				return candidate;
+		}
+		return vk::Format::eUndefined;
 	}
 
 }
