@@ -1,6 +1,7 @@
 #pragma once
 #include "meta/head.h"
 #include "blip/blip.h"
+#include "window.h"
 
 #ifdef NOVA_DEBUG
 #define NOVA_MAIN main
@@ -32,9 +33,6 @@ namespace Nova::core {
 
 	protected:
 		bool running = false;
-		struct Window {
-			unsigned int width, height;
-		};
 	public:
 		// Application Instance
 		static Application* I;

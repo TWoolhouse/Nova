@@ -1,5 +1,6 @@
 #pragma once
 #include "meta/head.h"
+#include "core/window.h"
 
 namespace Nova {
 
@@ -7,11 +8,9 @@ namespace Nova {
 		class Application;
 	}
 
-	class platform {
-		friend core::Application;
-	protected:
-		static void Initialize(const std::string_view& name, const unsigned int width, const unsigned int height);
-		static void Termintate();
-		static void process_events();
-	};
+	namespace platform {
+		void Initialize(const std::string_view& name, const core::Window& window);
+		void Termintate();
+		void process_events();
+	}
 }
