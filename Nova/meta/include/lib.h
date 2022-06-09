@@ -10,6 +10,7 @@
 #include <set>
 #include <bitset>
 
+#include <memory>
 #include <exception>
 #include <functional>
 

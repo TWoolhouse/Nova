@@ -21,6 +21,7 @@ API: NOVA, GLM
 #error NOVA_MLB_NOVA is not currently supported!
 #elif defined(NOVA_MLB_GLM)
 // Supported!
+// #error NOVA_MLB_GLM is not currently supported!
 #endif // NOVA_MLB_API
 
 //----------------------------------------------------------------\\
@@ -46,6 +47,7 @@ API: VULKAN, OPENGL, DIRECTX
 
 #if defined(NOVA_ABYSS_VULKAN)
 // Supported!
+// #error NOVA_ABYSS_VULKAN is not currently supported!
 #elif defined(NOVA_ABYSS_OPENGL)
 #error NOVA_ABYSS_OPENGL is not currently supported!
 #elif defined(NOVA_ABYSS_DIRECTX)
@@ -54,14 +56,14 @@ API: VULKAN, OPENGL, DIRECTX
 #endif // NOVA_EXPORT
 
 //---------------------------------------------------------------\\
-//-------------------------NOVA_PLATFORM-------------------------\\
+//----------------------------NOVA_OS----------------------------\\
 //---------------------------------------------------------------\\
 
 // NOVA_OS_<API>
 
-#ifdef NOVA_EXPORT
 #if defined(NOVA_OS_WINDOWS)
 // Supported!
+// #error NOVA_OS_WINDOWS is not currently supported!
 #elif defined(NOVA_OS_LINUX)
 #error NOVA_OS_LINUX is not currently supported!
 #elif defined(NOVA_OS_UNIX)
@@ -69,4 +71,28 @@ API: VULKAN, OPENGL, DIRECTX
 #elif defined(NOVA_OS_APPLE)
 #error NOVA_OS_APPLE is not currently supported!
 #endif // NOVA_OS_PLATFORM
-#endif // NOVA_EXPORT
+
+//---------------------------------------------------------------\\
+//-------------------------NOVA_WINDOW-------------------------\\
+//---------------------------------------------------------------\\
+
+// NOVA_WINDOW_<API>
+
+#if !(defined(NOVA_WINDOW_NATIVE) || defined(NOVA_WINDOW_GLFW))
+#error No Nova Window API Selected! NOVA_WINDOW_<API> \
+API: NATIVE, GLFW
+#elif defined(NOVA_WINDOW_NATIVE) && defined(NOVA_WINDOW_GLFW)
+#error Multiple Nova Window APIs Selected!
+#endif // NOVA_WINDOW_API
+
+#if defined(NOVA_WINDOW_NATIVE)
+// Supported!
+// #error NOVA_WINDOW_NATIVE is not currently supported!
+#if defined(NOVA_OS_WINDOWS)
+// Supported!
+#else
+#error NOVA_WINDOW_NATIVE is not currently supported on the OS!
+#endif // NOVA_OS
+#elif defined(NOVA_WINDOW_GLFW)
+#error NOVA_WINDOW_GLFW is not currently supported!
+#endif // NOVA_MLB_API
