@@ -60,6 +60,8 @@ namespace Nova::bark {
 #endif // nova_assert
 }
 
+#define nova_bark_format(message, ...) std::vformat(message, std::make_format_args(##__VA_ARGS__))
+
 #define nova_bark_fatal(message, ...) { ::Nova::bark::report(::Nova::bark::Level::Fatal, message, ##__VA_ARGS__); NOVA_BREAKPOINT(); }
 #define nova_bark_error(message, ...) ::Nova::bark::report(::Nova::bark::Level::Error, message, ##__VA_ARGS__)
 

@@ -171,8 +171,8 @@ namespace Nova::platform {
 
 	bool check(const bool check, const std::string_view& message) {
 		if (!check) {
-			nova_bark_fatal("{} Error: {} {}", message, GetLastError(), get_error());
-			MessageBoxA(hwnd, message.data(), "Error", MB_ICONERROR | MB_OK);
+			MessageBoxA(hwnd, nova_bark_format("{} : {} {}"sv, message, GetLastError(), get_error()).c_str(), "Error", MB_ICONERROR | MB_OK);
+			nova_bark_fatal("{} : {} {}", message, GetLastError(), get_error());
 			throw std::runtime_error(message.data());
 		}
 		return check;
@@ -181,12 +181,12 @@ namespace Nova::platform {
 	void Initialize(const std::string_view& name, const core::Window& window) {
 		// CONSOLE SETUP
 		HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-		if (hOut != INVALID_HANDLE_VALUE) {
+		if (hOut && hOut != INVALID_HANDLE_VALUE) {
 			DWORD dwMode = 0;
-			check(GetConsoleMode(hOut, &dwMode), "Windows");
+			check(GetConsoleMode(hOut, &dwMode), "Console Handle");
 
 			dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-			check(SetConsoleMode(hOut, dwMode), "Windows");
+			check(SetConsoleMode(hOut, dwMode), "Console Handle");
 		}
 
 		nova_bark_init("[Platform] <Windows> ...");
