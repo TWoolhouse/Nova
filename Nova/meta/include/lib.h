@@ -21,5 +21,6 @@
 
 #include <iosfwd>
 #include <fstream>
+#include <filesystem>
 
 #include <thread>

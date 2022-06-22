@@ -1,4 +1,5 @@
 #version 450
+#pragma vertex
 
 layout(location = 0) out vec3 fragColor;
 

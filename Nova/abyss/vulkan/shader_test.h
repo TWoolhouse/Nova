@@ -2,6 +2,8 @@
 #include "vk.h"
 #include "app.h"
 #include "renderpass.h"
+#include "abyss/spirv/spirv_compile.h"
+#include "shader.h"
 
 namespace Nova::abyss::vkn {
 
@@ -25,19 +27,19 @@ namespace Nova::abyss::vkn {
 
 	std::pair<vk::PipelineLayout, vk::Pipeline> create_pipeline(RenderPass& renderpass) {
 		nvk_tracec("Pipeline");
-		auto vert_code = read_shader("shader/start/first/spv/vert");
-		auto frag_code = read_shader("shader/start/first/spv/frag");
+		/*auto vert_code = spirv::file("start/first/.vert", Shader::Type::Vertex);
+		auto frag_code = spirv::file("start/first/.frag", Shader::Type::Fragment);
 
 		auto vert = nvk(device).createShaderModule({
 			{},
-			vert_code.size(),
-			reinterpret_cast<uint32_t*>(vert_code.data())
+			vert_code.size() * sizeof(spirv::Binary::value_type),
+			vert_code.data(),
 			}, nvk(alloc));
 
 		auto frag = nvk(device).createShaderModule({
 			{},
-			frag_code.size(),
-			reinterpret_cast<uint32_t*>(frag_code.data())
+			frag_code.size() * sizeof(spirv::Binary::value_type),
+			frag_code.data(),
 			}, nvk(alloc));
 
 		vk::PipelineShaderStageCreateInfo vert_info{
@@ -52,97 +54,117 @@ namespace Nova::abyss::vkn {
 			vk::ShaderStageFlagBits::eFragment,
 			frag,
 			"main"
+		};*/
+
+		Shader vert{ Shader::Type::Vertex, "start/first/.vert"sv };
+		Shader frag{ Shader::Type::Fragment, "start/first/.frag"sv };
+
+		const std::array<vk::PipelineShaderStageCreateInfo, 2> shader_create_info{
+			vert,
+			frag
 		};
 
-		const std::array<VkPipelineShaderStageCreateInfo, 2> shader_create_info{ vert_info, frag_info };
+		vk::PipelineVertexInputStateCreateInfo vertex_input_info{
+			{},
+			{},
+			{}
+		};
 
-		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
-		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-		vertexInputInfo.vertexBindingDescriptionCount = 0;
-		vertexInputInfo.vertexAttributeDescriptionCount = 0;
+		vk::PipelineInputAssemblyStateCreateInfo input_assembly{
+			{},
+			vk::PrimitiveTopology::eTriangleList,
+			VK_FALSE
+		};
 
-		VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
-		inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-		inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-		inputAssembly.primitiveRestartEnable = VK_FALSE;
+		vk::Viewport viewport{
+			0.0f,
+			0.0f,
+			static_cast<float>(App->swapchain.extent.width),
+			static_cast<float>(App->swapchain.extent.height),
+			0.0f,
+			1.0f,
+		};
 
-		VkViewport viewport{};
-		viewport.x = 0.0f;
-		viewport.y = 0.0f;
-		viewport.width = (float)App->swapchain.extent.width;
-		viewport.height = (float)App->swapchain.extent.height;
-		viewport.minDepth = 0.0f;
-		viewport.maxDepth = 1.0f;
+		vk::Rect2D scissor{
+			{ 0, 0 },
+			App->swapchain.extent
+		};
 
-		VkRect2D scissor{};
-		scissor.offset = { 0, 0 };
-		scissor.extent = App->swapchain.extent;
+		const std::array viewports{ viewport };
+		const std::array scissors{ scissor };
 
-		VkPipelineViewportStateCreateInfo viewportState{};
-		viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-		viewportState.viewportCount = 1;
-		viewportState.pViewports = &viewport;
-		viewportState.scissorCount = 1;
-		viewportState.pScissors = &scissor;
+		vk::PipelineViewportStateCreateInfo viewport_state_info{
+		{},
+			viewports,
+			scissors
+		};
 
-		VkPipelineRasterizationStateCreateInfo rasterizer{};
-		rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-		rasterizer.depthClampEnable = VK_FALSE;
-		rasterizer.rasterizerDiscardEnable = VK_FALSE;
-		rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
-		rasterizer.lineWidth = 1.0f;
-		rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-		rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
-		rasterizer.depthBiasEnable = VK_FALSE;
+		vk::PipelineRasterizationStateCreateInfo rasterizer{
+			{},
+			VK_FALSE,
+			VK_FALSE,
+			vk::PolygonMode::eFill,
+			vk::CullModeFlagBits::eBack,
+			vk::FrontFace::eClockwise,
+			VK_FALSE,
+			{}, {}, {},
+			1.0f
+		};
 
-		VkPipelineMultisampleStateCreateInfo multisampling{};
-		multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-		multisampling.sampleShadingEnable = VK_FALSE;
-		multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+		vk::PipelineMultisampleStateCreateInfo multisampling{
+			{},
+			vk::SampleCountFlagBits::e1,
+			VK_FALSE
+		};
 
-		VkPipelineColorBlendAttachmentState colorBlendAttachment{};
-		colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-		colorBlendAttachment.blendEnable = VK_FALSE;
+		vk::PipelineColorBlendAttachmentState colour_blend_attachment{
+			VK_FALSE,
+			{}, {}, {}, {}, {}, {},
+			vk::ColorComponentFlagBits::eR
+				| vk::ColorComponentFlagBits::eG
+				| vk::ColorComponentFlagBits::eB
+				| vk::ColorComponentFlagBits::eA
+		};
 
-		VkPipelineColorBlendStateCreateInfo colorBlending{};
-		colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-		colorBlending.logicOpEnable = VK_FALSE;
-		colorBlending.logicOp = VK_LOGIC_OP_COPY;
-		colorBlending.attachmentCount = 1;
-		colorBlending.pAttachments = &colorBlendAttachment;
-		colorBlending.blendConstants[0] = 0.0f;
-		colorBlending.blendConstants[1] = 0.0f;
-		colorBlending.blendConstants[2] = 0.0f;
-		colorBlending.blendConstants[3] = 0.0f;
+		const std::array attachments{ colour_blend_attachment };
 
-		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
-		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayoutInfo.setLayoutCount = 0;
-		pipelineLayoutInfo.pushConstantRangeCount = 0;
+		vk::PipelineColorBlendStateCreateInfo colour_blending{
+			{},
+			VK_FALSE,
+			vk::LogicOp::eCopy,
+			attachments,
+			{ 0.0f, 0.0f, 0.0f, 0.0f }
+		};
 
-		auto layout = nvk(device).createPipelineLayout(pipelineLayoutInfo, nvk(alloc));
+		const std::array<vk::DescriptorSetLayout, 0> descriptors;
+		const std::array<vk::PushConstantRange, 0> push_constants;
 
-		VkGraphicsPipelineCreateInfo pipelineInfo{};
-		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-		pipelineInfo.stageCount = 2;
-		pipelineInfo.pStages = shader_create_info.data();
-		pipelineInfo.pVertexInputState = &vertexInputInfo;
-		pipelineInfo.pInputAssemblyState = &inputAssembly;
-		pipelineInfo.pViewportState = &viewportState;
-		pipelineInfo.pRasterizationState = &rasterizer;
-		pipelineInfo.pMultisampleState = &multisampling;
-		pipelineInfo.pColorBlendState = &colorBlending;
-		pipelineInfo.layout = layout;
-		pipelineInfo.renderPass = renderpass.pass;
-		pipelineInfo.subpass = 0;
-		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+		vk::PipelineLayoutCreateInfo pipeline_layout_info{
+			{},
+			descriptors,
+			push_constants
+		};
 
-		vk::GraphicsPipelineCreateInfo create_info(pipelineInfo);
+		auto layout = nvk(device).createPipelineLayout(pipeline_layout_info, nvk(alloc));
 
-		auto pipeline = nvk(device).createGraphicsPipeline({}, create_info, nvk(alloc));
+		vk::GraphicsPipelineCreateInfo pipeline_info{
+			{},
+			shader_create_info,
+			&vertex_input_info,
+			&input_assembly,
+			{},
+			&viewport_state_info,
+			&rasterizer,
+			&multisampling,
+			{},
+			&colour_blending,
+			{},
+			layout,
+			renderpass.pass,
+			0
+		};
 
-		nvk(device).destroyShaderModule(vert, nvk(alloc));
-		nvk(device).destroyShaderModule(frag, nvk(alloc));
+		auto pipeline = nvk(device).createGraphicsPipeline({}, { pipeline_info }, nvk(alloc));
 
 		return { layout, pipeline };
 

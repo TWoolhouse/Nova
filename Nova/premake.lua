@@ -13,15 +13,24 @@ project "Nova"
 	-- Nova Building
 	defines { "NOVA_EXPORT" }
 
+	local vk_sdk = os.getenv("VULKAN_SDK")
+	-- Spir-V
+	includedirs { vk_sdk .. "/Include" }
+	libdirs { vk_sdk .. "/Lib" }
+	filter "configurations:Release"
+		links { "shaderc_combined.lib" }
+	filter "configurations:Debug"
+		links { "shaderc_combinedd.lib" }
+	filter {}
+
 	-- Nova Abyss Graphics API
 
 	-- Vulkan
 	filter "platforms:Vulkan"
 		defines { "NOVA_ABYSS_VULKAN" }
-		local vk_sdk = os.getenv("VULKAN_SDK")
 		includedirs { vk_sdk .. "/Include" }
-		links { "vulkan-1.lib" }
 		libdirs { vk_sdk .. "/Lib" }
+		links { "vulkan-1.lib" }
 
 	-- OpenGL
 	filter "platforms:OpenGL"
