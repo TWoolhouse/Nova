@@ -52,7 +52,7 @@ namespace Nova::abyss::vkn {
 #endif // __N_OVA_BARK_STATE_TRACE
 
 namespace Nova::abyss::vkn {
-	const cstr result_string(vk::Result result);
+	cstr result_string(vk::Result result);
 }
 
 template<class CharT>

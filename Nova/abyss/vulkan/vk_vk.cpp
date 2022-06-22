@@ -4,7 +4,7 @@
 
 namespace Nova::abyss::vkn {
 
-	const cstr result_string(vk::Result result) {
+	cstr result_string(vk::Result result) {
 		switch (result) {
 		case vk::Result::eSuccess:	return "Success";
 		case vk::Result::eNotReady:	return "NotReady";
