@@ -4,6 +4,8 @@
 #include <shaderc/shaderc.hpp>
 #include <abyss/vulkan/shader.h>
 
+using namespace std::string_literals;
+
 namespace Nova::abyss::spirv {
 
 	const std::filesystem::path shader_src{ "shader" };
