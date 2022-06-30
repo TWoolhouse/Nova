@@ -116,7 +116,7 @@ namespace Nova::abyss::vkn {
 	#if __N_OVA_BARK_STATE_INFO == 1
 	#define SET_FEATURE_V(fname, value) if constexpr (value) nova_bark_info("\t{}", #fname); CONCAT(features., fname) = value
 	#else // !__N_OVA_BARK_STATE_INFO
-	#define SET_FEATURE(fname, value) CONCAT(features., fname) = value
+	#define SET_FEATURE_V(fname, value) CONCAT(features., fname) = value
 	#endif // __N_OVA_BARK_STATE_INFO
 	#define SET_FEATURE(fname) SET_FEATURE_V(fname, true)
 
