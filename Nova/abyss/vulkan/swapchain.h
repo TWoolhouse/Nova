@@ -34,7 +34,8 @@ namespace Nova::abyss::vkn {
 		vk::Format depth_format();
 
 		vk::SwapchainCreateInfoKHR generate_info() noexcept;
-		void init(const vk::SwapchainCreateInfoKHR& info);
+		void init(vk::SwapchainCreateInfoKHR& info);
+		void init(vk::SwapchainCreateInfoKHR&& info) { return init(info); }
 	};
 
 }

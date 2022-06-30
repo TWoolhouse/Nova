@@ -43,13 +43,6 @@ namespace Nova::abyss::vkn {
 		unsigned int image_count = mlb::clamp(IMAGES, device.capabilities.minImageCount, device.capabilities.maxImageCount ? device.capabilities.maxImageCount : IMAGES);
 		nova_bark_info("Swapchain Images: {} <= {} <= {}", device.capabilities.minImageCount, image_count, device.capabilities.maxImageCount);
 
-		std::vector<unsigned int> qfamily_indices;
-		if (device.queue.graphics.index != device.queue.present.index) {
-			qfamily_indices.reserve(2);
-			qfamily_indices.push_back(device.queue.graphics.index);
-			qfamily_indices.push_back(device.queue.present.index);
-		}
-
 		return {
 			{},
 			cxt.surface,
@@ -58,8 +51,8 @@ namespace Nova::abyss::vkn {
 			extent,
 			1, // imageArrayLayers?
 			vk::ImageUsageFlagBits::eColorAttachment,
-			(qfamily_indices.empty() ? vk::SharingMode::eExclusive : vk::SharingMode::eConcurrent),
-			qfamily_indices,
+			{}, // (qfamily_indices.empty() ? vk::SharingMode::eExclusive : vk::SharingMode::eConcurrent)
+			{}, // qfamily_indices
 			device.capabilities.currentTransform,
 			choose_alpha(),
 			present_mode,
@@ -68,7 +61,16 @@ namespace Nova::abyss::vkn {
 		};
 	}
 
-	void Swapchain::init(const vk::SwapchainCreateInfoKHR& info) {
+	void Swapchain::init(vk::SwapchainCreateInfoKHR& info) {
+		std::vector<unsigned int> qfamily_indices;
+		if (device.queue.graphics.index != device.queue.present.index) {
+			qfamily_indices.reserve(2);
+			qfamily_indices.push_back(device.queue.graphics.index);
+			qfamily_indices.push_back(device.queue.present.index);
+		}
+		info.setQueueFamilyIndices(qfamily_indices);
+		info.setImageSharingMode(qfamily_indices.empty() ? vk::SharingMode::eExclusive : vk::SharingMode::eConcurrent);
+
 		swapchain = device.logical.createSwapchainKHR(info, cxt.alloc);
 		images = device.logical.getSwapchainImagesKHR(swapchain);
 
