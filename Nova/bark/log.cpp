@@ -3,14 +3,19 @@
 
 #include "colours.h"
 #include <iostream>
+#include <fstream>
 
 namespace Nova::bark {
 
+	inline std::ofstream log_file;
+
 	void Initialize() {
+		log_file = std::ofstream{ "log.log" };
 		nova_bark_init("[Bark] Done!");
 	}
 	void Terminate() {
 		nova_bark_term("[Bark] ...");
+		log_file.close();
 		std::cout << Colour::Default; std::cerr << Colour::Default;
 	}
 
@@ -25,10 +30,12 @@ namespace Nova::bark {
 			{"Error",	{Colour::Red,		Colour::BDefault}},
 			{"Fatal",	{Colour::Black,	Colour::BRed}},
 		};
-		const auto& lvl = levels[static_cast<char>(level)];
+		auto&& [name, colour] = levels[static_cast<char>(level)];
 		(level < Level::Error ? std::cout : std::cerr) << // Stream
-			lvl.second.first << lvl.second.second << // Colours
-			"[" << lvl.first << "] " << msg << std::endl; // Message
+			colour.first << colour.second << // Colours
+			"[" << name << "] " << msg << std::endl; // Message
+		log_file << // Stream
+			"[" << name << "] " << msg << std::endl;
 	}
 
 #ifdef nova_assert
