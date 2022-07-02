@@ -8,3 +8,20 @@ template<typename T> requires(!requires (T o) {
 std::ostream& operator<<(std::ostream& stream, const T& obj) {
 	return stream << std::format("{}"sv, obj);
 }
+
+template<typename E> requires std::is_enum_v<E>
+inline NODISCARD constexpr E operator&(const E a, const E b) {
+	return static_cast<E>(static_cast<std::underlying_type_t<E>>(a) & static_cast<std::underlying_type_t<E>>(b));
+}
+template<typename E> requires std::is_enum_v<E>
+inline NODISCARD constexpr E operator|(const E a, const E b) {
+	return static_cast<E>(static_cast<std::underlying_type_t<E>>(a) | static_cast<std::underlying_type_t<E>>(b));
+}
+template<typename E> requires std::is_enum_v<E>
+inline NODISCARD constexpr E operator^(const E a, const E b) {
+	return static_cast<E>(static_cast<std::underlying_type_t<E>>(a) ^ static_cast<std::underlying_type_t<E>>(b));
+}
+template<typename E> requires std::is_enum_v<E>
+inline NODISCARD constexpr E operator~(const E a) {
+	return static_cast<E>(~static_cast<std::underlying_type_t<E>>(a));
+}

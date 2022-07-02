@@ -4,11 +4,6 @@
 
 #define nova_eden_bind(func, member) ::std::bind(func, &member, std::placeholders::_1)
 
-template<typename E> requires std::is_enum_v<E>
-inline NODISCARD constexpr bool operator&(const E a, const E b) {
-	return static_cast<std::underlying_type_t<E>>(a) & static_cast<std::underlying_type_t<E>>(b);
-}
-
 namespace Nova::eden {
 
 	template<typename D> requires std::is_enum_v<D>
@@ -26,7 +21,7 @@ namespace Nova::eden {
 
 		template<typename E> requires std::derived_from<E, Eden>
 		inline E* cast() {
-			return desc & E::descriptor ? static_cast<E*>(this) : nullptr;
+			return static_cast<bool>(desc & E::descriptor) ? static_cast<E*>(this) : nullptr;
 		}
 	};
 
@@ -36,7 +31,7 @@ namespace Nova::eden {
 		using Descriptor = Event::Descriptor;
 		using DType = std::underlying_type_t<Descriptor>;
 		using FuncType = std::function<bool(Event&)>;
-		using Container = nvtl::BlockList<FuncType>;
+		using Container = nvtl::BlockList<FuncType>; // std::vector<FuncType>;
 		std::array<Container, C> list;
 
 		inline constexpr bool bit_isset(const Descriptor bitset, const DType index) {
@@ -82,18 +77,19 @@ namespace Nova::eden {
 			return false;
 		}
 
-		inline void remove(std::initializer_list<Ticket> tickets) {
-			for (auto& ticket : tickets) {
-				remove(ticket);
-			}
-		}
-
 		void remove(Ticket ticket) {
 			auto it = ticket.blocks.begin();
 			for (DType i = 0; i < list.size(); ++i) {
 				if (bit_isset(ticket.descriptor, i)) {
 					list[i].remove(*it++);
 				}
+			}
+		}
+		template<typename Container>
+			requires std::input_iterator<Container> && std::same_as<Ticket, std::iter_value_t<Container>>
+		void remove(Container tickets) {
+			for (auto& ticket : tickets) {
+				remove(ticket);
 			}
 		}
 
