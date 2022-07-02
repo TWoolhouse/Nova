@@ -13,8 +13,8 @@ workspace "Nova"
 	characterset "Unicode"
 	defines { "UNICODE", "_UNICODE" }
 
-	libdirs { "vendor/*/lib/" }
-	includedirs { "vendor/*/include/" }
+	-- libdirs { "vendor/*/lib/" }
+	-- includedirs { "vendor/*/include/" }
 
 	language "C++"
 	cppdialect "C++20"
