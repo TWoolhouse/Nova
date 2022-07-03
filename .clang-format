@@ -1,41 +1,113 @@
 # Visual Studio generated .clang-format file
 
+TabWidth: 4
+IndentWidth: 4
 AccessModifierOffset: -4
-AlignAfterOpenBracket: DontAlign
-AllowShortBlocksOnASingleLine: true
-AllowShortFunctionsOnASingleLine: All
+
 BasedOnStyle: LLVM
+
+AlignAfterOpenBracket: BlockIndent
+AlignArrayOfStructures: Left
+AlignConsecutiveAssignments: None
+AllowShortBlocksOnASingleLine: Always
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortLambdasOnASingleLine: All
+AllowShortLoopsOnASingleLine: true
+AlwaysBreakAfterReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+AlwaysBreakTemplateDeclarations: MultiLine
+
+BinPackArguments: true
+BinPackParameters: true
+BitFieldColonSpacing: Both
+
+BreakBeforeBraces: Custom
 BraceWrapping:
+  AfterCaseLabel: false
   AfterClass: false
-  AfterControlStatement: false
+  AfterControlStatement: MultiLine
   AfterEnum: false
   AfterFunction: false
   AfterNamespace: false
   AfterStruct: false
   AfterUnion: false
+  AfterExternBlock: false
   BeforeCatch: false
   BeforeElse: false
+  BeforeLambdaBody: false
+  BeforeWhile: false
   IndentBraces: false
   SplitEmptyFunction: false
   SplitEmptyRecord: false
-BreakBeforeBraces: Custom
+  SplitEmptyNamespace: false
+# BreakBeforeConceptDeclarations: Allowed
+BreakConstructorInitializers: BeforeColon
+BreakInheritanceList: BeforeColon
+BreakStringLiterals: false
+
 ColumnLimit: 0
+CompactNamespaces: true
 Cpp11BracedListStyle: false
-FixNamespaceComments: false
+EmptyLineAfterAccessModifier: Never
+EmptyLineBeforeAccessModifier: Leave
+FixNamespaceComments: true
+
+IndentAccessModifiers: false
+IndentCaseBlocks: true
 IndentCaseLabels: true
-IndentPPDirectives: AfterHash
-IndentWidth: 4
-MaxEmptyLinesToKeep: 10
-NamespaceIndentation: None
+IndentExternBlock: Indent
+IndentGotoLabels: true
+IndentPPDirectives: BeforeHash
+# IndentRequiresClause: true
+IndentWrappedFunctionNames: false
+
+KeepEmptyLinesAtTheStartOfBlocks: false
+LambdaBodyIndentation: Signature
+MaxEmptyLinesToKeep: 3
+NamespaceIndentation: Inner
+PackConstructorInitializers: NextLine
 PointerAlignment: Left
+QualifierAlignment: Custom
+QualifierOrder: ['inline', 'static', 'constexpr', 'const', 'type', 'volatile', 'restrict']
+ReferenceAlignment: Pointer
+ShortNamespaceLines: 0
 SortIncludes: false
 SortUsingDeclarations: false
+
 SpaceAfterCStyleCast: false
+SpaceAfterLogicalNot: false
+SpaceAfterTemplateKeyword: false
+SpaceAroundPointerQualifiers: Default
 SpaceBeforeAssignmentOperators: true
-SpaceBeforeParens: ControlStatements
+SpaceBeforeCaseColon: false
+SpaceBeforeCpp11BracedList: false
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeParens: Custom
+SpaceBeforeParensOptions:
+  AfterControlStatements: true
+  AfterForeachMacros: false
+  AfterFunctionDeclarationName: false
+  AfterFunctionDefinitionName: false
+  AfterIfMacros: false
+  AfterOverloadedOperator: false
+  # AfterRequiresInClause: true
+  # AfterRequiresInExpression: true
+  BeforeNonEmptyParentheses: false
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceBeforeSquareBrackets: false
+SpaceInEmptyBlock: false
 SpaceInEmptyParentheses: false
+SpacesInAngles: Never
 SpacesInCStyleCastParentheses: false
+SpacesInConditionalStatement: false
+SpacesInContainerLiterals: false
+SpacesInLineCommentPrefix:
+  Minimum: 1
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
-TabWidth: 4
-UseTab: true
+
+UseTab: ForContinuationAndIndentation
