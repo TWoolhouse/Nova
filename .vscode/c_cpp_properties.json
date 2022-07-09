@@ -15,7 +15,8 @@
             "includePath": [
                 "${workspaceFolder}/Nova",
                 "${env:VULKAN_SDK}/Include",
-                "${workspaceFolder}/vendor/glm/"
+                "${workspaceFolder}/vendor/glm/",
+                "${workspaceFolder}/vendor/googletest/googletest/include/"
             ],
             "cStandard": "c17",
             "cppStandard": "c++20",
