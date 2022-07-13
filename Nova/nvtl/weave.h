@@ -161,16 +161,23 @@ namespace Nova::nvtl {
 		};
 
 	public:
-		constexpr auto at(size_type pos) {
-			nova_assert(pos < size(), "Invalid index argument");
+		constexpr auto& at(size_type pos) {
+			if (pos >= size())
+				throw std::out_of_range{ "Invalid index argument" };
 			return threads[pos];
 		}
-		constexpr auto at(size_type pos) const {
-			nova_assert(pos < size(), "Invalid index argument");
+		constexpr auto& at(size_type pos) const {
+			if (pos >= size())
+				throw std::out_of_range{ "Invalid index argument" };
 			return threads[pos];
 		}
-		constexpr auto operator[](size_type pos) { return threads[pos]; }
-		constexpr auto operator[](size_type pos) const { return threads[pos]; }
+		constexpr auto& operator[](size_type pos) { 
+			nova_assert(pos < size(), "Invalid index argument");
+			return threads[pos]; }
+		constexpr auto& operator[](size_type pos) const { 
+			nova_assert(pos < size(), "Invalid index argument"); 
+			return threads[pos];
+		}
 
 		auto begin() const { return threads.begin(); }
 		auto end() const { return std::prev(threads.end()); }
@@ -249,18 +256,8 @@ namespace Nova::nvtl {
 		requires std::convertible_to<T, value_type>
 		constexpr Ticket<1> push_back(Token token, T&& value) {
 			auto row = allocate(1);
-			construct_row(row++, {token, std::forward<T>(value)});
-			return {row, 1};
-		}
-
-		template<typename... Args>
-		requires(std::convertible_to<Args, Row::value_type>&&...)
-		constexpr auto push_back(std::pair<Token, Args>&&... args) -> Ticket<sizeof...(Args)> {
-			constexpr auto Size = sizeof...(Args);
-			auto rows = allocate(Size);
-			Ticket<Size + 1> ticket{rows, Size};
-			(construct_row(rows++, std::forward<decltype(args)>(args)), ...);
-			return ticket;
+			construct_row(row++, std::pair{token, std::forward<T>(value)});
+			return Ticket<1>{row, 1};
 		}
 
 		template<typename... Args>
