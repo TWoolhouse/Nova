@@ -1,13 +1,12 @@
 project "Flask.Test"
-	location "./"
 	targetname "flask.test"
 	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++20"
-	targetdir "../bin/%{cfg.buildcfg}"
-	objdir "../build/%{cfg.buildcfg}/%{prj.name}"
 
-	staticruntime "On" --MultiThreadedDLL
+	location "./"
+	includedirs { "./" }
+	files { "**.h", "**.cpp", "**.ixx" }
+
+	staticruntime "On" --MultiThreadedDebug
 
 	files { "**.h", "**.cpp" }
 	includedirs { "./" }
@@ -15,10 +14,25 @@ project "Flask.Test"
 	pchheader "tpch.h"
 	pchsource "pch.cpp"
 
-	includedirs { "../vendor/*/include/" }
-	links { "gtestd.lib", "gtest_maind.lib" }
+	local gtest = "../vendor/googletest"
+	local bin = gtest .. "/build"
+
+	includedirs { gtest .. "/googletest/include/" }
+	libdirs { bin .. "/lib/Debug/" }
+	links { "gtest.lib", "gtest_main.lib" }
+
+	prebuildcommands {
+		"{MKDIR} " .. bin,
+		"{CHDIR} " .. bin,
+		"cmake .. -A x64"
+	}
+	filter { "system:windows" }
+		prebuildcommands {
+			"msbuild googletest-distribution.sln"
+		}
+	filter {}
 
 	removeconfigurations { "Release" }
 	-- defines { }
-	dofile "../premake/nova.lua"
 	dofile "../premake/config.lua"
+	dofile "../premake/nova.lua"
