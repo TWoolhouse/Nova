@@ -7,16 +7,13 @@ namespace Nova::meta {
 	struct pack {
 		static constexpr auto size = sizeof...(Ts);
 		using tuple = std::tuple<Ts...>;
+		template<size_t I>
+		using get = typename std::tuple_element<I, tuple>::type;
 	};
-
-	namespace __I {
-		template<typename ...Ts>
-		constexpr void Pack(pack<Ts...>);
-	}
 
 	template<typename P>
 	concept Pack = requires (P p) {
-		__I::Pack(p);
+		[]<typename ...Ts>(pack<Ts...>) {}(P{});
 	};
 
 	template<typename T, typename ...Ts>
@@ -51,7 +48,7 @@ namespace Nova::meta {
 				return type_index<I + 1, T, Ts...>();
 			}
 		}
-	}
+	} // namespace __I
 
 	template<typename T, typename ...Ts>
 	constexpr size_t type_index() {
@@ -69,8 +66,6 @@ namespace Nova::meta {
 	}
 	constexpr auto type_index_null = std::numeric_limits<size_t>::max();
 
-	template<size_t I, typename P>
-	using pack_get = typename std::tuple_element<I, typename P::tuple>::type;
 	template<size_t I, typename ...Ts>
 	using type_get = typename std::tuple_element<I, std::tuple<Ts...>>::type;
 
@@ -78,7 +73,7 @@ namespace Nova::meta {
 		template<std::size_t N, typename... T, std::size_t... I>
 		pack<std::tuple_element_t<N + I, std::tuple<T...>>...>
 			constexpr sub(std::index_sequence<I...>);
-	}
+	} // namespace __I
 
 	template<size_t I, size_t S, typename ...Ts>
 	struct subpack {
@@ -91,4 +86,4 @@ namespace Nova::meta {
 	template<typename T = std::size_t>
 	inline constexpr auto max() { return std::numeric_limits<T>::max(); }
 
-}
+} // namespace Nova::meta
