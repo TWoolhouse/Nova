@@ -1,9 +1,13 @@
+# Shader Binaries
+**/shader/bin/*
+
+# Project Files
 .vs/
 /project/
 *.vcxproj*
 
-# Vendor
-# /vendor/
+# Runtime Log Files
+*.log
 
 # Output Directories
 /bin/
