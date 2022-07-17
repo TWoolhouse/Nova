@@ -20,7 +20,7 @@ namespace Nova::nvtl {
 		// using reverse_iterator = std::reverse_iterator<iterator>;
 		// using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-		static_assert(std::same_as<T, value_type> && std::same_as<value_type, allocator_type::value_type>, "Mismataching container and allocator type!");
+		static_assert(std::same_as<T, value_type>&& std::same_as<value_type, allocator_type::value_type>, "Mismataching container and allocator type!");
 
 		explicit Weave(const allocator_type& alloc = allocator_type()) : allocator_row(alloc) {}
 		Weave(const Weave&) = delete; // Currently copying is not trivial to work out
@@ -29,16 +29,7 @@ namespace Nova::nvtl {
 		Weave& operator=(Weave&&) = default;
 
 		struct Tracker;
-		~Weave() {
-			auto ptr = reinterpret_cast<Tracker*>(threads[Count].next);
-			const auto end = reinterpret_cast<Tracker*>(&threads[Count]);
-			while (ptr != end) {
-				auto next = ptr->next;
-				destroy_all(ptr);
-				deallocate(ptr);
-				ptr = reinterpret_cast<Tracker*>(std::move(next));
-			}
-		}
+		~Weave() { clear(); }
 
 		static consteval size_type size() noexcept { return Count; }
 		static consteval size_type max_size() noexcept { return size(); }
@@ -171,11 +162,12 @@ namespace Nova::nvtl {
 				throw std::out_of_range{ "Invalid index argument" };
 			return threads[pos];
 		}
-		constexpr auto& operator[](size_type pos) { 
+		constexpr auto& operator[](size_type pos) {
 			nova_assert(pos < size(), "Invalid index argument");
-			return threads[pos]; }
-		constexpr auto& operator[](size_type pos) const { 
-			nova_assert(pos < size(), "Invalid index argument"); 
+			return threads[pos];
+		}
+		constexpr auto& operator[](size_type pos) const {
+			nova_assert(pos < size(), "Invalid index argument");
 			return threads[pos];
 		}
 
@@ -198,19 +190,19 @@ namespace Nova::nvtl {
 		AllocatorRow allocator_row;
 
 		template<typename Pair>
-		requires requires(Pair p) {
-			{ p.first } -> std::convertible_to<Token>;
-			{ p.second } -> std::convertible_to<value_type>;
+			requires requires(Pair p) {
+				{ p.first } -> std::convertible_to<Token>;
+				{ p.second } -> std::convertible_to<value_type>;
 		}
 		constexpr auto construct_row(Row* row, Pair&& obj) {
 			AllocatorTraitsRow::construct(allocator_row, row, std::move(obj.second));
-			nova_assert(obj.first < Count, "Invalid Thread ID");
+			nova_assert(obj.first < Count, "Weave Insert Invalid Thread ID");
 			threads[obj.first].emplace_back(row);
 		}
 
 		template<typename A, typename B, typename... Args>
 		constexpr auto construct_row(Row* row, A&& token, B&& obj, Args&&... args) {
-			construct_row(row++, std::pair{token, obj});
+			construct_row(row++, std::pair{ token, obj });
 			if constexpr (sizeof...(Args)) {
 				return construct_row(row, args...);
 			}
@@ -221,9 +213,8 @@ namespace Nova::nvtl {
 			AllocatorTraitsRow::destroy(allocator_row, row);
 		}
 		constexpr auto destroy_all(Tracker* tracker) {
-			for (auto row = reinterpret_cast<Row*>(tracker) + extra_space(); row != reinterpret_cast<Row*>(tracker) + tracker->size; ++row) {
-				AllocatorTraitsRow::destroy(allocator_row, row);
-			}
+			for (auto row = reinterpret_cast<Row*>(tracker) + extra_space(); row != reinterpret_cast<Row*>(tracker) + tracker->size; ++row)
+				destroy_row(row);
 		}
 
 		consteval static auto extra_space() {
@@ -253,31 +244,40 @@ namespace Nova::nvtl {
 
 	public:
 		template<typename T>
-		requires std::convertible_to<T, value_type>
+			requires std::convertible_to<T, value_type>
 		constexpr Ticket<1> push_back(Token token, T&& value) {
 			auto row = allocate(1);
-			construct_row(row++, std::pair{token, std::forward<T>(value)});
+			construct_row(row, std::pair{ token, std::forward<T>(value) });
 			return Ticket<1>{row, 1};
 		}
 
 		template<typename... Args>
-		requires meta::interlace<meta::lace<
-			[]<typename T>() { return std::convertible_to<Token, T>; },
-			[]<typename T>() { return std::convertible_to<T, value_type>; }
-		>, Args...>
+			requires meta::interlace < meta::lace <
+				[]<typename T>() { return std::convertible_to<Token, T>; },
+					[]<typename T>() { return std::convertible_to<T, value_type>; }
+			> , Args... >
 		constexpr auto push_back(Args&&... args) -> Ticket<sizeof...(Args) / 2> {
 			constexpr auto Size = sizeof...(Args) / 2;
 			auto rows = allocate(Size);
-			Ticket<Size> ticket{rows, Size};
+			Ticket<Size> ticket{ rows, Size };
 			construct_row(rows++, std::forward<Args>(args)...);
 			return ticket;
 		}
 
 		constexpr Ticket<> push_back(std::initializer_list<std::pair<Token, typename Row::value_type>>&& list) {
 			auto rows = allocate(list.size());
-			Ticket ticket{rows, list.size()};
+			Ticket ticket{ rows, list.size() };
 			for (auto&& obj : list)
 				construct_row(rows++, std::forward<decltype(obj)>(obj));
+			return ticket;
+		}
+
+		template<typename Iter>
+		constexpr Ticket<> push_back(Iter first, Iter last, size_t size) {
+			auto rows = allocate(size);
+			Ticket ticket{ rows, size };
+			for (; first != last; ++first)
+				construct_row(rows++, std::move(*first));
 			return ticket;
 		}
 
@@ -289,11 +289,19 @@ namespace Nova::nvtl {
 			deallocate(ticket);
 		}
 
+		constexpr void clear() {
+			auto ptr = reinterpret_cast<Tracker*>(threads[Count].next);
+			const auto end = reinterpret_cast<Tracker*>(&threads[Count]);
+			while (ptr != end) {
+				auto next = ptr->next;
+				destroy_all(ptr);
+				deallocate(ptr);
+				ptr = reinterpret_cast<Tracker*>(std::move(next));
+			}
+		}
+
 	protected:
 		std::array<Thread, Count + 1> threads;
 	};
 
 } // namespace Nova::nvtl
-
-// Ticket - RAII
-// Ticket Orphan
