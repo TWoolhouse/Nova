@@ -11,17 +11,17 @@ std::ostream& operator<<(std::ostream& stream, const T& obj) {
 
 template<typename E> requires std::is_enum_v<E>
 inline NODISCARD constexpr E operator&(const E a, const E b) noexcept {
-	return static_cast<E>(static_cast<std::underlying_type_t<E>>(a) & static_cast<std::underlying_type_t<E>>(b));
+	return static_cast<E>(std::to_underlying(a) & std::to_underlying(b));
 }
 template<typename E> requires std::is_enum_v<E>
 inline NODISCARD constexpr E operator|(const E a, const E b) noexcept {
-	return static_cast<E>(static_cast<std::underlying_type_t<E>>(a) | static_cast<std::underlying_type_t<E>>(b));
+	return static_cast<E>(std::to_underlying(a) | std::to_underlying(b));
 }
 template<typename E> requires std::is_enum_v<E>
 inline NODISCARD constexpr E operator^(const E a, const E b) noexcept {
-	return static_cast<E>(static_cast<std::underlying_type_t<E>>(a) ^ static_cast<std::underlying_type_t<E>>(b));
+	return static_cast<E>(std::to_underlying(a) ^ std::to_underlying(b));
 }
 template<typename E> requires std::is_enum_v<E>
 inline NODISCARD constexpr E operator~(const E a) noexcept {
-	return static_cast<E>(~static_cast<std::underlying_type_t<E>>(a));
+	return static_cast<E>(~std::to_underlying(a));
 }

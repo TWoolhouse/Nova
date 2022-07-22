@@ -13,7 +13,7 @@ namespace Nova::meta {
 
 	template<typename P>
 	concept Pack = requires (P p) {
-		[]<typename ...Ts>(pack<Ts...>) {}(P{});
+		[] <typename ...Ts>(pack<Ts...>) {}(P{});
 	};
 
 	template<typename T, typename ...Ts>
@@ -43,8 +43,7 @@ namespace Nova::meta {
 			}
 			if constexpr (!sizeof...(Ts)) {
 				return std::numeric_limits<size_t>::max();
-			}
-			else {
+			} else {
 				return type_index<I + 1, T, Ts...>();
 			}
 		}
@@ -83,7 +82,19 @@ namespace Nova::meta {
 	template<size_t I, size_t S, typename ...Ts>
 	constexpr subpack<I, S, Ts...>::type subpack_pack(pack<Ts...>);
 
-	template<typename T = std::size_t>
-	inline constexpr auto max() { return std::numeric_limits<T>::max(); }
+	namespace smallest {
+		template<size_t N>
+		using uint = std::conditional_t < N <= std::numeric_limits<uint8_t>::max(), uint8_t,
+			std::conditional_t < N <= std::numeric_limits<uint16_t>::max(), uint16_t,
+			std::conditional_t< N <= std::numeric_limits<uint32_t>::max(), uint32_t,
+			std::conditional_t< N <= std::numeric_limits<uint64_t>::max(), uint64_t,
+			uintmax_t
+			>>>>;
+	} // namespace smallest
+
+	constexpr uintmax_t bit(uint8_t pos) {
+		if (pos == 0)	return 0;
+		return (static_cast<uintmax_t>(1) << (pos - 1));
+	}
 
 } // namespace Nova::meta
