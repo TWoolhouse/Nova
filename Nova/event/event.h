@@ -4,20 +4,20 @@
 
 namespace Nova::event {
 
-	enum class Type : uint16_t {
-		None = 0b000000000000,
-		KeyPress = 0b000000000001,
-		KeyRelease = 0b000000000010,
-		MouseButtonPress = 0b000000000100,
-		MouseButtonRelease = 0b000000001000,
-		MouseScroll = 0b000000010000,
-		MouseMove = 0b000000100000,
-		WindowClose = 0b000001000000,
-		WindowFocusGain = 0b000010000000,
-		WindowFocusLost = 0b000100000000,
-		WindowMove = 0b001000000000,
-		WindowResizeScreen = 0b010000000000,
-		WindowResizeFrame = 0b100000000000,
+	enum class Type : meta::smallest::uint<meta::bit(12)> {
+		None = meta::bit(0),
+		KeyPress = meta::bit(1),
+		KeyRelease = meta::bit(2),
+		MouseButtonPress = meta::bit(3),
+		MouseButtonRelease = meta::bit(4),
+		MouseScroll = meta::bit(5),
+		MouseMove = meta::bit(6),
+		WindowClose = meta::bit(7),
+		WindowFocusGain = meta::bit(8),
+		WindowFocusLost = meta::bit(9),
+		WindowMove = meta::bit(10),
+		WindowResizeScreen = meta::bit(11),
+		WindowResizeFrame = meta::bit(12),
 		MouseButton = MouseButtonPress | MouseButtonRelease,
 		Mouse = MouseButton | MouseScroll | MouseMove,
 		WindowFocus = WindowFocusGain | WindowFocusLost,
@@ -27,10 +27,14 @@ namespace Nova::event {
 	};
 
 	struct Handle : eden::Event<Type> {
-		Handle(const Descriptor des) : Eden(des) {}
-		NOVAPI bool fire();
+		using Eden::Eden;
+		bool fire();
 	};
 	extern NOVAPI eden::Dispatcher<Handle, 12> dispatcher;
+	using Ticket = decltype(dispatcher)::Ticket;
+	inline bool Handle::fire() {
+		return dispatcher.fire(*this);
+	}
 
 }
 
