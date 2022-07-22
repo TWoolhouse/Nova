@@ -22,14 +22,15 @@ namespace Nova::core {
 		platform::Initialize(name, window);
 
 		// Events
-		auto event_ticket = {
-			event::dispatcher.subscribe(event::Type::WindowClose, [this](event::Handle&)->bool { this->terminate(); return false; }),
-			event::dispatcher.subscribe(event::Type::WindowResizeScreen, [this](event::Handle& event)->bool {
-				const auto e = event.cast<event::WindowResizeScreen>();
-				this->window.size(e->width, e->height);
-				return false;
-			}),
-		};
+		event::dispatcher.subscribe({
+			{ event::Type::WindowClose, [&](event::Handle&)->bool { this->terminate(); return false; } },
+			{ event::Type::WindowResizeScreen, [&](event::Handle& event)->bool {
+					const auto e = event.cast<event::WindowResizeScreen>();
+					this->window.size(e->width, e->height);
+					return false;
+				}
+			}, }
+		).orphan();
 
 		abyss::Initialize(name);
 

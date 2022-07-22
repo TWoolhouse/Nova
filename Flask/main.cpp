@@ -12,20 +12,18 @@ bool simple_quit(Nova::event::Handle& event) {
 class Game : public Nova::core::Application {
 public:
 	unsigned int frame_count_temp = 0;
-	Game() : Application("Flask") {
-		Nova::event::dispatcher.subscribe(Nova::event::Type::KeyPress, &simple_quit);
-	}
+	Nova::event::Ticket events;
+	Game() : Application("Flask"), events(Nova::event::dispatcher.subscribe(Nova::event::Type::KeyPress, &simple_quit)) {}
 
 	void update() {}
 	void render() {
 		static constexpr bool max_frames = false;
 		static constexpr auto req = 1.f / 50;
 		if (clock > req)
-		nova_bark_debug("FPS: {:.1f}\tFrame Time: {:>5.1f}ms", 1 / clock, clock * 1000);
+			nova_bark_debug("FPS: {:.1f}\tFrame Time: {:>5.1f}ms", 1 / clock, clock * 1000);
 		if ((frame_count_temp++) > 25 && max_frames) {
 			nova_bark_debug("Max Frametime: {}", frame_count_temp);
-			Nova::event::WindowClose e;
-			Nova::event::dispatcher.fire(e);
+			Nova::event::WindowClose().fire();
 		}
 	}
 };
