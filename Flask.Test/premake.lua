@@ -28,7 +28,7 @@ project "Flask.Test"
 	}
 	filter { "system:windows" }
 		prebuildcommands {
-			"msbuild googletest-distribution.sln"
+			"msbuild /maxcpucount /nodeReuse:True googletest-distribution.sln"
 		}
 	filter {}
 
