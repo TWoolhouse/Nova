@@ -251,19 +251,6 @@ namespace Nova::nvtl {
 			return Ticket<1>{row, 1};
 		}
 
-		template<typename... Args>
-			requires meta::interlace < meta::lace <
-				[]<typename T>() { return std::convertible_to<Token, T>; },
-					[]<typename T>() { return std::convertible_to<T, value_type>; }
-			> , Args... >
-		constexpr auto push_back(Args&&... args) -> Ticket<sizeof...(Args) / 2> {
-			constexpr auto Size = sizeof...(Args) / 2;
-			auto rows = allocate(Size);
-			Ticket<Size> ticket{ rows, Size };
-			construct_row(rows++, std::forward<Args>(args)...);
-			return ticket;
-		}
-
 		constexpr Ticket<> push_back(std::initializer_list<std::pair<Token, typename Row::value_type>>&& list) {
 			auto rows = allocate(list.size());
 			Ticket ticket{ rows, list.size() };
@@ -280,6 +267,21 @@ namespace Nova::nvtl {
 				construct_row(rows++, std::move(*first));
 			return ticket;
 		}
+
+		/* Broken???
+		template<typename... Args>
+			requires meta::interlace < meta::lace <
+				[]<typename T>() { return std::convertible_to<Token, T>; },
+					[]<typename T>() { return std::convertible_to<T, value_type>; }
+			> , Args... >
+		constexpr auto push_back(Args&&... args) -> Ticket<sizeof...(Args) / 2> {
+			constexpr auto Size = sizeof...(Args) / 2;
+			auto rows = allocate(Size);
+			Ticket<Size> ticket{ rows, Size };
+			construct_row(rows++, std::forward<Args>(args)...);
+			return ticket;
+		}
+		*/
 
 		template<std::size_t Extent>
 		constexpr void remove(Ticket<Extent> ticket) {
