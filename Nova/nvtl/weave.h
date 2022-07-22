@@ -13,8 +13,8 @@ namespace Nova::nvtl {
 		using const_reference = const value_type&;
 		using pointer = typename std::allocator_traits<allocator_type>::pointer;
 		using const_pointer = typename std::allocator_traits<allocator_type>::const_pointer;
-		using size_type = allocator_type::size_type;
-		using difference_type = allocator_type::difference_type;
+		using size_type = typename std::allocator_traits<allocator_type>::size_type;
+		using difference_type = typename std::allocator_traits<allocator_type>::difference_type;
 		// using iterator = void;
 		// using const_iterator = void;
 		// using reverse_iterator = std::reverse_iterator<iterator>;
@@ -29,7 +29,7 @@ namespace Nova::nvtl {
 		Weave& operator=(Weave&&) = default;
 
 		struct Tracker;
-		~Weave() { clear(); }
+		~Weave() noexcept { clear(); }
 
 		static consteval size_type size() noexcept { return Count; }
 		static consteval size_type max_size() noexcept { return size(); }
@@ -45,14 +45,14 @@ namespace Nova::nvtl {
 				prev->next = this;
 				next->prev = this;
 			}
-			Head(Head* next, Head* prev) : next(next), prev(prev) {}
+			Head(Head* next, Head* prev) noexcept : next(next), prev(prev) {}
 
 			Head* next = nullptr;
 			Head* prev = nullptr;
 		};
 
 		struct Tracker : public Head {
-			Tracker(std::size_t size) : size(size) {}
+			Tracker(std::size_t size) noexcept : size(size) {}
 			std::size_t size;
 		};
 
@@ -60,8 +60,8 @@ namespace Nova::nvtl {
 			Row() = default;
 			Row(const Row&) = default;
 			Row(Row&&) = default;
-			Row(const value_type& obj) : object(obj) {}
-			Row(value_type&& obj) : object(std::move(obj)) {}
+			Row(const value_type& obj) noexcept : object(obj) {}
+			Row(value_type&& obj) noexcept : object(std::move(obj)) {}
 			using value_type = value_type;
 			value_type object;
 		};
@@ -76,7 +76,7 @@ namespace Nova::nvtl {
 			using const_pointer = const_pointer;
 			using difference_type = std::ptrdiff_t;
 
-			Thread() : Head(this, this) {}
+			Thread() noexcept : Head(this, this) {}
 
 			constexpr void emplace_back(Head* row) {
 				row->prev = this->prev;
@@ -96,7 +96,7 @@ namespace Nova::nvtl {
 				using external_type = std::conditional_t<const_, const Row, Row>;
 			public:
 				Iterator() = default;
-				Iterator(internal_type* ptr) : m_ptr(ptr) {}
+				Iterator(internal_type* ptr) noexcept : m_ptr(ptr) {}
 
 				using iterator_category = std::bidirectional_iterator_tag;
 				using value_type = std::conditional_t<const_, const typename value_type, typename value_type>;
@@ -105,7 +105,7 @@ namespace Nova::nvtl {
 				using reference = value_type&;
 
 				reference operator*() { return reinterpret_cast<external_type*>(m_ptr)->object; }
-				pointer operator->() { return reinterpret_cast<external_type*>(m_ptr); }
+				pointer operator->() noexcept { return reinterpret_cast<external_type*>(m_ptr); }
 				Iterator& operator++() {
 					m_ptr = m_ptr->next;
 					return *this;
@@ -136,19 +136,19 @@ namespace Nova::nvtl {
 			using reverse_iterator = std::reverse_iterator<iterator>;
 			using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-			iterator begin() { return iterator(this->next); }
-			iterator end() { return iterator(this); }
-			const_iterator begin() const { return const_iterator(this->next); }
-			const_iterator end() const { return const_iterator(this); }
-			const_iterator cbegin() const { return begin(); }
-			const_iterator cend() const { return end(); }
+			iterator begin() noexcept { return iterator(this->next); }
+			iterator end() noexcept { return iterator(this); }
+			const_iterator begin() const noexcept { return const_iterator(this->next); }
+			const_iterator end() const noexcept { return const_iterator(this); }
+			const_iterator cbegin() const noexcept { return begin(); }
+			const_iterator cend() const noexcept { return end(); }
 
-			reverse_iterator rbegin() { return reverse_iterator(this); }
-			reverse_iterator rend() { return reverse_iterator(this->next); }
-			const_reverse_iterator rbegin() const { return const_reverse_iterator(this); }
-			const_reverse_iterator rend() const { return const_reverse_iterator(this->next); }
-			const_reverse_iterator crbegin() const { return rbegin(); }
-			const_reverse_iterator crend() const { return rend(); }
+			reverse_iterator rbegin() noexcept { return reverse_iterator(this); }
+			reverse_iterator rend() noexcept { return reverse_iterator(this->next); }
+			const_reverse_iterator rbegin() const noexcept { return const_reverse_iterator(this); }
+			const_reverse_iterator rend() const noexcept { return const_reverse_iterator(this->next); }
+			const_reverse_iterator crbegin() const noexcept { return rbegin(); }
+			const_reverse_iterator crend() const noexcept { return rend(); }
 		};
 
 	public:
@@ -162,23 +162,23 @@ namespace Nova::nvtl {
 				throw std::out_of_range{ "Invalid index argument" };
 			return threads[pos];
 		}
-		constexpr auto& operator[](size_type pos) {
+		constexpr auto& operator[](size_type pos) noexcept {
 			nova_assert(pos < size(), "Invalid index argument");
 			return threads[pos];
 		}
-		constexpr auto& operator[](size_type pos) const {
+		constexpr auto& operator[](size_type pos) const noexcept {
 			nova_assert(pos < size(), "Invalid index argument");
 			return threads[pos];
 		}
 
-		auto begin() const { return threads.begin(); }
-		auto end() const { return std::prev(threads.end()); }
-		auto cbegin() const { return threads.cbegin(); }
-		auto cend() const { return std::prev(threads.cend()); }
-		auto rbegin() const { return std::next(threads.rbegin()); }
-		auto rend() const { return threads.rend(); }
-		auto crbegin() const { return std::next(threads.crbegin()); }
-		auto crend() const { return threads.crend(); }
+		auto begin() const noexcept { return threads.begin(); }
+		auto end() const noexcept { return std::prev(threads.end()); }
+		auto cbegin() const noexcept { return threads.cbegin(); }
+		auto cend() const noexcept { return std::prev(threads.cend()); }
+		auto rbegin() const noexcept { return std::next(threads.rbegin()); }
+		auto rend() const noexcept { return threads.rend(); }
+		auto crbegin() const noexcept { return std::next(threads.crbegin()); }
+		auto crend() const noexcept { return threads.crend(); }
 
 	public:
 		template<std::size_t Extent = std::dynamic_extent>
