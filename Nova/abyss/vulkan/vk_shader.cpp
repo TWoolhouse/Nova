@@ -10,6 +10,9 @@ namespace Nova::abyss::vkn {
 		switch (type) {
 		case Shader::Type::Vertex:	return vk::ShaderStageFlagBits::eVertex;
 		case Shader::Type::Fragment:	return vk::ShaderStageFlagBits::eFragment;
+		default:
+			nova_bark_error("vkn::Shader::Type {} is currently not handled!", static_cast<std::underlying_type_t<Shader::Type>>(type));
+			return vk::ShaderStageFlagBits{0};
 		}
 	}
 
