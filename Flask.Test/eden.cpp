@@ -14,7 +14,7 @@ enum class Type : meta::smallest::uint<meta::bit(5)> {
 };
 
 constexpr Type shift(Type type, size_t shift = 1) {
-	return static_cast<Type>(std::to_underlying(type) << shift);
+	return static_cast<Type>(static_cast<std::underlying_type_t<Type>>(type) << shift);
 }
 
 struct Event : public eden::Event<Type> {
@@ -42,7 +42,7 @@ NOVA_TEST_EDEN(Subscribe_OutOfBounds) {
 		EXPECT_THROW(dispatcher.subscribe(shift(Type::E, i), [](auto&& event) { return false; }), std::domain_error);
 }
 
-#define _IMPL_EXPECT_COUNT(count, value) EXPECT_EQ(count, value) << "Mismatching Calls to fire and the number of subcribed functions!"
+#define _IMPL_EXPECT_COUNT(count, value) EXPECT_EQ(count, value) << "Mismatching Calls to fire and the number of subscribed functions!"
 #define EXPECT_COUNT(value) _IMPL_EXPECT_COUNT(count, value)
 #define EXPECT_COUNTS(index, value) _IMPL_EXPECT_COUNT(counts ## index, value)
 
