@@ -23,6 +23,7 @@
 			"command": "msbuild",
 			"args": [
 				"/maxcpucount",
+				"/nr:True",
 				"project/vs2022/Nova.sln",
 				"/p:Configuration=Debug",
 				"/p:Platform=Vulkan",

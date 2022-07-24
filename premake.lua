@@ -1,7 +1,7 @@
 workspace "Nova"
 
 	configurations { "Debug", "Release" }
-	platforms { "Vulkan", "OpenGL" }
+	platforms { "Vulkan" } -- "OpenGL"
 	architecture "x86_64"
 
 	toolset "clang"
