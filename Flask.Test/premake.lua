@@ -8,9 +8,6 @@ project "Flask.Test"
 
 	staticruntime "On" --MultiThreadedDebug
 
-	files { "**.h", "**.cpp" }
-	includedirs { "./" }
-
 	pchheader "tpch.h"
 	pchsource "pch.cpp"
 
