@@ -19,7 +19,7 @@ namespace Nova::bark {
 		std::cout << Colour::Default; std::cerr << Colour::Default;
 	}
 
-	void submit(const Level level, const std::string& msg) {
+	void submit(const Level level, const char* location, const std::string& msg) {
 		static constexpr std::pair<std::string_view, std::pair<Colour, Colour>> levels[static_cast<char>(Level::MAX)] = {
 			{"Debug",	{Colour::Green,	Colour::BDefault}},
 			{"Trace",	{Colour::Cyan,	Colour::BDefault}},
@@ -35,7 +35,8 @@ namespace Nova::bark {
 			colour.first << colour.second << // Colours
 			"[" << name << "] " << msg << std::endl; // Message
 		log_file << // Stream
-			"[" << name << "] " << msg << std::endl;
+			"[" << name << "] " << msg << // '\n' << // Message
+			"\t\t" << location << std::endl; // Location
 	}
 
 #ifdef nova_assert

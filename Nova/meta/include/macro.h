@@ -4,6 +4,9 @@
 #define __C_ONCAT(x, y) x##y
 #define CONCAT(x, y) __C_ONCAT(x, y)
 
+#define __S_TRINGIFY(x) #x
+#define STRINGIFY(x) __S_TRINGIFY(x)
+
 #define formatter_enum(EnumName) \
 template<class CharT> \
 struct std::formatter<EnumName, CharT> : std::formatter<std::underlying_type_t<EnumName>, CharT> { \
