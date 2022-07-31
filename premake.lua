@@ -7,6 +7,7 @@ workspace "Nova"
 	toolset "clang"
 	filter { "system:Windows" }
 		toolset "msc"
+	filter {}
 
 	location("project/" .. _ACTION .. "/")
 

@@ -11,7 +11,7 @@ project "Nova"
 	pchsource "meta/pch.cpp"
 
 	-- Nova Building
-	defines { "NOVA_EXPORT" }
+	defines { "NOVA_BUILD_EXPORT" }
 
 	local vk_sdk = os.getenv("VULKAN_SDK")
 	-- Spir-V

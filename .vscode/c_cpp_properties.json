@@ -10,7 +10,7 @@
                 "NOVA_ABYSS_VULKAN",
                 "NOVA_MLB_GLM",
                 "NOVA_WINDOW_NATIVE",
-                "NOVA_EXPORT"
+                "NOVA_BUILD_EXPORT"
             ],
             "includePath": [
                 "${workspaceFolder}/Nova",

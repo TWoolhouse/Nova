@@ -27,4 +27,6 @@ filter "platforms:OpenGL"
 	removedefines { "NOVA_WINDOW_NATIVE" }
 
 filter {}
-	-- scanformoduledependencies "true"
+-- scanformoduledependencies "true"
+
+-- defines "NOVA_BUILD_STATIC"

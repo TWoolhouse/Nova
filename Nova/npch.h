@@ -8,8 +8,8 @@
 
 #include "mlb/maths.h" // Maybe the rest of the maths library
 
-#ifdef NOVA_EXPORT
+#ifdef NOVA_BUILD_EXPORT
 	#if defined(NOVA_ABYSS_VULKAN)
 #include "abyss/vulkan/_vulkan.h"
 	#endif // Abyss
-#endif // NOVA_EXPORT
+#endif // NOVA_BUILD_EXPORT
