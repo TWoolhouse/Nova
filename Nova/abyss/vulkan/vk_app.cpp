@@ -26,12 +26,12 @@ namespace Nova::abyss::vkn {
 			for (auto& view : swapchain.views) {
 				const std::array<vk::ImageView, 1> views{ view };
 				vk::FramebufferCreateInfo create_info{
-					{},
-					renderpass.pass,
-					views,
-					swapchain.extent.width,
-					swapchain.extent.height,
-					1
+					.renderPass = renderpass.pass,
+					.attachmentCount = views.size(),
+					.pAttachments = views.data(),
+					.width = swapchain.extent.width,
+					.height = swapchain.extent.height,
+					.layers = 1,
 				};
 				framebuffers.emplace_back(device.logical.createFramebuffer(create_info, nvk(alloc)));
 			}
@@ -45,8 +45,8 @@ namespace Nova::abyss::vkn {
 		{ // Command Pool
 			nvk_tracec("Command Pool");
 			vk::CommandPoolCreateInfo create_info{
-				vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
-				device.queue.graphics.index
+				.flags = vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
+				.queueFamilyIndex = device.queue.graphics.index,
 			};
 			cmd_pool = device.logical.createCommandPool(create_info, nvk(alloc));
 		}
@@ -54,9 +54,9 @@ namespace Nova::abyss::vkn {
 		{ // Command Buffer
 			nvk_tracec("Command Buffer");
 			vk::CommandBufferAllocateInfo info{
-				cmd_pool,
-				vk::CommandBufferLevel::ePrimary,
-				1
+				.commandPool = cmd_pool,
+				.level = vk::CommandBufferLevel::ePrimary,
+				.commandBufferCount = 1,
 			};
 			auto v = device.logical.allocateCommandBuffers(info);
 			buf = v[0];
@@ -66,7 +66,9 @@ namespace Nova::abyss::vkn {
 			nvk_tracec("Semaphores & Fences");
 			image_available = device.logical.createSemaphore({}, nvk(alloc));
 			render_done = device.logical.createSemaphore({}, nvk(alloc));
-			in_flight = device.logical.createFence({ vk::FenceCreateFlagBits::eSignaled }, nvk(alloc));
+			in_flight = device.logical.createFence(vk::FenceCreateInfo{
+				.flags = vk::FenceCreateFlagBits::eSignaled
+			}, nvk(alloc));
 		}
 
 	}
@@ -120,13 +122,17 @@ namespace Nova::abyss::vkn {
 		vk::CommandBufferBeginInfo begin{};
 		buf.begin(begin);
 
-		vk::ClearValue cv = vk::ClearColorValue(std::array<float, 4>({ 0.0f, 0.0f, 0.0f, 1.0f }));
-		vk::RenderPassBeginInfo rpinfo{
-			renderpass.pass,
-			framebuffers[image],
-			{ {}, swapchain.extent },
-			cv
+		vk::ClearValue cv = {
+			.color = vk::ClearColorValue(std::array<float, 4>({ 0.0f, 0.0f, 0.0f, 1.0f }))
 		};
+		vk::RenderPassBeginInfo rpinfo{
+			.renderPass = renderpass.pass,
+			.framebuffer = framebuffers[image],
+			.renderArea = { {}, swapchain.extent },
+			.clearValueCount = 1,
+			.pClearValues = &cv,
+		};
+
 		buf.beginRenderPass(rpinfo, vk::SubpassContents::eInline);
 		buf.bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline);
 
@@ -137,20 +143,25 @@ namespace Nova::abyss::vkn {
 		buf.end();
 
 		const std::vector<vk::Semaphore> wait_sems = { image_available };
-		const std::vector<vk::PipelineStageFlags> dst = { vk::PipelineStageFlagBits::eColorAttachmentOutput };
+		const vk::PipelineStageFlags dst = { vk::PipelineStageFlagBits::eColorAttachmentOutput };
 
 		vk::SubmitInfo info{
-			wait_sems,
-			dst,
-			buf,
-			render_done
+			.waitSemaphoreCount = static_cast<uint32_t>(wait_sems.size()),
+			.pWaitSemaphores = wait_sems.data(),
+			.pWaitDstStageMask = &dst,
+			.commandBufferCount = 1,
+			.pCommandBuffers = &buf,
+			.signalSemaphoreCount = 1,
+			.pSignalSemaphores = &render_done,
 		};
 		device.queue.graphics.queue.submit(info, in_flight);
 
 		vk::PresentInfoKHR present{
-			render_done,
-			swapchain.swapchain,
-			image
+			.waitSemaphoreCount = 1,
+			.pWaitSemaphores = &render_done,
+			.swapchainCount = 1,
+			.pSwapchains = &swapchain.swapchain,
+			.pImageIndices = &image,
 		};
 		device.queue.present.queue.presentKHR(present);
 

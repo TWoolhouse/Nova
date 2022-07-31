@@ -20,17 +20,15 @@ namespace Nova::abyss::vkn {
 
 	Shader::Shader(const Type type, const spirv::Binary& binary)
 		: m_module(
-			nvk(device).createShaderModule({
-				{},
-				binary.size() * sizeof(spirv::Binary::value_type),
-				binary.data()
+			nvk(device).createShaderModule(vk::ShaderModuleCreateInfo{
+				.codeSize = binary.size() * sizeof(spirv::Binary::value_type),
+				.pCode = binary.data(),
 			}, nvk(alloc))
-		), m_shader_stage_info(
-			{},
-			shader_stage_flag(type),
-			m_module,
-			"main"
-		) {}
+		), m_shader_stage_info{
+			.stage = shader_stage_flag(type),
+			.module = m_module,
+			.pName = "main",
+		} {}
 
 	Shader::~Shader() {
 		nvk(device).destroyShaderModule(m_module, nvk(alloc));

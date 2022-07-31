@@ -27,34 +27,6 @@ namespace Nova::abyss::vkn {
 
 	std::pair<vk::PipelineLayout, vk::Pipeline> create_pipeline(RenderPass& renderpass) {
 		nvk_tracec("Pipeline");
-		/*auto vert_code = spirv::file("start/first/.vert", Shader::Type::Vertex);
-		auto frag_code = spirv::file("start/first/.frag", Shader::Type::Fragment);
-
-		auto vert = nvk(device).createShaderModule({
-			{},
-			vert_code.size() * sizeof(spirv::Binary::value_type),
-			vert_code.data(),
-			}, nvk(alloc));
-
-		auto frag = nvk(device).createShaderModule({
-			{},
-			frag_code.size() * sizeof(spirv::Binary::value_type),
-			frag_code.data(),
-			}, nvk(alloc));
-
-		vk::PipelineShaderStageCreateInfo vert_info{
-			{},
-			vk::ShaderStageFlagBits::eVertex,
-			vert,
-			"main"
-		};
-
-		vk::PipelineShaderStageCreateInfo frag_info{
-			{},
-			vk::ShaderStageFlagBits::eFragment,
-			frag,
-			"main"
-		};*/
 
 		Shader vert{ Shader::Type::Vertex, "start/first/.vert"sv };
 		Shader frag{ Shader::Type::Fragment, "start/first/.frag"sv };
@@ -65,62 +37,54 @@ namespace Nova::abyss::vkn {
 		};
 
 		vk::PipelineVertexInputStateCreateInfo vertex_input_info{
-			{},
-			{},
-			{}
+			.vertexBindingDescriptionCount = 0,
+			.vertexAttributeDescriptionCount = 0,
 		};
 
 		vk::PipelineInputAssemblyStateCreateInfo input_assembly{
-			{},
-			vk::PrimitiveTopology::eTriangleList,
-			VK_FALSE
+			.topology = vk::PrimitiveTopology::eTriangleList,
+			.primitiveRestartEnable = VK_FALSE,
 		};
 
 		vk::Viewport viewport{
-			0.0f,
-			0.0f,
-			static_cast<float>(App->swapchain.extent.width),
-			static_cast<float>(App->swapchain.extent.height),
-			0.0f,
-			1.0f,
+			.x = 0.0f,
+			.y = 0.0f,
+			.width = static_cast<float>(App->swapchain.extent.width),
+			.height = static_cast<float>(App->swapchain.extent.height),
+			.minDepth = 0.0f,
+			.maxDepth = 1.0f,
 		};
 
 		vk::Rect2D scissor{
-			{ 0, 0 },
-			App->swapchain.extent
+			.offset = { 0, 0 },
+			.extent = App->swapchain.extent,
 		};
 
-		const std::array viewports{ viewport };
-		const std::array scissors{ scissor };
-
 		vk::PipelineViewportStateCreateInfo viewport_state_info{
-		{},
-			viewports,
-			scissors
+			.viewportCount = 1,
+			.pViewports = &viewport,
+			.scissorCount = 1,
+			.pScissors = &scissor,
 		};
 
 		vk::PipelineRasterizationStateCreateInfo rasterizer{
-			{},
-			VK_FALSE,
-			VK_FALSE,
-			vk::PolygonMode::eFill,
-			vk::CullModeFlagBits::eBack,
-			vk::FrontFace::eClockwise,
-			VK_FALSE,
-			{}, {}, {},
-			1.0f
+			.depthClampEnable = VK_FALSE,
+			.rasterizerDiscardEnable = VK_FALSE,
+			.polygonMode = vk::PolygonMode::eFill,
+			.cullMode = vk::CullModeFlagBits::eBack,
+			.frontFace = vk::FrontFace::eClockwise,
+			.depthBiasEnable = VK_FALSE,
+			.lineWidth = 1.0f,
 		};
 
 		vk::PipelineMultisampleStateCreateInfo multisampling{
-			{},
-			vk::SampleCountFlagBits::e1,
-			VK_FALSE
+			.rasterizationSamples = vk::SampleCountFlagBits::e1,
+			.sampleShadingEnable = VK_FALSE,
 		};
 
 		vk::PipelineColorBlendAttachmentState colour_blend_attachment{
-			VK_FALSE,
-			{}, {}, {}, {}, {}, {},
-			vk::ColorComponentFlagBits::eR
+			.blendEnable = VK_FALSE,
+			.colorWriteMask = vk::ColorComponentFlagBits::eR
 				| vk::ColorComponentFlagBits::eG
 				| vk::ColorComponentFlagBits::eB
 				| vk::ColorComponentFlagBits::eA
@@ -129,39 +93,37 @@ namespace Nova::abyss::vkn {
 		const std::array attachments{ colour_blend_attachment };
 
 		vk::PipelineColorBlendStateCreateInfo colour_blending{
-			{},
-			VK_FALSE,
-			vk::LogicOp::eCopy,
-			attachments,
-			{ 0.0f, 0.0f, 0.0f, 0.0f }
+			.logicOpEnable = VK_FALSE,
+			.logicOp = vk::LogicOp::eCopy,
+			.attachmentCount = static_cast<uint32_t>(attachments.size()),
+			.pAttachments = attachments.data(),
+			.blendConstants = std::array{ 0.0f, 0.0f, 0.0f, 0.0f },
 		};
 
 		const std::array<vk::DescriptorSetLayout, 0> descriptors;
 		const std::array<vk::PushConstantRange, 0> push_constants;
 
 		vk::PipelineLayoutCreateInfo pipeline_layout_info{
-			{},
-			descriptors,
-			push_constants
+			.setLayoutCount = static_cast<uint32_t>(descriptors.size()),
+			.pSetLayouts = descriptors.data(),
+			.pushConstantRangeCount = static_cast<uint32_t>(push_constants.size()),
+			.pPushConstantRanges = push_constants.data(),
 		};
 
 		auto layout = nvk(device).createPipelineLayout(pipeline_layout_info, nvk(alloc));
 
 		vk::GraphicsPipelineCreateInfo pipeline_info{
-			{},
-			shader_create_info,
-			&vertex_input_info,
-			&input_assembly,
-			{},
-			&viewport_state_info,
-			&rasterizer,
-			&multisampling,
-			{},
-			&colour_blending,
-			{},
-			layout,
-			renderpass.pass,
-			0
+			.stageCount = static_cast<uint32_t>(shader_create_info.size()),
+			.pStages = shader_create_info.data(),
+			.pVertexInputState = &vertex_input_info,
+			.pInputAssemblyState = &input_assembly,
+			.pViewportState = &viewport_state_info,
+			.pRasterizationState = &rasterizer,
+			.pMultisampleState = &multisampling,
+			.pColorBlendState = &colour_blending,
+			.layout = layout,
+			.renderPass = renderpass.pass,
+			.subpass = 0,
 		};
 
 		auto pipeline = nvk(device).createGraphicsPipeline({}, { pipeline_info }, nvk(alloc));

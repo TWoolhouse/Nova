@@ -8,7 +8,7 @@ constexpr auto IMAGES = 3u;
 namespace Nova::abyss::vkn {
 
 	Swapchain::Swapchain(Context& cxt, Device& device, const unsigned int width, const unsigned int height)
-		: cxt(cxt), device(device), extent(width, height), format(), present_mode(vk::PresentModeKHR::eFifo) {
+		: cxt(cxt), device(device), extent{width, height}, format(), present_mode(vk::PresentModeKHR::eFifo) {
 		nvk_tracec("Swapchain");
 
 		init(generate_info());
@@ -16,11 +16,11 @@ namespace Nova::abyss::vkn {
 
 	Swapchain::Swapchain(const Swapchain& swapchain, const unsigned int width, const unsigned int height)
 		: cxt(swapchain.cxt), device(swapchain.device),
-		extent(width, height), format(swapchain.format), present_mode(swapchain.present_mode) {
+		extent{width, height}, format(swapchain.format), present_mode(swapchain.present_mode) {
 		nvk_trace("Swapchain", "Recreating", "Recreated");
 
 		auto info = generate_info();
-		info.setOldSwapchain(swapchain.swapchain);
+		info.oldSwapchain = swapchain.swapchain;
 		init(info);
 	}
 
@@ -43,21 +43,20 @@ namespace Nova::abyss::vkn {
 		unsigned int image_count = mlb::clamp(IMAGES, device.capabilities.minImageCount, device.capabilities.maxImageCount ? device.capabilities.maxImageCount : IMAGES);
 		nova_bark_info("Swapchain Images: {} <= {} <= {}", device.capabilities.minImageCount, image_count, device.capabilities.maxImageCount);
 
-		return {
-			{},
-			cxt.surface,
-			image_count,
-			format.format, format.colorSpace,
-			extent,
-			1, // imageArrayLayers?
-			vk::ImageUsageFlagBits::eColorAttachment,
-			{}, // (qfamily_indices.empty() ? vk::SharingMode::eExclusive : vk::SharingMode::eConcurrent)
-			{}, // qfamily_indices
-			device.capabilities.currentTransform,
-			choose_alpha(),
-			present_mode,
-			true, // Always Clip
-			nullptr // OldChain
+		return vk::SwapchainCreateInfoKHR{
+			.surface = cxt.surface,
+			.minImageCount = image_count,
+			.imageFormat = format.format,
+			.imageColorSpace = format.colorSpace,
+			.imageExtent = extent,
+			.imageArrayLayers = 1,
+			.imageUsage = vk::ImageUsageFlagBits::eColorAttachment,
+			// .imageSharingMode = {}, // (qfamily_indices.empty() ? vk::SharingMode::eExclusive : vk::SharingMode::eConcurrent)
+			// .pQueueFamilyIndices = {}, // qfamily_indices
+			.preTransform = device.capabilities.currentTransform,
+			.compositeAlpha = choose_alpha(),
+			.presentMode = present_mode,
+			.clipped = true,
 		};
 	}
 
@@ -68,8 +67,10 @@ namespace Nova::abyss::vkn {
 			qfamily_indices.push_back(device.queue.graphics.index);
 			qfamily_indices.push_back(device.queue.present.index);
 		}
-		info.setQueueFamilyIndices(qfamily_indices);
-		info.setImageSharingMode(qfamily_indices.empty() ? vk::SharingMode::eExclusive : vk::SharingMode::eConcurrent);
+
+		info.queueFamilyIndexCount = static_cast<uint32_t>(qfamily_indices.size());
+		info.pQueueFamilyIndices = qfamily_indices.data();
+		info.imageSharingMode = qfamily_indices.empty() ? vk::SharingMode::eExclusive : vk::SharingMode::eConcurrent;
 
 		swapchain = device.logical.createSwapchainKHR(info, cxt.alloc);
 		images = device.logical.getSwapchainImagesKHR(swapchain);
@@ -77,13 +78,11 @@ namespace Nova::abyss::vkn {
 		views.reserve(images.size());
 
 		for (const auto& image : images) {
-			views.push_back(device.logical.createImageView({
-				{},
-				image,
-				vk::ImageViewType::e2D,
-				format.format,
-				{},
-				{ vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1 }
+			views.push_back(device.logical.createImageView(vk::ImageViewCreateInfo{
+				.image = image,
+				.viewType = vk::ImageViewType::e2D,
+				.format = format.format,
+				.subresourceRange = { vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1 },
 				}, cxt.alloc));
 		}
 

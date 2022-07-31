@@ -29,13 +29,13 @@ namespace Nova::abyss::vkn {
 
 	constexpr std::string_view get_device_type(const vk::PhysicalDeviceType type) {
 		switch (type) {
-		case vk::PhysicalDeviceType::eDiscreteGpu:	return "Discrete GPU";
-		case vk::PhysicalDeviceType::eIntegratedGpu:	return "Integrated GPU";
-		case vk::PhysicalDeviceType::eVirtualGpu:	return "Virtual GPU";
-		case vk::PhysicalDeviceType::eCpu:	return "CPU";
-		case vk::PhysicalDeviceType::eOther: [[fallthrough]];
-		default:
-			return "Unknown";
+			case vk::PhysicalDeviceType::eDiscreteGpu:	return "Discrete GPU";
+			case vk::PhysicalDeviceType::eIntegratedGpu:	return "Integrated GPU";
+			case vk::PhysicalDeviceType::eVirtualGpu:	return "Virtual GPU";
+			case vk::PhysicalDeviceType::eCpu:	return "CPU";
+			case vk::PhysicalDeviceType::eOther: [[fallthrough]];
+			default:
+				return "Unknown";
 		}
 	}
 
@@ -58,7 +58,7 @@ namespace Nova::abyss::vkn {
 		memory = physical.getMemoryProperties();
 
 		// Output Device Properties
-		#if __N_OVA_BARK_STATE_INFO == 1
+	#if __N_OVA_BARK_STATE_INFO == 1
 		{
 			std::stringstream memory_info_local, memory_info_shared;
 			for (auto it = memory.memoryHeaps.begin(), cend = memory.memoryHeaps.begin() + memory.memoryHeapCount; it != cend; ++it) {
@@ -73,59 +73,69 @@ namespace Nova::abyss::vkn {
 			nova_bark_info("VK Device:\n\tName: {}\n\tType: {}\n\tAPI Version: {}.{}.{}\n\tDriver Version: {}.{}.{}\n\tLocal Memory:{}\n\tShared Memory:{}",
 				prop.deviceName,
 				get_device_type(prop.deviceType),
-				VK_VERSION_MAJOR(prop.apiVersion),
-				VK_VERSION_MINOR(prop.apiVersion),
-				VK_VERSION_PATCH(prop.apiVersion),
-				VK_VERSION_MAJOR(prop.driverVersion),
-				VK_VERSION_MINOR(prop.driverVersion),
-				VK_VERSION_PATCH(prop.driverVersion),
+				VK_API_VERSION_MAJOR(prop.apiVersion),
+				VK_API_VERSION_MINOR(prop.apiVersion),
+				VK_API_VERSION_PATCH(prop.apiVersion),
+				VK_API_VERSION_MAJOR(prop.driverVersion),
+				VK_API_VERSION_MINOR(prop.driverVersion),
+				VK_API_VERSION_PATCH(prop.driverVersion),
 				memory_info_local_str.empty() ? " 0 B" : memory_info_local_str,
 				memory_info_shared_str.empty() ? " 0 B" : memory_info_shared_str
 			);
 		}
-		#endif // __N_OVA_BARK_STATE_INFO
+	#endif // __N_OVA_BARK_STATE_INFO
 	}
 
 	void Device::create_logical() {
 		nvk_tracec("Logical");
 
-		auto indices = std::views::transform(queues, [](const auto& q) { return q.index; });
+		auto indices = std::views::transform(queues, &Q::index);
 		const auto unique_queues = std::set<decltype(Q::index)>(indices.begin(), indices.end());
 
-		#if __N_OVA_BARK_STATE_INFO == 1 && defined(NOVA_DEBUG)
+	#if __N_OVA_BARK_STATE_INFO == 1 && defined(NOVA_DEBUG)
 		nova_bark_info("VK Queues:");
 		for (const auto& q : queues) {
 			nova_bark_info("\t{} {}x @ {}", q.name, q.count, q.index);
 		}
 		nova_bark_info("VK Unique Queues: {}", unique_queues.size());
-		#endif // __N_OVA_BARK_STATE_INFO
+	#endif // __N_OVA_BARK_STATE_INFO
 
 		std::vector<vk::DeviceQueueCreateInfo> queue_create_infos;
 		for (const auto& index : unique_queues) {
 			constexpr auto queues = std::array{ 1.0f };
-			queue_create_infos.emplace_back(vk::DeviceQueueCreateFlags{}, index, queues);
+			queue_create_infos.emplace_back(vk::DeviceQueueCreateInfo{
+				.queueFamilyIndex = index,
+				.queueCount = static_cast<uint32_t>(queues.size()),
+				.pQueuePriorities = queues.data(),
+			});
 		}
 
 		std::vector<cstr> extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
-		const auto create_info = vk::DeviceCreateInfo(vk::DeviceCreateFlags{}, queue_create_infos, {}, extensions, &features);
+		const auto create_info = vk::DeviceCreateInfo{
+			.queueCreateInfoCount = static_cast<uint32_t>(queue_create_infos.size()),
+			.pQueueCreateInfos = queue_create_infos.data(),
+			.enabledExtensionCount = static_cast<uint32_t>(extensions.size()),
+			.ppEnabledExtensionNames = extensions.data(),
+			.pEnabledFeatures = &features,
+		};
 		logical = physical.createDevice(create_info, cxt.alloc);
 
 	}
 
-	#if __N_OVA_BARK_STATE_INFO == 1
-	#define SET_FEATURE_V(fname, value) if constexpr (value) nova_bark_info("\t{}", #fname); CONCAT(features., fname) = value
-	#else // !__N_OVA_BARK_STATE_INFO
-	#define SET_FEATURE_V(fname, value) CONCAT(features., fname) = value
-	#endif // __N_OVA_BARK_STATE_INFO
-	#define SET_FEATURE(fname) SET_FEATURE_V(fname, true)
+#if __N_OVA_BARK_STATE_INFO == 1
+#define SET_FEATURE_V(fname, value) if constexpr (value) nova_bark_info("\t{}", #fname); CONCAT(features., fname) = value
+#else // !__N_OVA_BARK_STATE_INFO
+#define SET_FEATURE_V(fname, value) CONCAT(features., fname) = value
+#endif // __N_OVA_BARK_STATE_INFO
+#define SET_FEATURE(fname) SET_FEATURE_V(fname, true)
 
 	void Device::set_required_features() {
 		nova_bark_info("VK Required Device Features:");
 		SET_FEATURE(samplerAnisotropy);
 	}
-	#undef SET_FEATURE_V
-	#undef SET_FEATURE
+#undef SET_FEATURE_V
+#undef SET_FEATURE
 
 	bool Device::is_device_suitable(const vk::PhysicalDevice& device) {
 		const auto queue_families = device.getQueueFamilyProperties();
@@ -133,7 +143,7 @@ namespace Nova::abyss::vkn {
 		// Graphics | Compute | Transfer Queue Index
 		for (auto& que : std::views::filter(queues, [](const auto& q) { return static_cast<unsigned int>(q.type); })) {
 			if (auto result = std::ranges::find_if(queue_families,
-				[&que](const auto& qfp) { return static_cast<bool>(qfp.queueFlags & que.type); }
+				[&](const auto& qfp) { return static_cast<bool>(qfp.queueFlags & que.type); }
 			); result != queue_families.cend()) {
 				que.index = std::distance(queue_families.cbegin(), result);
 				que.count = result->queueCount;
@@ -141,9 +151,10 @@ namespace Nova::abyss::vkn {
 		}
 
 		// Present Queue Index
-		for (uint32_t i = 0, end = queue_families.size(); i < end; ++i) {
+		for (size_t i = 0, end = queue_families.size(); i < end; ++i) {
 			if (device.getSurfaceSupportKHR(i, cxt.surface)) {
 				queue.present.index = i;
+				break;
 			}
 		}
 
@@ -156,5 +167,5 @@ namespace Nova::abyss::vkn {
 		return true;
 	}
 
-}
+	}
 #endif // NOVA_ABYSS_VULKAN

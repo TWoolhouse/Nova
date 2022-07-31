@@ -14,7 +14,7 @@
 #endif // !__N_OVA_BARK_ABYSS
 
 #ifndef __N_OVA_BARK_ABYSS_VERBOSE
-#define __N_OVA_BARK_ABYSS_VERBOSE 0
+#define __N_OVA_BARK_ABYSS_VERBOSE 1
 #endif // !__N_OVA_BARK_ABYSS_VERBOSE
 
 #ifdef NOVA_DEBUG
