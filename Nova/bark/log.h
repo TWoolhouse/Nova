@@ -1,30 +1,7 @@
 #pragma once
 #include "meta/head.h"
+#include "log_state.h"
 #include <format>
-
-#ifndef __N_OVA_BARK_STATE_WARN
-#define __N_OVA_BARK_STATE_WARN 1
-#endif // !__N_OVA_BARK_STATE_WARN
-
-#ifndef __N_OVA_BARK_STATE_INIT
-#define __N_OVA_BARK_STATE_INIT 1
-#endif // !__N_OVA_BARK_STATE_INIT
-
-#ifndef __N_OVA_BARK_STATE_INFO
-#define __N_OVA_BARK_STATE_INFO 1
-#endif // !__N_OVA_BARK_STATE_INFO
-
-#ifndef __N_OVA_BARK_STATE_TRACE
-#ifdef NOVA_DEBUG
-#define __N_OVA_BARK_STATE_TRACE 1
-#endif // NOVA_DEBUG
-#endif // !__N_OVA_BARK_STATE_TRACE
-
-#ifndef __N_OVA_BARK_STATE_DEBUG
-#ifdef NOVA_DEBUG
-#define __N_OVA_BARK_STATE_DEBUG 1
-#endif // NOVA_DEBUG
-#endif // !__N_OVA_BARK_STATE_DEBUG
 
 #define __N_OVA_LOCATION CONCAT(__FILE__, CONCAT(":", STRINGIFY(__LINE__)))
 
