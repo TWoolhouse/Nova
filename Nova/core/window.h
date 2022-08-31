@@ -10,16 +10,19 @@ namespace Nova::core {
 
 		constexpr inline NODISCARD const auto& width() const noexcept { return m_width; }
 		constexpr inline NODISCARD const auto& height() const noexcept { return m_height; }
+		constexpr inline NODISCARD const std::pair<const unsigned int&, const unsigned int&> size() const noexcept { return { m_width, m_height }; }
 
-		// Sets the size values, does not perform a resize.
-		inline void size(const unsigned int width, const unsigned int height) noexcept {
-			m_width = width; m_height = height;
-		}
 
 		// Resizes the window to the requested values.
 		void resize(const unsigned int width, const unsigned int height);
 	protected:
 		unsigned int m_width, m_height;
+
+		friend class Application;
+		// Sets the size values, does not perform a resize.
+		inline void size(const unsigned int width, const unsigned int height) noexcept {
+			m_width = width; m_height = height;
+		}
 	};
 
 }
