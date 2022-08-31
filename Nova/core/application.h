@@ -2,6 +2,7 @@
 #include "meta/head.h"
 #include "blip/blip.h"
 #include "window.h"
+#include "abyss/flight.h"
 
 #ifdef NOVA_DEBUG
 #define NOVA_MAIN main
@@ -23,7 +24,7 @@ namespace Nova::core {
 		virtual ~Application();
 
 		virtual void update() = 0;
-		virtual void render() = 0;
+		virtual void render(abyss::Flight&) = 0;
 
 		inline void terminate() { running = false;};
 
@@ -35,8 +36,8 @@ namespace Nova::core {
 		bool running = false;
 	public:
 		// Application Instance
-		static Application* I;
-		static blip::Clock clock;
+		inline static Application* I = nullptr;
+		inline static blip::Clock clock;
 		Window window;
 	};
 
