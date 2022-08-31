@@ -34,7 +34,6 @@ API: NOVA, GLM
 //     OPENGL
 //     DIRECTX
 
-#ifdef NOVA_BUILD_EXPORT
 #if !(defined(NOVA_ABYSS_VULKAN) || defined(NOVA_ABYSS_OPENGL) || defined(NOVA_ABYSS_DIRECTX))
 #error No Nova Abyss Graphics Rendering API Selected! NOVA_ABYSS_<API> \
 API: VULKAN, OPENGL, DIRECTX
@@ -53,7 +52,6 @@ API: VULKAN, OPENGL, DIRECTX
 #elif defined(NOVA_ABYSS_DIRECTX)
 #error NOVA_ABYSS_DIRECTX is not currently supported!
 #endif // NOVA_ABYSS_API
-#endif // NOVA_BUILD_EXPORT
 
 //---------------------------------------------------------------\\
 //----------------------------NOVA_OS----------------------------\\
