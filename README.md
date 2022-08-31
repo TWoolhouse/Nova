@@ -1,35 +1,66 @@
 # Nova
 C++ Game Engine
 
-# Eden
-
+# Systems
+## Eden
 Event System
 
-# Verglas
+## Bark
+Logging
 
+## Meta
+C++ Macros and Reflection
+
+## Verglas
 Renderer Front End
 
-# Abyss
-
+## Abyss
 Abstract Renderer Backend
 
 - Vulkan
 - DirectX
 
-# Blip
-
+## Blip
 Time
 
 - DeltaTime
 - Timer
 
-# Nvtl
-
+## Nvtl
 Nova Template Library
 
-Containers
+### Containers
 
+- Weave
 - BlockList
+
+### Allocators
+
+- Bump
+
+# Projects
+
+## Serialization
+## Asset Manager
+- Local & Network assets
+
+## Particle System
+- GPU based
+
+## Networking
+- Client server
+- P2P
+
+## Realtime Audio
+* beat detection
+* auto volume balancing
+* audio filters
+  * echo
+  * reverb
+  * speed
+* visulisers
+
+## Wave Function Collapse
 
 # Name Ideas
 
