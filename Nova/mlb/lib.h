@@ -8,7 +8,4 @@
 
 namespace Nova::mlb {
 
-	template<typename T>
-	inline NODISCARD constexpr T clamp(T v, T mn, T mx) noexcept { return std::max(mn, std::min(mx, v)); }
-
 }
