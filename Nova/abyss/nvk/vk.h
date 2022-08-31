@@ -29,6 +29,11 @@ false;
 #endif // NOVA_DEBUG
 
 nova_meta_enum_str(vk::Result, result);
+nova_meta_enum_str(vk::PhysicalDeviceType, type);
+nova_meta_enum_str(vk::PresentModeKHR, mode);
+nova_meta_enum_str(vk::Format, format);
+nova_meta_enum_str(vk::ColorSpaceKHR, format);
+nova_meta_enum_str(vk::SharingMode, mode);
 
 namespace Nova::abyss::nvk {
 	template<typename T, typename VK>

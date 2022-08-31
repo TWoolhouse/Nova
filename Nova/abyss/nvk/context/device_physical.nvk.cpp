@@ -11,33 +11,6 @@
 	VK_API_VERSION_MINOR(version), \
 	VK_API_VERSION_PATCH(version)
 
-nova_meta_enum_str(Nova::abyss::nvk::Q::Type, type) {
-	using Type = std::remove_cvref_t<decltype(type)>;
-	switch (type) {
-		case Type::Graphics: return "Graphics";
-		case Type::Compute: return "Compute";
-		case Type::Transfer: return "Transfer";
-		case Type::Present: return "Present";
-		default:
-			nova_bark_warn("Unknown Case [Queue Type]: {}", static_cast<std::underlying_type_t<decltype(type)>>(type));
-			return "Unknown";
-	}
-}
-
-nova_meta_enum_str(vk::PhysicalDeviceType, type) {
-	using Type = std::remove_cvref_t<decltype(type)>;
-	switch (type) {
-		case Type::eDiscreteGpu: return "Discrete GPU";
-		case Type::eIntegratedGpu: return "Integrated GPU";
-		case Type::eVirtualGpu: return "Virtual GPU";
-		case Type::eCpu: return "CPU";
-		case Type::eOther: [[fallthrough]];
-		default:
-			nova_bark_warn("Unknown Case [vk Physical Device Type]: {}", static_cast<std::underlying_type_t<decltype(type)>>(type));
-			return "Unknown";
-	}
-}
-
 using FeatureType = decltype(vk::PhysicalDeviceFeatures::geometryShader);
 
 template<typename T>
@@ -122,7 +95,7 @@ namespace Nova::abyss::nvk {
 	}
 	// Queue Type is not supported
 	size_t reject(const Q::Type& type) {
-		nova_bark_trace("\tRejection [Queue Family]: Not supported! {}", meta::estr(type));
+		nova_bark_trace("\tRejection [Queue Family]: Not supported! {}", type);
 		return REJECTION;
 	}
 	// Surface Format is not supported
@@ -131,6 +104,11 @@ namespace Nova::abyss::nvk {
 			static_cast<std::underlying_type_t<decltype(surface_format.format)>>(surface_format.format),
 			static_cast<std::underlying_type_t<decltype(surface_format.colorSpace)>>(surface_format.colorSpace)
 		);
+		return REJECTION;
+	}
+	// Present Mode is not supported
+	size_t reject(const vk::PresentModeKHR& present_mode) {
+		nova_bark_trace("\tRejection [Present Mode]: Not supported! {}", present_mode);
 		return REJECTION;
 	}
 
@@ -312,6 +290,7 @@ namespace Nova::abyss::nvk {
 				return (modes.size() - idx) * WEIGHT;
 			}
 		}
+		return reject(vk::PresentModeKHR::eFifo);
 	}
 
 	std::vector<Q::Index> PhysicalBuilder::assign_queues(vk::PhysicalDevice& device, Q::Type type, std::vector<vk::QueueFamilyProperties>& families) {

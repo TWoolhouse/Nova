@@ -7,48 +7,6 @@
 
 #include "event/window.h"
 
-nova_meta_enum_str(vk::PresentModeKHR, mode) {
-	switch (mode) {
-		case vk::PresentModeKHR::eImmediate: return "Immediate";
-		case vk::PresentModeKHR::eMailbox: return "Mailbox";
-		case vk::PresentModeKHR::eFifo: return "Fifo";
-		case vk::PresentModeKHR::eFifoRelaxed: return "Fifo Relaxed";
-		case vk::PresentModeKHR::eSharedDemandRefresh: return "Shared Demand Refresh";
-		case vk::PresentModeKHR::eSharedContinuousRefresh: return "Shared Continuous Refresh";
-		default:
-			nova_bark_warn("Unknown Case [vk Present Mode]: {}", static_cast<std::underlying_type_t<decltype(mode)>>(mode));
-			return "Unknown";
-	}
-}
-
-nova_meta_enum_str(vk::Format, format) {
-	switch (format) {
-		case vk::Format::eB8G8R8A8Srgb: return "B8-G8-R8-A8-Srgb";
-		default:
-			nova_bark_warn("Unknown Case [vk Format]: {}", static_cast<std::underlying_type_t<decltype(format)>>(format));
-			return "Unknown";
-	}
-}
-
-nova_meta_enum_str(vk::ColorSpaceKHR, format) {
-	switch (format) {
-		case vk::ColorSpaceKHR::eSrgbNonlinear: return "Srgb-Nonlinear";
-		default:
-			nova_bark_warn("Unknown Case [vk Colour Space]: {}", static_cast<std::underlying_type_t<decltype(format)>>(format));
-			return "Unknown";
-	}
-}
-
-nova_meta_enum_str(vk::SharingMode, mode) {
-	switch (mode) {
-		case vk::SharingMode::eExclusive: return "Exclusive";
-		case vk::SharingMode::eConcurrent: return "Concurrent";
-		default:
-			nova_bark_warn("Unknown Case [vk Sharing Mode]: {}", static_cast<std::underlying_type_t<decltype(mode)>>(mode));
-			return "Unknown";
-	}
-}
-
 namespace Nova::abyss::nvk {
 
 	void log_swapchain(const vk::SwapchainCreateInfoKHR& info, const vk::SurfaceCapabilitiesKHR& cap, const size_t& image_count) {
