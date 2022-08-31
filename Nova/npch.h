@@ -6,10 +6,10 @@
 #include "meta/concept.h"
 #include "meta/function.h"
 
-#include "mlb/maths.h" // Maybe the rest of the maths library
+#include "mlb/mlb.h"
 
 #ifdef NOVA_BUILD_EXPORT
 	#if defined(NOVA_ABYSS_VULKAN)
-#include "abyss/vulkan/_vulkan.h"
+#include "abyss/nvk/_vulkan.h"
 	#endif // Abyss
 #endif // NOVA_BUILD_EXPORT

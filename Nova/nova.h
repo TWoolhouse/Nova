@@ -18,6 +18,7 @@
 #include "input/poll.h"
 
 #include "abyss/abyss.h"
+#include "abyss/shader_graphics.h"
 #include "verglas/verglas.h"
 
 #include "mlb/mlb.h"
