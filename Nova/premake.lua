@@ -5,11 +5,12 @@ project "Nova"
 	else
 		kind "SharedLib"
 	end
+
+	staticruntime "Off"
+
 	location "./"
 	includedirs { "./" }
 	files { "**.h", "**.cpp", "**.ixx" }
-
-	staticruntime "Off" --MultiThreadedDLL
 
 	pchheader "npch.h"
 	pchsource "meta/pch.cpp"

@@ -10,10 +10,10 @@ project "Flask"
 	includedirs { "./" }
 	files { "**.h", "**.cpp", "**.ixx" }
 
-	staticruntime "Off" --MultiThreadedDLL
-
 	pchheader "fpch.h"
 	pchsource "pch.cpp"
+
+	staticruntime "Off"
 
 	-- defines { }
 	dofile "../premake/nova.lua"
