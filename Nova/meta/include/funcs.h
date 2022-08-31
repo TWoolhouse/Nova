@@ -25,3 +25,19 @@ template<typename E> requires std::is_enum_v<E>
 inline NODISCARD constexpr E operator~(const E a) noexcept {
 	return static_cast<E>(~static_cast<std::underlying_type_t<E>>(a));
 }
+
+template<typename E> requires std::is_enum_v<E>
+inline NODISCARD constexpr E& operator&=(E& a, const E b) noexcept {
+	a = a & b;
+	return a;
+}
+template<typename E> requires std::is_enum_v<E>
+inline NODISCARD constexpr E& operator|=(E& a, const E b) noexcept {
+	a = a | b;
+	return a;
+}
+template<typename E> requires std::is_enum_v<E>
+inline NODISCARD constexpr E& operator^=(E& a, const E b) noexcept {
+	a = a ^ b;
+	return a;
+}
