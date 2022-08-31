@@ -135,6 +135,7 @@ namespace Nova::platform {
 			case VK_F24:	return Nova::input::Key::F24;
 
 			default:
+				nova_bark_warn("Unhandled Case [Windows Key Code]: {}", code);
 				return Nova::input::Key::NONE;
 			}
 		}
@@ -147,6 +148,7 @@ namespace Nova::platform {
 			case VK_XBUTTON2:	return Nova::input::Mouse::VB2;
 
 			default:
+				nova_bark_warn("Unhandled Case [Windows Mouse Button]: {}", code);
 				return Nova::input::Mouse::NONE;
 			}
 		}
@@ -264,7 +266,7 @@ LRESULT CALLBACK proc_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 			// Clean Up Tasks
 			PostQuitMessage(0);
 			return 0;
-		case WM_SIZE: {
+		[[unlikely]] case WM_SIZE: {
 			RECT r;
 			GetClientRect(hwnd, &r);
 			Nova::event::WindowResizeScreen(r.right - r.left, r.bottom - r.top).fire();
@@ -304,20 +306,24 @@ LRESULT CALLBACK proc_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 #ifdef NOVA_ABYSS_VULKAN
-#include "abyss/vulkan/context.h"
+#include "abyss/nvk/context/context.h"
+#include "abyss/nvk/context/surface.h"
 #include <vulkan/vulkan_win32.h>
-namespace Nova::abyss::vkn {
-	void Context::create_surface() {
+namespace Nova::abyss::nvk::Surface {
+	vk::SurfaceKHR create(vk::Instance& instance) {
+		nova_bark_init("VK Surface <Windows>");
 		VkWin32SurfaceCreateInfoKHR create_info{
 			.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
 			.hinstance = Nova::platform::instance,
 			.hwnd = Nova::platform::hwnd,
 		};
-		nova_bark_debug("VK Surface: Windows");
-		VK_CHECK(vkCreateWin32SurfaceKHR(instance, &create_info, reinterpret_cast<std::remove_reference_t<decltype(*alloc)>::NativeType*>(alloc), reinterpret_cast<decltype(surface)::CType*>(&surface)));
+		vk::SurfaceKHR surface;
+		nova_debug_exc(auto result = ) vkCreateWin32SurfaceKHR(instance, &create_info, reinterpret_cast<std::remove_reference_t<decltype(*nova_abyss_api->alloc)>::NativeType*>(nova_abyss_api->alloc), reinterpret_cast<decltype(surface)::CType*>(&surface));
+		nova_assert(result == VK_SUCCESS, "Failed to create vk::SurfaceKHR");
+		NVK_CHECK(surface, "Invalid vk::SurfaceKHR");
+		return surface;
 	}
-}
-#endif // NOVA_ABYSS_VULKAN
-
+} // namespace Nova::abyss::vkn
+#endif	// NOVA_ABYSS_VULKAN
 
 #endif // NOVA_WINDOW_NATIVE && NOVA_OS_WINDOWS
