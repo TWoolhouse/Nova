@@ -12,11 +12,10 @@ project "Flask"
 
 	staticruntime "Off" --MultiThreadedDLL
 
-	-- pchheader "fpch.h"
-	-- pchsource "core/pch.cpp"
+	pchheader "fpch.h"
+	pchsource "pch.cpp"
 
 	-- defines { }
-	dofile "../premake/config.lua"
 	dofile "../premake/nova.lua"
 
 project "*"

@@ -31,5 +31,4 @@ project "Flask.Test"
 
 	removeconfigurations { "Release" }
 	-- defines { }
-	dofile "../premake/config.lua"
 	dofile "../premake/nova.lua"

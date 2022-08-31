@@ -1,6 +1,3 @@
-filter {}
-	defines { "NOVA_WINDOW_NATIVE" }
-
 filter "configurations:Debug"
 	defines { "DEBUG", "_DEBUG" }
 	removedefines { "NDEBUG" }
@@ -22,11 +19,4 @@ filter "configurations:Release"
 filter { "configurations:Release", "action:vs*" }
 	buildoptions { "/Ot" }
 
-filter "platforms:OpenGL"
-	defines { "NOVA_WINDOW_GLFW" }
-	removedefines { "NOVA_WINDOW_NATIVE" }
-
 filter {}
--- scanformoduledependencies "true"
-
--- defines "NOVA_BUILD_STATIC"
