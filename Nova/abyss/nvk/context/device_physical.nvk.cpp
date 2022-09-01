@@ -141,7 +141,7 @@ namespace Nova::abyss::nvk {
 		device_ranks.reserve(devices.size());
 		for (auto idx = 0; idx < devices.size(); idx++) {
 			auto&& device = devices[idx];
-			nova_bark_trace("Device [{0:>0{1}d}/{1:}]: {2:}", idx, devices.size(), device.getProperties().deviceName);
+			nova_bark_trace("Device [{0:>0{1}d}/{1:}]: {2:}", idx + 1, devices.size(), device.getProperties().deviceName);
 			auto& score = device_ranks.emplace_back(
 				device
 			).score;

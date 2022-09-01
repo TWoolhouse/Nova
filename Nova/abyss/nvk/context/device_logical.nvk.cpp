@@ -56,11 +56,11 @@ namespace Nova::abyss::nvk::Logical {
 
 		nova_bark_init("VK Queues");
 		for (auto& q : std::views::reverse(queues.all())) {
+			q.self = device.getQueue(q.family, --qf_queue_count[q.family]);
 			if (static_cast<bool>(q.type & Q::Type::Merge)) {
 				++qf_queue_count[q.family];
 				q.type &= ~Q::Type::Merge;
 			}
-			q.self = device.getQueue(q.family, --qf_queue_count[q.family]);
 		}
 
 		log_queues(queues);
