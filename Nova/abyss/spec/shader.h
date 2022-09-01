@@ -5,7 +5,7 @@
 namespace Nova::abyss::spec {
 
 	template<typename T>
-	concept Shader_Stage = std::is_scoped_enum_v<T> && requires {
+	concept Shader_Stage = std::is_enum_v<T> && requires {
 		T::Vertex;
 		T::Fragment;
 	};
