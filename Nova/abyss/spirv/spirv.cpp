@@ -52,7 +52,6 @@ namespace Nova::abyss::spirv {
 		std::ifstream file{ file_path, std::ios::in | std::ios::ate | std::ios::binary };
 		if (!file)	throw std::invalid_argument("Unable to Open File: "s + file_path.generic_string());
 		const auto size = file.tellg();
-		const auto fsize = std::filesystem::file_size(file_path);
 		file.seekg(std::ios::beg);
 		Binary buffer(std::ceil(size / static_cast<float>(sizeof(Binary::value_type))));
 		file.read(reinterpret_cast<char*>(buffer.data()), size);

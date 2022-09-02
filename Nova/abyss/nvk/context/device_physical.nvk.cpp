@@ -84,7 +84,7 @@ namespace Nova::abyss::nvk {
 	inline static constexpr size_t REJECTION = 0;
 	// Log reason for rejecting a device
 	// Feature is not supported
-	size_t reject(const vk::PhysicalDeviceFeatures& features, size_t index) {
+	size_t reject(const vk::PhysicalDeviceFeatures&, size_t index) {
 		nova_bark_trace("\tRejection [Feature]: Not supported! {}", index);
 		return REJECTION;
 	}
@@ -130,7 +130,6 @@ namespace Nova::abyss::nvk {
 		nova_assert(best.score > REJECTION, "No devices match the requirements");
 
 		log_device_info(best.device, properties);
-		constexpr auto x = offsetof(vk::PhysicalDeviceFeatures, geometryShader);
 
 		info = best.info;
 		return best.device;
