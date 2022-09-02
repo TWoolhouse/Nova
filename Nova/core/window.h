@@ -8,9 +8,9 @@ namespace Nova::core {
 		Window(const unsigned int width, const unsigned int height) : m_width(width), m_height(height) {}
 		~Window() {}
 
-		constexpr inline NODISCARD const auto& width() const noexcept { return m_width; }
-		constexpr inline NODISCARD const auto& height() const noexcept { return m_height; }
-		constexpr inline NODISCARD const std::pair<const unsigned int&, const unsigned int&> size() const noexcept { return { m_width, m_height }; }
+		NODISCARD constexpr inline const auto& width() const noexcept { return m_width; }
+		NODISCARD constexpr inline const auto& height() const noexcept { return m_height; }
+		NODISCARD constexpr inline const std::pair<const unsigned int&, const unsigned int&> size() const noexcept { return { m_width, m_height }; }
 
 
 		// Resizes the window to the requested values.

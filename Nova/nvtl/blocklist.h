@@ -26,8 +26,8 @@ namespace Nova::nvtl {
 				block_iterator() = default;
 				block_iterator(pointer block) : curr(block) {}
 
-				inline NODISCARD reference operator*() { return *curr; }
-				inline NODISCARD pointer operator->() { return curr; }
+				NODISCARD inline reference operator*() { return *curr; }
+				NODISCARD inline pointer operator->() { return curr; }
 
 				iterator_type& operator++() noexcept {
 					curr = curr->next;
@@ -48,10 +48,10 @@ namespace Nova::nvtl {
 					return tmp;
 				}
 
-				inline NODISCARD bool operator!=(const iterator_type& other) const noexcept {
+				NODISCARD inline bool operator!=(const iterator_type& other) const noexcept {
 					return curr != other.curr;
 				}
-				inline NODISCARD bool operator==(const iterator_type& other) const noexcept {
+				NODISCARD inline bool operator==(const iterator_type& other) const noexcept {
 					return !operator!=(other);
 				}
 
@@ -69,10 +69,10 @@ namespace Nova::nvtl {
 				reverse_block_iterator() = default;
 				reverse_block_iterator(pointer block) : curr(block) {}
 
-				inline NODISCARD reference operator*() {
+				NODISCARD inline reference operator*() {
 					return *curr;
 				}
-				inline NODISCARD pointer operator->() {
+				NODISCARD inline pointer operator->() {
 					return curr;
 				}
 
@@ -95,10 +95,10 @@ namespace Nova::nvtl {
 					return tmp;
 				}
 
-				inline NODISCARD bool operator!=(const iterator_type& other) const noexcept {
+				NODISCARD inline bool operator!=(const iterator_type& other) const noexcept {
 					return curr != other.curr;
 				}
-				inline NODISCARD bool operator==(const iterator_type& other) const noexcept {
+				NODISCARD inline bool operator==(const iterator_type& other) const noexcept {
 					return !operator!=(other);
 				}
 
@@ -123,10 +123,10 @@ namespace Nova::nvtl {
 					last = first + block->count;
 				}
 
-				inline NODISCARD reference operator*() const {
+				NODISCARD inline reference operator*() const {
 					return *curr;
 				}
-				inline NODISCARD pointer operator->() const noexcept {
+				NODISCARD inline pointer operator->() const noexcept {
 					return curr;
 				}
 
@@ -157,10 +157,10 @@ namespace Nova::nvtl {
 					return tmp;
 				}
 
-				inline NODISCARD bool operator!=(const iterator_type& other) const noexcept {
+				NODISCARD inline bool operator!=(const iterator_type& other) const noexcept {
 					return curr != other.curr;
 				}
-				inline NODISCARD bool operator==(const iterator_type& other) const noexcept {
+				NODISCARD inline bool operator==(const iterator_type& other) const noexcept {
 					return !operator!=(other);
 				}
 
@@ -204,19 +204,19 @@ namespace Nova::nvtl {
 		using reverse_iterator = Head::reverse_iterator;
 		using const_reverse_iterator = Head::const_reverse_iterator;
 
-		inline NODISCARD iterator begin() { return iterator(head); }
-		inline NODISCARD const_iterator cbegin() const { return const_iterator(head); }
-		inline NODISCARD const_iterator begin() const { return cbegin(); }
-		inline NODISCARD iterator end() { return iterator(tail, false); }
-		inline NODISCARD const_iterator cend() const { return const_iterator(tail, false); }
-		inline NODISCARD const_iterator end() const { return cend(); }
+		NODISCARD inline iterator begin() { return iterator(head); }
+		NODISCARD inline const_iterator cbegin() const { return const_iterator(head); }
+		NODISCARD inline const_iterator begin() const { return cbegin(); }
+		NODISCARD inline iterator end() { return iterator(tail, false); }
+		NODISCARD inline const_iterator cend() const { return const_iterator(tail, false); }
+		NODISCARD inline const_iterator end() const { return cend(); }
 
-		inline NODISCARD reverse_iterator rbegin() { return reverse_iterator(end()); }
-		//inline NODISCARD const_reverse_iterator crbegin() const { return const_reverse_iterator(cend()); }
-		//inline NODISCARD const_reverse_iterator rbegin() const { return crbegin(); }
-		inline NODISCARD reverse_iterator rend() { return reverse_iterator(begin()); }
-		//inline NODISCARD const_reverse_iterator crend() const { return const_reverse_iterator(cbegin()); }
-		//inline NODISCARD const_reverse_iterator rend() const { return crend(); }
+		NODISCARD inline reverse_iterator rbegin() { return reverse_iterator(end()); }
+		//NODISCARD inline const_reverse_iterator crbegin() const { return const_reverse_iterator(cend()); }
+		//NODISCARD inline const_reverse_iterator rbegin() const { return crbegin(); }
+		NODISCARD inline reverse_iterator rend() { return reverse_iterator(begin()); }
+		//NODISCARD inline const_reverse_iterator crend() const { return const_reverse_iterator(cbegin()); }
+		//NODISCARD inline const_reverse_iterator rend() const { return crend(); }
 
 		struct blocks {
 			constexpr blocks(BlockList& parent) : parent(parent) {}
@@ -226,19 +226,19 @@ namespace Nova::nvtl {
 			using reverse_iterator = Head::reverse_block_iterator;
 			using const_reverse_iterator = Head::const_reverse_block_iterator;
 
-			inline NODISCARD iterator begin() { return iterator(parent.head); }
-			inline NODISCARD const_iterator cbegin() const { return const_iterator(parent.head); }
-			inline NODISCARD const_iterator begin() const { return cbegin(); }
-			inline NODISCARD iterator end() { return iterator(); }
-			inline NODISCARD const_iterator cend() const { return const_iterator(); }
-			inline NODISCARD const_iterator end() const { return cend(); }
+			NODISCARD inline iterator begin() { return iterator(parent.head); }
+			NODISCARD inline const_iterator cbegin() const { return const_iterator(parent.head); }
+			NODISCARD inline const_iterator begin() const { return cbegin(); }
+			NODISCARD inline iterator end() { return iterator(); }
+			NODISCARD inline const_iterator cend() const { return const_iterator(); }
+			NODISCARD inline const_iterator end() const { return cend(); }
 
-			inline NODISCARD reverse_iterator rbegin() { return reverse_iterator(parent.tail); }
-			//inline NODISCARD const_reverse_iterator crbegin() const { return const_reverse_iterator(cend()); }
-			//inline NODISCARD const_reverse_iterator rbegin() const { return crbegin(); }
-			inline NODISCARD reverse_iterator rend() { return reverse_iterator(); }
-			//inline NODISCARD const_reverse_iterator crend() const { return const_reverse_iterator(cbegin()); }
-			//inline NODISCARD const_reverse_iterator rend() const { return crend(); }
+			NODISCARD inline reverse_iterator rbegin() { return reverse_iterator(parent.tail); }
+			//NODISCARD inline const_reverse_iterator crbegin() const { return const_reverse_iterator(cend()); }
+			//NODISCARD inline const_reverse_iterator rbegin() const { return crbegin(); }
+			NODISCARD inline reverse_iterator rend() { return reverse_iterator(); }
+			//NODISCARD inline const_reverse_iterator crend() const { return const_reverse_iterator(cbegin()); }
+			//NODISCARD inline const_reverse_iterator rend() const { return crend(); }
 
 		private:
 			BlockList& parent;
