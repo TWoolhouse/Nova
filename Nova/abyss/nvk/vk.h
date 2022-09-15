@@ -3,6 +3,16 @@
 #include "bark/bark.h"
 #include "_vulkan.h"
 
+#if defined(VK_API_VERSION_1_3)
+#define VK_VERSION VK_API_VERSION_1_3
+#elif defined(VK_API_VERSION_1_2)
+#define VK_VERSION VK_API_VERSION_1_2
+#elif defined(VK_API_VERSION_1_1)
+#define VK_VERSION VK_API_VERSION_1_1
+#elif defined(VK_API_VERSION_1_0)
+#define VK_VERSION VK_API_VERSION_1_0
+#endif // API Version
+
 namespace Nova::abyss::def {
 constexpr auto debug =
 #ifndef NOVA_ABYSS_DEBUG
@@ -19,12 +29,16 @@ false;
 }
 
 #ifdef NOVA_DEBUG
-#define NVK_CHECK(expr, msg) ([&]() { \
+// TODO: Dont' use the internal vulkan function to convert result to error as it is not part of the stable api
+#define NVK_RESULT(expr, msg) \
+	vk::resultCheck(static_cast<vk::Result>(expr), msg " : " #expr);
+#define NVK_CHECK(expr, msg) [&]() { \
 	auto __n_vk_check_result = expr; \
 	nova_assert(__n_vk_check_result, msg " : " #expr); \
 	return __n_vk_check_result; \
-})()
+}()
 #else // !NOVA_DEBUG
+#define NVK_RESULT(expr, msg) expr
 #define NVK_CHECK(expr, msg) expr
 #endif // NOVA_DEBUG
 
