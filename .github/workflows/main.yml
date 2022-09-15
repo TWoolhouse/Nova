@@ -19,6 +19,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Setup Vulkan SDK
+        uses: humbletim/setup-vulkan-sdk@v1.2.0
+        with:
+          vulkan-query-version: latest
+          vulkan-use-cache: true
+          vulkan-components: Vulkan-Headers, Vulkan-Loader
 
       - name: Setup Premake
         uses: abel0b/setup-premake@v2.1
@@ -27,13 +36,6 @@ jobs:
 
       - name: Execute Premake Script
         run: premake5 --file=premake.lua ${{ matrix.config.tool }}
-
-      - name: Setup Vulkan SDK
-        uses: humbletim/setup-vulkan-sdk@v1.2.0
-        with:
-          vulkan-query-version: latest
-          vulkan-use-cache: true
-          vulkan-components: Vulkan-Headers, Vulkan-Loader
 
       - name: Setup MSBuild
         if: ${{ startsWith(matrix.config.tool, 'vs') }}
