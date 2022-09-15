@@ -318,9 +318,10 @@ namespace Nova::abyss::nvk::Surface {
 			.hwnd = Nova::platform::hwnd,
 		};
 		vk::SurfaceKHR surface;
-		nova_debug_exc(auto result = ) vkCreateWin32SurfaceKHR(instance, &create_info, reinterpret_cast<std::remove_reference_t<decltype(*nova_abyss_api->alloc)>::NativeType*>(nova_abyss_api->alloc), reinterpret_cast<decltype(surface)::CType*>(&surface));
-		nova_assert(result == VK_SUCCESS, "Failed to create vk::SurfaceKHR");
-		NVK_CHECK(surface, "Invalid vk::SurfaceKHR");
+		NVK_RESULT(
+			vkCreateWin32SurfaceKHR(instance, &create_info, reinterpret_cast<std::remove_reference_t<decltype(*nova_abyss_api->alloc)>::NativeType*>(nova_abyss_api->alloc), reinterpret_cast<decltype(surface)::CType*>(&surface)),
+			"Failed to create vk::SurfaceKHR"
+		);
 		return surface;
 	}
 } // namespace Nova::abyss::vkn
