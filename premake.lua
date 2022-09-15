@@ -14,8 +14,7 @@ workspace "Nova"
 	characterset "Unicode"
 	defines { "UNICODE", "_UNICODE" }
 
-	-- libdirs { "vendor/*/lib/" }
-	-- includedirs { "vendor/*/include/" }
+	nova_build_static = false
 
 	language "C++"
 	cppdialect "C++20"

@@ -11,8 +11,11 @@
 #else
 #define INLINE inline
 #endif
+#else // !NOVA_DEBUG
+#define INLINE inline
 #endif // NOVA_DEBUG
 
+// https://github.com/nemequ/portable-snippets/
 #if defined(__has_builtin) && !defined(__ibmxl__)
 #	if __has_builtin(__builtin_debugtrap)
 #		define NOVA_BREAKPOINT() __builtin_debugtrap()

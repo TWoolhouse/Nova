@@ -6,10 +6,10 @@ project "Flask.Test"
 	includedirs { "./" }
 	files { "**.h", "**.cpp", "**.ixx" }
 
-	staticruntime "On" --MultiThreadedDebug
-
 	pchheader "tpch.h"
 	pchsource "pch.cpp"
+
+	staticruntime "On"
 
 	local gtest = "../vendor/googletest"
 	local bin = gtest .. "/build"
@@ -18,10 +18,17 @@ project "Flask.Test"
 	libdirs { bin .. "/lib/Debug/" }
 	links { "gtest.lib", "gtest_main.lib" }
 
+
+	local gtest_shared = "OFF"
+	if (nova_build_static) then
+		staticruntime "Off"
+		gtest_shared = "ON"
+	end
+
 	prebuildcommands {
 		"{MKDIR} " .. bin,
 		"{CHDIR} " .. bin,
-		"cmake .. -A x64 -DBUILD_GMOCK=OFF"
+		"cmake .. -A x64 -DBUILD_GMOCK=OFF -Dgtest_force_shared_crt=" .. gtest_shared
 	}
 	filter { "system:windows" }
 		prebuildcommands {
@@ -31,5 +38,4 @@ project "Flask.Test"
 
 	removeconfigurations { "Release" }
 	-- defines { }
-	dofile "../premake/config.lua"
 	dofile "../premake/nova.lua"

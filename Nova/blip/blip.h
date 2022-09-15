@@ -7,7 +7,7 @@ namespace Nova::blip {
 	using ClockType = std::chrono::steady_clock;
 	using Unit = std::chrono::duration<double>;
 	using Time = std::chrono::time_point<ClockType, Unit>;
-	inline NODISCARD static Time now() noexcept { return std::chrono::time_point_cast<Unit>(ClockType::now()); }
+	NODISCARD inline static Time now() noexcept { return std::chrono::time_point_cast<Unit>(ClockType::now()); }
 
 	struct Base {};
 
@@ -21,13 +21,13 @@ namespace Nova::blip {
 			delta = now - prev;
 		}
 
-		inline NODISCARD constexpr operator Unit() const noexcept { return delta; }
-		inline NODISCARD constexpr operator double() const noexcept { return delta.count(); }
+		NODISCARD inline constexpr operator Unit() const noexcept { return delta; }
+		NODISCARD inline constexpr operator double() const noexcept { return delta.count(); }
 	};
 
 	struct Timer : public Base {
 		Time start = now(), last = now();
-		inline NODISCARD constexpr Unit elapsed() const noexcept {
+		NODISCARD inline constexpr Unit elapsed() const noexcept {
 			return last - start;
 		};
 		inline void update() noexcept {
@@ -39,7 +39,7 @@ namespace Nova::blip {
 		Time start;
 		Clock() : Delta(), start(prev) {}
 
-		inline NODISCARD constexpr Unit elapsed() const noexcept {
+		NODISCARD inline constexpr Unit elapsed() const noexcept {
 			return now - start;
 		}
 

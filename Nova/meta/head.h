@@ -5,4 +5,5 @@
 #include "include/defines.h"
 #include "include/macro.h"
 #include "include/funcs.h"
+#include "include/enum.h"
 #include "include/apis.h"

@@ -4,13 +4,11 @@
 #include "platform/application.h"
 #include "event/window.h"
 #include "abyss/abyss.h"
+#include "abyss/exc/frame_resize.h"
 
 void t();
 
 namespace Nova::core {
-
-	typename decltype(Application::I) Application::I = nullptr;
-	typename decltype(Application::clock) Application::clock{};
 
 	Application::Application(const std::string_view& name) : window(720, 480) {
 		nova_assert(!I, "Creating multiple Applications is not allowed!");
@@ -45,7 +43,6 @@ namespace Nova::core {
 		platform::Termintate();
 		event::dispatcher.clear();
 		bark::Terminate();
-
 		I = nullptr;
 	}
 
@@ -56,15 +53,19 @@ namespace Nova::core {
 				clock.update();
 				platform::process_events();
 
-				abyss::acquire();
-				render();
-				abyss::release();
+				try {
+					auto& flight = nova_abyss_app->tower.acquire();
+					render(flight);
+					nova_abyss_app->tower.release(flight);
+				} catch (const abyss::exc::FrameResize& e) {
+					nova_bark_debug("Failed to render: {}", e.what());
+				}
 
 				std::this_thread::yield();
 			}
 		} catch (const std::exception& exc) {
 			running = false;
-			nova_bark_error("Main Execution Exception: {}", exc.what());
+			nova_bark_error("Main Execution Exception: {} {}", typeid(exc).name(), exc.what());
 			throw;
 		}
 	}

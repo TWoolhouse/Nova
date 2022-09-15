@@ -1,7 +1,7 @@
 #pragma once
 #include "meta/head.h"
 #include "nvtl/weave.h"
-#include "meta/function.h"
+#include "meta/smallest.h"
 
 #define nova_eden_bind(func, member) ::std::bind(func, &member, std::placeholders::_1)
 
@@ -20,12 +20,16 @@ namespace Nova::eden {
 		// Descriptor of the event
 		Descriptor desc;
 
-		inline constexpr bool is(Descriptor descriptor) {
+		NODISCARD inline constexpr bool is(Descriptor descriptor) {
 			return static_cast<bool>(desc & descriptor);
 		}
 		template<typename E> requires std::derived_from<E, Eden>
-		inline constexpr E* cast() {
+		NODISCARD inline constexpr E* cast() {
 			return is(E::descriptor) ? static_cast<E*>(this) : nullptr;
+		}
+		template<typename E> requires std::derived_from<E, Eden>
+		NODISCARD inline constexpr E& as() {
+			return *reinterpret_cast<E*>(this);
 		}
 
 	};

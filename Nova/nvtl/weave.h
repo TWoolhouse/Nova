@@ -104,8 +104,8 @@ namespace Nova::nvtl {
 				using pointer = value_type*;
 				using reference = value_type&;
 
-				reference operator*() { return reinterpret_cast<external_type*>(m_ptr)->object; }
-				pointer operator->() noexcept { return reinterpret_cast<external_type*>(m_ptr); }
+				reference operator*() { return static_cast<external_type*>(m_ptr)->object; }
+				pointer operator->() noexcept { return static_cast<external_type*>(m_ptr); }
 				Iterator& operator++() {
 					m_ptr = m_ptr->next;
 					return *this;
@@ -298,7 +298,7 @@ namespace Nova::nvtl {
 				auto next = ptr->next;
 				destroy_all(ptr);
 				deallocate(ptr);
-				ptr = reinterpret_cast<Tracker*>(std::move(next));
+				ptr = static_cast<Tracker*>(std::move(next));
 			}
 		}
 

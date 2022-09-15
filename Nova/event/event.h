@@ -30,8 +30,9 @@ namespace Nova::event {
 		using Eden::Eden;
 		bool fire();
 	};
-	extern NOVAPI eden::Dispatcher<Handle, 12> dispatcher;
-	using Ticket = decltype(dispatcher)::Ticket;
+	using Dispatcher = eden::Dispatcher<Handle, 12>;
+	extern NOVAPI Dispatcher dispatcher; // TODO: Spire
+	using Ticket = Dispatcher::Ticket;
 	inline bool Handle::fire() {
 		return dispatcher.fire(*this);
 	}

@@ -6,7 +6,6 @@ namespace Nova::meta::def {
 
 		// NOVAPI DLL Import / Export
 	#ifdef NOVA_BUILD_STATIC
-	#error Nova does not currently support static linking!
 		constexpr bool Static = true;
 		constexpr bool Export = false;
 	#define NOVAPI
