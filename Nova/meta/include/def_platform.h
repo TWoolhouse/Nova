@@ -11,6 +11,7 @@ namespace Nova::meta::def {
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
 	// Windows
 #define NOVA_OS_WINDOWS
+constexpr auto os = OS::Windows;
 #ifndef _WIN64
 #error "64-bit is required on Windows!"
 #endif
