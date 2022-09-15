@@ -30,6 +30,8 @@ namespace Nova::abyss::nvk {
 			.layout = vk::ImageLayout::eColorAttachmentOptimal,
 		};
 
+		// TODO: Depth Stencil Attachment
+
 		vk::SubpassDescription subpass{
 			.pipelineBindPoint = vk::PipelineBindPoint::eGraphics,
 			.colorAttachmentCount = 1,

@@ -239,8 +239,6 @@ namespace Nova::abyss::nvk {
 		return score * WEIGHT_DISTICNT * assigned.size() / Queues::count;
 	}
 
-	// TODO: Device swapchain support!
-
 	// Introduce a bias to different GPU types
 	PhysicalBuilder::Rank::Score PhysicalBuilder::rank_type(vk::PhysicalDevice& device) {
 		constexpr Rank::Score WEIGHT = 100;

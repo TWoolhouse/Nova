@@ -144,7 +144,6 @@ namespace Nova::abyss::nvk {
 		};
 	}
 
-	// TODO
 	void Swapchain::shared_families() {
 		for (auto&& queue : { nova_abyss_api->queues.present, nova_abyss_api->queues.graphics })
 			if (auto it = std::ranges::find(nova_abyss_api->device.info.swapchain.image_sharing, queue.family); it == nova_abyss_api->device.info.swapchain.image_sharing.end())

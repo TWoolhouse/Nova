@@ -3,8 +3,8 @@
 
 namespace Nova::abyss::nvk::Logger {
 
-	vk::DebugUtilsMessengerEXT create(vk::Instance& instance);
+	NODISCARD vk::DebugUtilsMessengerEXT create(vk::Instance& instance);
 	void destroy(vk::DebugUtilsMessengerEXT& logger, vk::Instance& instance);
-	constexpr vk::DebugUtilsMessengerCreateInfoEXT info();
+	NODISCARD constexpr vk::DebugUtilsMessengerCreateInfoEXT info();
 
 }
