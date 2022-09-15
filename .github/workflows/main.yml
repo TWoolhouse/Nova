@@ -1,0 +1,124 @@
+name: Main
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          - os: windows-latest
+            tool: vs2022
+        configuration: [Debug, Release]
+        gfx_api: [Vulkan]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Setup Vulkan SDK
+        uses: humbletim/install-vulkan-sdk@v1.1.1
+        with:
+          version: latest
+          cache: true
+
+      #   uses: humbletim/setup-vulkan-sdk@v1.2.0
+      #   with:
+      #     vulkan-query-version: latest
+      #     vulkan-config-file: vulkan_sdk_config.json
+      #     vulkan-use-cache: true
+      #     vulkan-components: Vulkan-Headers, Vulkan-Loader
+
+      - name: Setup Premake
+        uses: abel0b/setup-premake@v2.1
+        with:
+          version: "5.0.0-beta2"
+
+      - name: Execute Premake Script
+        run: premake5 --file=premake.lua ${{ matrix.config.tool }}
+
+      - name: Setup MSBuild
+        if: ${{ startsWith(matrix.config.tool, 'vs') }}
+        uses: microsoft/setup-msbuild@v1.1
+        with:
+          msbuild-architecture: x64
+
+      - name: Build Nova
+        if: ${{ startsWith(matrix.config.tool, 'vs') }}
+        run: msbuild
+          /maxcpucount
+          /nr:True
+          project/vs2022/Nova.sln
+          /p:Configuration=${{ matrix.configuration }}
+          /p:Platform=${{ matrix.gfx_api }}
+          /consoleloggerparameters:NoSummary
+
+      - name: Cache Binary
+        uses: actions/cache@v3
+        with:
+          key: ${{ runner.os }}-${{ matrix.config.tool}}-${{ github.sha }}
+          path: |
+            ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/
+            !./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*.pdb
+            !./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*.lib
+            !./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*.exp
+            !./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*.idb
+
+  test:
+    needs: [build]
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          - os: windows-latest
+            tool: vs2022
+        configuration: [Debug]
+        gfx_api: [Vulkan]
+
+    steps:
+      - name: Load Binary
+        uses: actions/cache@v3
+        with:
+          key: ${{ runner.os }}-${{ matrix.config.tool}}-${{ github.sha }}
+          path: ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/
+          restore-keys: ${{ runner.os }}-${{ matrix.config.tool}}
+
+      - name: Flask.Test
+        run: ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/flask.test > test_report.txt
+
+      - name: Upload to Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ runner.os }}-${{ matrix.gfx_api }}-TestReport
+          path: test_report.txt
+
+  upload-binary:
+    needs: [build]
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          - os: windows-latest
+            tool: vs2022
+        configuration: [Release]
+        gfx_api: [Vulkan]
+
+    steps:
+      - name: Load Binary
+        uses: actions/cache@v3
+        with:
+          key: ${{ runner.os }}-${{ matrix.config.tool}}-${{ github.sha }}
+          path: ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/
+          restore-keys: ${{ runner.os }}-${{ matrix.config.tool}}
+
+      - name: Upload to Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ runner.os }}-${{ matrix.gfx_api }}
+          path: ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/
