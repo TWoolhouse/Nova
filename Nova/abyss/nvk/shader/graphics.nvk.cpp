@@ -12,7 +12,7 @@ namespace Nova::abyss::nvk {
 			case Stage::Fragment:	return vk::ShaderStageFlagBits::eFragment;
 			default:
 				nova_bark_warn("Unknown Case: [Shader Stage]: {}", stage);
-				break;
+				return vk::ShaderStageFlagBits{};
 		}
 	}
 
@@ -20,11 +20,13 @@ namespace Nova::abyss::nvk {
 
 namespace Nova::abyss::nvk::shader {
 
-	Graphics::Graphics(const abyss::Renderpass& renderpass, const std::initializer_list<abyss::ShaderCode>& stages) {
+	Graphics::Graphics(const abyss::Renderpass& renderpass, const std::initializer_list<abyss::ShaderCode>& stages, vk::VertexInputBindingDescription binding, std::span<vk::VertexInputAttributeDescription> attributes) {
 
 		vk::PipelineVertexInputStateCreateInfo info_input_vertex{
-			.vertexBindingDescriptionCount = 0,
-			.vertexAttributeDescriptionCount = 0,
+			.vertexBindingDescriptionCount = 1,
+			.pVertexBindingDescriptions = &binding,
+			.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributes.size()),
+			.pVertexAttributeDescriptions = attributes.data(),
 		};
 
 		vk::PipelineInputAssemblyStateCreateInfo info_input_assembly{
@@ -122,15 +124,15 @@ namespace Nova::abyss::nvk::shader {
 			.pViewportState = &info_viewport,
 			.pRasterizationState = &info_rasterizer,
 			.pMultisampleState = &info_multisampling,
-			.pDepthStencilState = {}, // DO
+			.pDepthStencilState = {}, // TODO: Depth Stencil
 			.pColorBlendState = &info_colour_blending,
 			//.pDynamicState = nullptr, // TODO: Dynamic State
 
 			.layout = layout,
-			.renderPass = renderpass, // TODO
-			.subpass = 0, // TODO
+			.renderPass = renderpass,
+			.subpass = 0, // TODO: expose subpass index to the constructor
 
-			// TODO
+			// TODO: Pipeline inheritance
 			//.basePipelineHandle,
 			//.basePipelineIndex,
 		};
