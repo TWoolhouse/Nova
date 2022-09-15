@@ -3,6 +3,7 @@
 #include "instance.h"
 #include "queues.h"
 #include "device.h"
+#include "vma.h"
 #include "swapchain.h"
 
 namespace Nova::abyss::nvk {
@@ -16,6 +17,8 @@ namespace Nova::abyss::nvk {
 
 		Queues& queues;
 		vk::Device& dev;
+
+		VMA vma;
 
 		Swapchain swapchain;
 

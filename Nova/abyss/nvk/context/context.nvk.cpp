@@ -12,6 +12,7 @@ namespace Nova::abyss::nvk {
 		device(properties),
 		queues(device.info.queues),
 		dev(device.logical),
+		vma(),
 		swapchain()
 	{
 
