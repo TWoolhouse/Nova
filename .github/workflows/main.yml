@@ -26,6 +26,7 @@ jobs:
         uses: humbletim/setup-vulkan-sdk@v1.2.0
         with:
           vulkan-query-version: latest
+          vulkan-config-file: vulkan_sdk_config.json
           vulkan-use-cache: true
           vulkan-components: Vulkan-Headers, Vulkan-Loader
 
