@@ -15,9 +15,12 @@ filter {}
 -- Vulkan
 filter "platforms:Vulkan"
 	defines { "NOVA_ABYSS_VULKAN" }
-	includedirs { vk_sdk .. "/Include" }
-	libdirs { vk_sdk .. "/Lib" }
+	includedirs { vk_sdk .. "/Include/" }
+	libdirs { vk_sdk .. "/Lib/" }
 	links { "vulkan-1.lib" }
+
+	-- VMA
+	includedirs { "../vendor/vma/include/" }
 
 -- OpenGL
 filter "platforms:OpenGL"
