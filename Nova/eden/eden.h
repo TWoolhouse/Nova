@@ -1,7 +1,7 @@
 #pragma once
 #include "meta/head.h"
 #include "nvtl/weave.h"
-#include "meta/function.h"
+#include "meta/smallest.h"
 
 #define nova_eden_bind(func, member) ::std::bind(func, &member, std::placeholders::_1)
 

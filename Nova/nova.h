@@ -3,8 +3,7 @@
 #include "npch.h"
 
 #include "meta/head.h"
-#include "meta/concept.h"
-#include "meta/function.h"
+#include "meta/meta.h"
 
 #include "bark/bark.h"
 #include "nvtl/nvtl.h"

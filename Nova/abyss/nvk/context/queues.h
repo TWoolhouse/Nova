@@ -1,6 +1,7 @@
 #pragma once
 #include "vk.h"
-#include "meta/function.h"
+#include "meta/bit.h"
+#include "meta/smallest.h"
 
 namespace Nova::abyss::nvk {
 
