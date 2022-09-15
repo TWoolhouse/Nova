@@ -1,7 +1,7 @@
 #include "npch.h"
 #include "spirv_compile.h"
 
-#include <shaderc/shaderc.hpp>
+#include "_spirv.h"
 
 using namespace std::string_literals;
 
@@ -77,7 +77,7 @@ namespace Nova::abyss::spirv {
 		);
 		if (spv.GetCompilationStatus() != shaderc_compilation_status::shaderc_compilation_status_success) {
 			nova_bark_error("Shader Compiliation[{}]<{}> {}", spv.GetCompilationStatus(), file_path.generic_string(), spv.GetErrorMessage());
-			throw std::runtime_error("Shader Compilation Error");		
+			throw std::runtime_error("Shader Compilation Error");
 		}
 		nova_assert(std::distance(spv.cbegin(), spv.cend()) > 0, "Shader Code must have a length greater than 0!");
 		return { spv.cbegin(), spv.cend() };
