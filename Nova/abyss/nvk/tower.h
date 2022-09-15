@@ -14,7 +14,7 @@ namespace Nova::abyss::nvk {
 		~Tower();
 
 		abyss::Flight& acquire();
-		INLINE void release(abyss::Flight& flight) { return release(reinterpret_cast<Flight&>(flight)); }
+		INLINE void release(abyss::Flight& flight) { return release(static_cast<Flight&>(flight)); }
 
 		abyss::Renderpass renderpass;
 
