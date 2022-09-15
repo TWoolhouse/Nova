@@ -57,7 +57,7 @@ namespace Nova::abyss::nvk {
 			.applicationVersion = VK_MAKE_API_VERSION(0, 0, 1, 0),
 			.pEngineName = engine_name.data(),
 			.engineVersion = VK_MAKE_API_VERSION(0, 0, 1, 0),
-			.apiVersion = VK_API_VERSION_1_2,
+			.apiVersion = VK_VERSION,
 		};
 		nova_bark_info("Engine: {}.{}.{}.{} {}", VERSION_ARGS(info_app.engineVersion), info_app.pEngineName);
 		nova_bark_info("Vulkan: {}.{}.{}.{}", VERSION_ARGS(info_app.apiVersion));
