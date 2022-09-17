@@ -23,17 +23,10 @@ jobs:
           submodules: true
 
       - name: Setup Vulkan SDK
-        uses: humbletim/install-vulkan-sdk@v1.1.1
+        uses: TWoolhouse/setup-vulkan-sdk@v1.0.0
         with:
           version: latest
-          cache: true
-
-      #   uses: humbletim/setup-vulkan-sdk@v1.2.0
-      #   with:
-      #     vulkan-query-version: latest
-      #     vulkan-config-file: vulkan_sdk_config.json
-      #     vulkan-use-cache: true
-      #     vulkan-components: Vulkan-Headers, Vulkan-Loader
+          components: com.lunarg.vulkan.debug
 
       - name: Setup Premake
         uses: abel0b/setup-premake@v2.1
