@@ -60,7 +60,7 @@ jobs:
         with:
           key: ${{ runner.os }}-${{ matrix.config.tool}}-${{ github.sha }}
           path: |
-            ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/
+            ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*
             !./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*.{pdb,exp,idb}
 
   test:
@@ -80,12 +80,13 @@ jobs:
         with:
           key: ${{ runner.os }}-${{ matrix.config.tool}}-${{ github.sha }}
           path: |
-            ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/
+            ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*
             !./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*.{pdb,exp,idb}
           restore-keys: ${{ runner.os }}-${{ matrix.config.tool}}
 
       - name: Flask.Test
         run: ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/flask.test > test_report.txt
+        continue-on-error: true
 
       - name: Upload to Artifact
         uses: actions/upload-artifact@v3
@@ -110,7 +111,7 @@ jobs:
         with:
           key: ${{ runner.os }}-${{ matrix.config.tool}}-${{ github.sha }}
           path: |
-            ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/
+            ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*
             !./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*.{pdb,exp,idb}
           restore-keys: ${{ runner.os }}-${{ matrix.config.tool}}
 
