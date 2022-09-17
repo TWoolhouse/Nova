@@ -61,10 +61,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.config.tool}}-${{ github.sha }}
           path: |
             ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/
-            !./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*.pdb
-            !./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*.lib
-            !./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*.exp
-            !./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*.idb
+            !./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*.{pdb,exp,idb}
 
   test:
     needs: [build]
@@ -82,7 +79,9 @@ jobs:
         uses: actions/cache@v3
         with:
           key: ${{ runner.os }}-${{ matrix.config.tool}}-${{ github.sha }}
-          path: ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/
+          path: |
+            ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/
+            !./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*.{pdb,exp,idb}
           restore-keys: ${{ runner.os }}-${{ matrix.config.tool}}
 
       - name: Flask.Test
@@ -110,7 +109,9 @@ jobs:
         uses: actions/cache@v3
         with:
           key: ${{ runner.os }}-${{ matrix.config.tool}}-${{ github.sha }}
-          path: ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/
+          path: |
+            ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/
+            !./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*.{pdb,exp,idb}
           restore-keys: ${{ runner.os }}-${{ matrix.config.tool}}
 
       - name: Upload to Artifact
