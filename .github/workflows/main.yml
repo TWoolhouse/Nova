@@ -24,7 +24,7 @@ jobs:
 
       - name: Setup Vulkan SDK
         id: vulkan
-        uses: TWoolhouse/setup-vulkan-sdk@v1.0.0
+        uses: TWoolhouse/setup-vulkan-sdk@v1.1.0
         with:
           version: latest
           components: com.lunarg.vulkan.debug
@@ -83,6 +83,12 @@ jobs:
             ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*
             !./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/*.{pdb,exp,idb}
           restore-keys: ${{ runner.os }}-${{ matrix.config.tool}}
+
+      - name: Obtain Vulkan Libraries
+        id: vulkan
+        uses: TWoolhouse/setup-vulkan-sdk@v1.1.0
+        with:
+          version: latest
 
       - name: Flask.Test
         run: ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/flask.test > test_report.txt
