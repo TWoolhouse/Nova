@@ -90,8 +90,17 @@ jobs:
         with:
           version: latest
 
+      - name: Debug
+        run: |
+          echo "$PATH"
+          echo "$VULKAN_SDK"
+          ls ./
+          ls ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/
+        shell: bash
+
       - name: Flask.Test
         run: ./bin/${{ matrix.configuration }}/${{ matrix.gfx_api }}/flask.test > test_report.txt
+        shell: powershell
         continue-on-error: true
 
       - name: Upload to Artifact
