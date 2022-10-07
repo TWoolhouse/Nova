@@ -22,7 +22,7 @@ nova_meta_enum_str(vk::Format, format) {
 		case vk::Format::eR32G32B32Uint: return "vec3<uint>";
 		case vk::Format::eR32G32B32A32Uint: return "vec4<uint>";
 		default:
-			nova_bark_warn("Unknown Case [vk Format]: {}", static_cast<std::underlying_type_t<decltype(format)>>(format));
+			nova_bark_warn("Unknown Case [vk Format]: {}", cpp::to_underlying(format));
 			return "Unknown";
 	}
 }

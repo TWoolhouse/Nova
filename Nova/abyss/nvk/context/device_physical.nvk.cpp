@@ -101,8 +101,8 @@ namespace Nova::abyss::nvk {
 	// Surface Format is not supported
 	size_t reject(const vk::SurfaceFormatKHR& surface_format) {
 		nova_bark_trace("\tRejection [Surface Format]: Not supported! Format: {} Colour Space: {}",
-			static_cast<std::underlying_type_t<decltype(surface_format.format)>>(surface_format.format),
-			static_cast<std::underlying_type_t<decltype(surface_format.colorSpace)>>(surface_format.colorSpace)
+			cpp::to_underlying(surface_format.format),
+			cpp::to_underlying(surface_format.colorSpace)
 		);
 		return REJECTION;
 	}
@@ -250,7 +250,7 @@ namespace Nova::abyss::nvk {
 				case vk::PhysicalDeviceType::eCpu: return 1;
 				case vk::PhysicalDeviceType::eOther: [[fallthrough]];
 				default:
-					nova_bark_warn("Unknown Case [vk Physical Device Type]: {}", static_cast<std::underlying_type_t<vk::PhysicalDeviceType>>(device.getProperties().deviceType));
+					nova_bark_warn("Unknown Case [vk Physical Device Type]: {}", cpp::to_underlying(device.getProperties().deviceType));
 					return 1;
 			}
 		}() * WEIGHT;

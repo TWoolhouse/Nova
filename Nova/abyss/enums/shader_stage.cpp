@@ -7,7 +7,7 @@ nova_meta_enum_str(Nova::abyss::Shader::Stage, stage) {
 		case Stage::Vertex:	return "Vertex";
 		case Stage::Fragment:	return "Fragment";
 		default:
-			nova_bark_warn("Unknown Case: [Shader Stage]: {}", static_cast<std::underlying_type_t<decltype(stage)>>(stage));
+			nova_bark_warn("Unknown Case: [Shader Stage]: {}", cpp::to_underlying(stage));
 			return "Unknown";
 	}
 }

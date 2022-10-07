@@ -6,7 +6,7 @@ nova_meta_enum_str(vk::ColorSpaceKHR, format) {
 	switch (format) {
 		case vk::ColorSpaceKHR::eSrgbNonlinear: return "Srgb-Nonlinear";
 		default:
-			nova_bark_warn("Unknown Case [vk Colour Space]: {}", static_cast<std::underlying_type_t<decltype(format)>>(format));
+			nova_bark_warn("Unknown Case [vk Colour Space]: {}", cpp::to_underlying(format));
 			return "Unknown";
 	}
 }

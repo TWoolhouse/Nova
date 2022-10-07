@@ -18,7 +18,7 @@ nova_meta_enum_str(shaderc_compilation_status, status) {
 		case Status::shaderc_compilation_status_transformation_error:	return "Transformation Error";
 		case Status::shaderc_compilation_status_configuration_error:	return "Configuration Error";
 	default:
-		nova_bark_warn("Unknown Case []: {}", static_cast<std::underlying_type_t<decltype(status)>>(status));
+		nova_bark_warn("Unknown Case []: {}", cpp::to_underlying(status));
 		return "Unknown";
 	}
 }

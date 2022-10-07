@@ -22,7 +22,7 @@ namespace Nova::abyss::nvk::buffer {
 		};
 
 		VmaAllocationInfo info;
-		
+
 		auto info_ptr = &info;
 		constexpr auto debug = abyss::def::debug && bark::def::debug;
 		if constexpr (!debug)
@@ -43,7 +43,7 @@ namespace Nova::abyss::nvk::buffer {
 			nova_bark_debug("VK Buffer Allocation: {}B {} {}",
 				info.size,
 				info.pMappedData ? "Mapped" : "Unmapped",
-				static_cast<std::underlying_type_t<vk::BufferUsageFlagBits>>(info_buffer.usage)
+				cpp::to_underlying(info_buffer.usage)
 			);
 		}
 

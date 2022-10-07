@@ -26,6 +26,6 @@ template<typename Enum, class CharT> requires std::is_enum_v<Enum> && (!requires
 struct std::formatter<Enum, CharT> : public std::formatter<std::underlying_type_t<Enum>, CharT> {
 	template<class FormatContext>
 	auto format(Enum arg, FormatContext& fc) {
-		return formatter<std::underlying_type_t<Enum>, CharT>::format(static_cast<std::underlying_type_t<Enum>>(arg), fc);
+		return formatter<std::underlying_type_t<Enum>, CharT>::format(cpp::to_underlying(arg), fc);
 	}
 };

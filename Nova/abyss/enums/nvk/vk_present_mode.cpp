@@ -11,7 +11,7 @@ nova_meta_enum_str(vk::PresentModeKHR, mode) {
 		case vk::PresentModeKHR::eSharedDemandRefresh: return "Shared Demand Refresh";
 		case vk::PresentModeKHR::eSharedContinuousRefresh: return "Shared Continuous Refresh";
 		default:
-			nova_bark_warn("Unknown Case [vk Present Mode]: {}", static_cast<std::underlying_type_t<decltype(mode)>>(mode));
+			nova_bark_warn("Unknown Case [vk Present Mode]: {}", cpp::to_underlying(mode));
 			return "Unknown";
 	}
 }

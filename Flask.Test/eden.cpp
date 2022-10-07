@@ -14,7 +14,7 @@ enum class Type : meta::smallest::uint<meta::bit(5)> {
 };
 
 constexpr Type shift(Type type, size_t shift = 1) {
-	return static_cast<Type>(static_cast<std::underlying_type_t<Type>>(type) << shift);
+	return static_cast<Type>(cpp::to_underlying(type) << shift);
 }
 
 struct Event : public eden::Event<Type> {

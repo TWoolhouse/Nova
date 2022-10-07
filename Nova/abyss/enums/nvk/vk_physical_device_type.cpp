@@ -11,7 +11,7 @@ nova_meta_enum_str(vk::PhysicalDeviceType, type) {
 		case Type::eCpu: return "CPU";
 		case Type::eOther: [[fallthrough]];
 		default:
-			nova_bark_warn("Unknown Case [vk Physical Device Type]: {}", static_cast<std::underlying_type_t<decltype(type)>>(type));
+			nova_bark_warn("Unknown Case [vk Physical Device Type]: {}", cpp::to_underlying(type));
 			return "Unknown";
 	}
 }

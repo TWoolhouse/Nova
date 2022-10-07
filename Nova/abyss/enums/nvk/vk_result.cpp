@@ -48,7 +48,7 @@ nova_meta_enum_str(vk::Result, result) {
 		// case vk::Result::eErrorOutOfPoolMemoryKHR:	return "ErrorOutOfPoolMemoryKHR";
 		// case vk::Result::eErrorPipelineCompileRequiredEXT:	return "ErrorPipelineCompileRequiredEXT";
 		default:
-			nova_bark_warn("Unknown Case [vk Result]: {}", static_cast<std::underlying_type_t<decltype(result)>>(result));
+			nova_bark_warn("Unknown Case [vk Result]: {}", cpp::to_underlying(result));
 			return "Unknown Error";
 	}
 }

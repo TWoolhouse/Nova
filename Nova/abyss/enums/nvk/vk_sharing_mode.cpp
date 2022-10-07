@@ -7,7 +7,7 @@ nova_meta_enum_str(vk::SharingMode, mode) {
 		case vk::SharingMode::eExclusive: return "Exclusive";
 		case vk::SharingMode::eConcurrent: return "Concurrent";
 		default:
-			nova_bark_warn("Unknown Case [vk Sharing Mode]: {}", static_cast<std::underlying_type_t<decltype(mode)>>(mode));
+			nova_bark_warn("Unknown Case [vk Sharing Mode]: {}", cpp::to_underlying(mode));
 			return "Unknown";
 	}
 }

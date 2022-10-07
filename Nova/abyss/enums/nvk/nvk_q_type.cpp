@@ -10,7 +10,7 @@ nova_meta_enum_str(Nova::abyss::nvk::Q::Type, type) {
 		case Type::Transfer: return "Transfer";
 		case Type::Present: return "Present";
 		default:
-			nova_bark_warn("Unknown Case [Queue Type]: {}", static_cast<std::underlying_type_t<decltype(type)>>(type));
+			nova_bark_warn("Unknown Case [Queue Type]: {}", cpp::to_underlying(type));
 			return "Unknown";
 	}
 }

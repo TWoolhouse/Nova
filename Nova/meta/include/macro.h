@@ -12,7 +12,7 @@ template<class CharT> \
 struct std::formatter<EnumName, CharT> : std::formatter<std::underlying_type_t<EnumName>, CharT> { \
 	template<class FormatContext> \
 	auto format(EnumName _enum, FormatContext& fc) { \
-		return std::formatter<std::underlying_type_t<EnumName>, CharT>::format(static_cast<std::underlying_type_t<EnumName>>(_enum), fc); \
+		return std::formatter<std::underlying_type_t<EnumName>, CharT>::format(cpp::to_underlying(_enum), fc); \
 	} \
 }
 
