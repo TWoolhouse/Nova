@@ -10,7 +10,7 @@ namespace Nova::abyss::nvk::buffer {
 		vmaDestroyBuffer(nova_abyss_api->vma, buffer, allocation);
 	}
 
-	Raw create(size_t size) {
+	Raw::Raw(size_t size) {
 		nova_bark_init("VK Buffer");
 		vk::BufferCreateInfo info_buffer{
 			.size = size,
@@ -22,8 +22,6 @@ namespace Nova::abyss::nvk::buffer {
 			.usage = VMA_MEMORY_USAGE_AUTO,
 		};
 
-		VkBuffer buffer;
-		VmaAllocation allocation;
 		VmaAllocationInfo info;
 		
 		auto info_ptr = &info;
@@ -32,8 +30,14 @@ namespace Nova::abyss::nvk::buffer {
 			info_ptr = nullptr;
 
 		NVK_RESULT(
-			vmaCreateBuffer(nova_abyss_api->vma, reinterpret_cast<VkBufferCreateInfo*>(&info_buffer), &info_allocation, &buffer, &allocation, info_ptr),
-			"Failed to create VMA Buffer"
+			vmaCreateBuffer(
+				nova_abyss_api->vma,
+				reinterpret_cast<VkBufferCreateInfo*>(&info_buffer),
+				&info_allocation,
+				reinterpret_cast<VkBuffer*>(&buffer),
+				&allocation,
+				info_ptr
+			), "Failed to create VMA Buffer"
 		);
 
 		if constexpr (debug) {
@@ -44,10 +48,6 @@ namespace Nova::abyss::nvk::buffer {
 			);
 		}
 
-		return {
-			std::move(buffer),
-			std::move(allocation)
-		};
 	}
 
 }

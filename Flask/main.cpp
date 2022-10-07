@@ -37,7 +37,7 @@ public:
 		pipeline(nova_abyss_app->tower.renderpass, {
 			{ Nova::abyss::Shader::Stage::Vertex, "start/first/.vert" },
 			{ Nova::abyss::Shader::Stage::Fragment, "start/first/.frag" },
-		}, Nova::abyss::buffer::Vertex<Vertex>{}),
+		}, Nova::meta::pack<Nova::abyss::buffer::Vertex<Vertex>>{}),
 		buffer_vertex()
 
 	{}
@@ -59,7 +59,7 @@ public:
 		}
 		
 		flight.commands.bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline);
-		//flight.commands.bindVertexBuffers(0, {VK_NULL_HANDLE}, {0});
+		//flight.commands.bindVertexBuffers(0, {buffer_vertex}, {0});
 		flight.commands.draw(3, 1, 0, 0);
 	}
 };

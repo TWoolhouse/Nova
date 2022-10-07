@@ -9,8 +9,8 @@
 namespace Nova::abyss::spec::shader {
 
 	template<typename T>
-	concept Graphics = Null<T> && std::is_base_of_v<abyss::Shader, T> && requires (const abyss::Renderpass& renderpass, abyss::ShaderCode shader_code, abyss::nvk::buffer::Vertex<spec::buffer::_V> vertex_buffer) {
-		T(renderpass, { shader_code, shader_code, shader_code }, vertex_buffer);
+	concept Graphics = Null<T> && std::is_base_of_v<abyss::Shader, T> && requires (const abyss::Renderpass& renderpass, abyss::ShaderCode shader_code) {
+		T(renderpass, { shader_code, shader_code, shader_code }, Nova::meta::pack<abyss::buffer::Vertex<spec::buffer::_V>>{});
 	};
 
 }

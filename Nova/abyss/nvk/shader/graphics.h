@@ -10,8 +10,11 @@ namespace Nova::abyss::nvk::shader {
 	class NOVAPI Graphics : public Shader {
 	public:
 		template<typename Vertex>
-		Graphics(const abyss::Renderpass& renderpass, const std::initializer_list<abyss::ShaderCode>& stages, abyss::buffer::Vertex<Vertex> buffer) 
-			: Graphics(renderpass, stages, buffer.binding(), std::span{buffer.attributes().data(), buffer.attributes().size()}) {}
+		Graphics(const abyss::Renderpass& renderpass, const std::initializer_list<abyss::ShaderCode>& stages, meta::pack<abyss::buffer::Vertex<Vertex>> buffer_type) 
+			: Graphics(renderpass, stages,
+				decltype(buffer_type)::get<0>::binding(),
+				std::span{decltype(buffer_type)::get<0>::attributes().data(), decltype(buffer_type)::get<0>::attributes().size()}
+			) {}
 		virtual ~Graphics() override;
 	protected:
 		Graphics(const abyss::Renderpass& renderpass, const std::initializer_list<abyss::ShaderCode>& stages, vk::VertexInputBindingDescription binding, std::span<vk::VertexInputAttributeDescription> attributes);
