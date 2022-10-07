@@ -2,6 +2,7 @@
 #include "meta/head.h"
 #include "../vk.h"
 
+#include "buffer.h"
 #include "abyss/interface/buffer_vertex.h"
 #include "abyss/interface/vertex_format.h"
 #include "mlb/mlb.h"
@@ -71,6 +72,9 @@ namespace Nova::abyss::nvk::buffer {
 
 		Vertex() {}
 		~Vertex() {}
+
+	protected:
+		Raw buffer;
 
 	};
 

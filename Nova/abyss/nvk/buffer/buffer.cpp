@@ -7,7 +7,7 @@ namespace Nova::abyss::nvk::buffer {
 
 	Raw::~Raw() {
 		nova_bark_term("Buffer");
-		vmaDestroyBuffer(nova_abyss_api->vma, buffer, allocation);
+		vmaDestroyBuffer(nova_abyss_api->vma, self, allocation);
 	}
 
 	Raw::Raw(size_t size) {
@@ -16,7 +16,6 @@ namespace Nova::abyss::nvk::buffer {
 			.size = size,
 			.usage = vk::BufferUsageFlagBits::eVertexBuffer,
 		};
-
 		VmaAllocationCreateInfo info_allocation{
 			.flags = {},
 			.usage = VMA_MEMORY_USAGE_AUTO,
@@ -34,7 +33,7 @@ namespace Nova::abyss::nvk::buffer {
 				nova_abyss_api->vma,
 				reinterpret_cast<VkBufferCreateInfo*>(&info_buffer),
 				&info_allocation,
-				reinterpret_cast<VkBuffer*>(&buffer),
+				reinterpret_cast<VkBuffer*>(&self),
 				&allocation,
 				info_ptr
 			), "Failed to create VMA Buffer"
