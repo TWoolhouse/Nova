@@ -10,15 +10,15 @@ namespace Nova::abyss::nvk::buffer {
 		vmaDestroyBuffer(nova_abyss_api->vma, self, allocation);
 	}
 
-	Raw::Raw(size_t size) {
+	Raw::Raw(size_t size, Type type) {
 		nova_bark_init("VK Buffer");
 		vk::BufferCreateInfo info_buffer{
 			.size = size,
-			.usage = vk::BufferUsageFlagBits::eVertexBuffer,
+			.usage = static_cast<vk::BufferUsageFlagBits>(type),
 		};
 		VmaAllocationCreateInfo info_allocation{
-			.flags = {},
-			.usage = VMA_MEMORY_USAGE_AUTO,
+			.flags = VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT,
+			.usage = VMA_MEMORY_USAGE_AUTO_PREFER_HOST,
 		};
 
 		VmaAllocationInfo info;
@@ -43,10 +43,16 @@ namespace Nova::abyss::nvk::buffer {
 			nova_bark_debug("VK Buffer Allocation: {}B {} {}",
 				info.size,
 				info.pMappedData ? "Mapped" : "Unmapped",
-				cpp::to_underlying(info_buffer.usage)
+				type
 			);
 		}
 
+	}
+
+	void* Raw::mapping() {
+		VmaAllocationInfo info;
+		vmaGetAllocationInfo(nova_abyss_api->vma, allocation, &info);
+		return info.pMappedData;
 	}
 
 }

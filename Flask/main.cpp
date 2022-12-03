@@ -20,6 +20,10 @@ struct Vertex {
 	Nova::mlb::vec3 colour;
 };
 const std::vector<Vertex> verticies{
+	{ { 0.1, -0.6, 0.0}, {0.0, 0.0, 0.0} },
+	{ { 0.6,  0.6, 1.0}, {0.0, 0.0, 0.0} },
+	{ {-0.6,  0.6, 0.0}, {0.0, 0.0, 1.0} },
+
 	{ { 0.0, -0.5, 0.0}, {1.0, 0.0, 0.0} },
 	{ { 0.5,  0.5, 0.0}, {0.0, 1.0, 0.0} },
 	{ {-0.5,  0.5, 0.0}, {0.0, 0.0, 1.0} },
@@ -35,12 +39,16 @@ public:
 
 		// Temporary Graphics Stuff
 		pipeline(nova_abyss_app->tower.renderpass, {
-			{ Nova::abyss::Shader::Stage::Vertex, "start/first/.vert" },
-			{ Nova::abyss::Shader::Stage::Fragment, "start/first/.frag" },
-		}, Nova::meta::pack<Nova::abyss::buffer::Vertex<Vertex>>{}),
-		buffer_vertex()
-
-	{}
+			{ Nova::abyss::Shader::Stage::Vertex, "start/simple/.vert" },
+			{ Nova::abyss::Shader::Stage::Fragment, "start/simple/.frag" },
+		}, Nova::meta::pack<decltype(buffer_vertex)>{}),
+		buffer_vertex(verticies.size())
+	{
+	
+		void* data = buffer_vertex.buffer.mapping();
+		memcpy(data, verticies.data(), verticies.size() * sizeof(Vertex));
+	
+	}
 
 	void update() {}
 
@@ -59,8 +67,8 @@ public:
 		}
 		
 		flight.commands.bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline);
-		//flight.commands.bindVertexBuffers(0, {buffer_vertex}, {0});
-		flight.commands.draw(3, 1, 0, 0);
+		flight.commands.bindVertexBuffers(0, {buffer_vertex.buffer}, {0});
+		flight.commands.draw(verticies.size(), 1, 0, 0);
 	}
 };
 

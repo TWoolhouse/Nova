@@ -2,11 +2,12 @@
 #include "meta/head.h"
 #include "../vk.h"
 #include "../context/vma.h"
+#include "type.h"
 
 namespace Nova::abyss::nvk::buffer {
 
-	struct Raw : public OPVK<Raw, vk::Buffer> {
-		Raw(size_t size);
+	struct NOVAPI Raw : public OPVK<Raw, vk::Buffer> {
+		Raw(size_t size, Type type);
 
 		vk::Buffer self;
 		VmaAllocation allocation;
@@ -18,6 +19,8 @@ namespace Nova::abyss::nvk::buffer {
 			allocation = std::exchange(other.allocation, VK_NULL_HANDLE);
 			return *this;
 		}
+
+		void* mapping();
 
 		~Raw();
 	};

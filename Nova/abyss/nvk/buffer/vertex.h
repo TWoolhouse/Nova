@@ -70,12 +70,11 @@ namespace Nova::abyss::nvk::buffer {
 			};
 		}
 
-		Vertex() {}
+		Vertex(size_t elements) : buffer(elements * sizeof(T), Type::Vertex) {}
 		~Vertex() {}
 
-	protected:
+	public:
 		Raw buffer;
-
 	};
 
 }
