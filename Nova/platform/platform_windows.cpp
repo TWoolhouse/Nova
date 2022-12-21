@@ -6,8 +6,17 @@
 #include "events.h"
 #include "input.h"
 
+#ifdef NOVA_ABYSS_VULKAN
+#include "abyss/nvk/context/context.h"
+#include "abyss/nvk/context/surface.h"
+#endif // NOVA_ABYSS_VULKAN
+
 #include <Windows.h>
 #include <windowsx.h>
+
+#ifdef NOVA_ABYSS_VULKAN
+#include <vulkan/vulkan_win32.h>
+#endif // NOVA_ABYSS_VULKAN
 
 LRESULT CALLBACK proc_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -306,9 +315,6 @@ LRESULT CALLBACK proc_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 #ifdef NOVA_ABYSS_VULKAN
-#include "abyss/nvk/context/context.h"
-#include "abyss/nvk/context/surface.h"
-#include <vulkan/vulkan_win32.h>
 namespace Nova::abyss::nvk::Surface {
 	vk::SurfaceKHR create(vk::Instance& instance) {
 		nova_bark_init("VK Surface <Windows>");
