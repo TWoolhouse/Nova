@@ -48,6 +48,7 @@ nova_meta_enum_str(vk::PresentModeKHR, mode);
 nova_meta_enum_str(vk::Format, format);
 nova_meta_enum_str(vk::ColorSpaceKHR, format);
 nova_meta_enum_str(vk::SharingMode, mode);
+nova_meta_enum_str(vk::MemoryPropertyFlagBits, flag);
 
 namespace Nova::abyss::nvk {
 	template<typename T, typename VK>
