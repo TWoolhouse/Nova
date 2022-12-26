@@ -2,7 +2,7 @@
 #include "meta/head.h"
 #include "../vk.h"
 
-#include "buffer.h"
+#include "abyss/buffer.h"
 #include "abyss/interface/buffer_vertex.h"
 #include "abyss/interface/vertex_format.h"
 #include "mlb/mlb.h"
@@ -70,11 +70,11 @@ namespace Nova::abyss::nvk::buffer {
 			};
 		}
 
-		Vertex(size_t elements) : buffer(elements * sizeof(T), Type::Vertex) {}
+		Vertex(size_t elements) : buffer(elements * sizeof(T), Type::Vertex, Scope::Bind | Scope::Write) {}
 		~Vertex() {}
 
 	public:
-		Raw buffer;
+		abyss::buffer::Buffer buffer;
 	};
 
 }
