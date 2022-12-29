@@ -6,7 +6,7 @@ namespace Nova::abyss::nvk {
 
 	class NOVAPI Shader : public OPVK<Shader, vk::Pipeline> {
 	public:
-		enum class Stage {
+		enum class Stage : std::underlying_type_t<vk::ShaderStageFlagBits> {
 			Vertex = cpp::to_underlying(vk::ShaderStageFlagBits::eVertex),
 			Fragment = cpp::to_underlying(vk::ShaderStageFlagBits::eFragment),
 		};
