@@ -10,7 +10,7 @@ root = mainfile.parent
 INCLUDE = "#include"
 def expand(out: TextIO, filename: Path, level=0):
 	REL_NAME = filename.as_posix()[len(root.as_posix())+1:]
-	out.write(f"//-----File<{level:>03}>: {REL_NAME:-<59}\\\\\n")
+	out.write(f"//-----File<{level:>03}>: {REL_NAME:-<59}//\n")
 	print("Import>", filename)
 	with filename.open() as file:
 		for line in file:
