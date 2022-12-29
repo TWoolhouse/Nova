@@ -1,13 +1,16 @@
 #include "npch.h"
 #include "meta/head.h"
 
-#include "nvtl/weave.h"
+// Includes Here
 
-void t() {
-	using namespace Nova;
-	nova_bark_debug("Test...");
+namespace Nova {
 
-	// Code Here!
+	void test() {
+		nova_bark_debug("Test...");
 
-	nova_bark_debug("Test!");
+		// Code Here
+
+		nova_bark_debug("Test!");
+	}
+
 }

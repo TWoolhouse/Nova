@@ -6,7 +6,10 @@
 #include "abyss/abyss.h"
 #include "abyss/exc/frame_resize.h"
 
-void t();
+
+namespace Nova {
+	void test();
+}
 
 namespace Nova::core {
 
@@ -34,7 +37,7 @@ namespace Nova::core {
 
 		clock.update();
 		nova_bark_init("[Application] Done!");
-		t();
+		Nova::test();
 	}
 
 	Application::~Application() {
