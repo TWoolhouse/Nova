@@ -36,9 +36,10 @@ namespace Nova::meta {
 				return (sizeof(Ts) + ...);
 			else return 0;
 		}();
-		template<size_t I>
+
 		// Get the Ith type of the pack
-		using get = typename std::tuple_element<I, tuple>::type;
+		template<size_t I>
+		using get = typename std::tuple_element_t<I, tuple>;
 
 		// Null index if the type is not found in the pack
 		static constexpr size_t index_null = std::numeric_limits<size_t>::max();
@@ -58,7 +59,7 @@ namespace Nova::meta {
 	public:
 		template<typename T>
 		// Get the index of the first matching type.
-		static consteval size_t index() { return _index<0, T, Ts...>(); }
+		NODISCARD static consteval size_t index() { return _index<0, T, Ts...>(); }
 
 	public:
 		template<typename ...T>
@@ -110,12 +111,12 @@ namespace Nova::meta {
 		static consteval auto _flattern() { return _flattern_n(std::make_index_sequence<count>{}); };
 	public:
 		// A flatterned version of the pack
-		static consteval auto flat() { return _flattern<0>(); }
+		NODISCARD static consteval auto flat() { return _flattern<0>(); }
 
 	public:
 		template<auto Concept>
 		// Check if every type of the pack matches the concept
-		static consteval auto is() { return nova_meta_concept_exec(Concept, Ts...); }
+		NODISCARD static consteval auto is() { return nova_meta_concept_exec(Concept, Ts...); }
 
 	public:
 		// Highest alignment requirement of every type in the pack
