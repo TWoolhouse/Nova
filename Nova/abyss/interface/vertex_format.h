@@ -1,7 +1,7 @@
 #pragma once
 #include "meta/head.h"
 #include "meta/pack.h"
-#include "meta/tvmap.h"
+#include "meta/map/tv.h"
 #include "meta/concept.h"
 
 namespace Nova::abyss::buffer::interface {
@@ -9,8 +9,8 @@ namespace Nova::abyss::buffer::interface {
 	template<typename ...Pairs>
 	struct Format {
 	protected:
-		using Map = meta::TVMap<Pairs...>;
-		static_assert(Map::values::template is<nova_meta_concept(meta::is::all_same)>(), "All Pairs must have the same value type");
+		using Map = meta::map::TV<Pairs...>;
+		static_assert(Map::value_types::template is<nova_meta_concept(meta::is::all_same)>(), "All Pairs must have the same value type");
 	protected:
 		template<typename T>
 		static consteval T get_types() { return {}; }
