@@ -3,16 +3,14 @@
 #include "spec/cmd_queue.h"
 
 #if defined(NOVA_ABYSS_VULKAN)
-#include "nvk/vk.h"
-// #include "nvk/command_buffer.h"
+#include "nvk/command_queue.h"
 #endif // NOVA_ABYSS
 
 namespace Nova::abyss {
 
 	using CommandQueue =
 	#if defined(NOVA_ABYSS_VULKAN)
-	vk::CommandBuffer;
-	//nvk::CommandBuffer;
+	nvk::CommandQueue;
 	#else
 	spec::null;
 	#endif // NOVA_ABYSS

@@ -92,7 +92,7 @@ namespace Nova::abyss::nvk {
 	}
 
 	void Tower::main_pass_end(Flight& flight) {
-		flight.cmd.buffer.executeCommands(flight.commands);
+		flight.cmd.buffer.executeCommands(flight.commands.self);
 		flight.cmd.buffer.endRenderPass();
 		flight.cmd.buffer.end();
 	}
@@ -103,14 +103,14 @@ namespace Nova::abyss::nvk {
 			.subpass = 0,
 			.framebuffer = renderpass.target[flight.swapchain_frame_index],
 		};
-		flight.commands.begin(vk::CommandBufferBeginInfo{
+		flight.commands.self.begin(vk::CommandBufferBeginInfo{
 			.flags = vk::CommandBufferUsageFlagBits::eOneTimeSubmit | vk::CommandBufferUsageFlagBits::eRenderPassContinue,
 			.pInheritanceInfo = &info_inheritance,
 		});
 	}
 
 	void Tower::sub_buffer_end(Flight& flight) {
-		flight.commands.end();
+		flight.commands.self.end();
 	}
 
 }

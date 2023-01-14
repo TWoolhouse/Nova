@@ -7,13 +7,13 @@ namespace Nova::abyss::nvk {
 
 	Flight::Flight() :
 		abyss::Flight{
-			.commands = VK_NULL_HANDLE,
+			.commands = {},
 		},
 		sync(),
 		cmd(),
 		swapchain_frame_index(std::numeric_limits<decltype(swapchain_frame_index)>::max())
 	{
-		commands = nova_abyss_api->dev.allocateCommandBuffers(vk::CommandBufferAllocateInfo{
+		commands.self = nova_abyss_api->dev.allocateCommandBuffers(vk::CommandBufferAllocateInfo{
 			.commandPool = cmd.pool,
 			.level = vk::CommandBufferLevel::eSecondary,
 			.commandBufferCount = 1,
