@@ -18,16 +18,16 @@ namespace Nova::abyss::nvk::buffer {
 
 	namespace __I {
 		std::string scopes_string(Scope scopes) {
-			return (scopes == Scope::None) ? std::string(meta::estr(Scope::None)) : meta::estrs(scopes);
+			return (scopes == Scope::None) ? std::string(meta::enm::str(Scope::None)) : meta::enm::strs(scopes);
 		}
 
 		std::string scopes_strings(Scope required, Scope rejected) {
-			if ((required | rejected) == Scope::None) return std::string(meta::estr(Scope::None));
+			if ((required | rejected) == Scope::None) return std::string(meta::enm::str(Scope::None));
 			std::vector<std::string> vrb{};
-			
-			auto req = meta::ebits(required) | std::views::transform([](auto&& e) { return std::string(meta::estr(e)); });
+
+			auto req = meta::enm::bits(required) | std::views::transform([](auto&& e) { return std::string(meta::enm::str(e)); });
 			vrb.insert(vrb.end(), req.begin(), req.end());
-			auto ban = meta::ebits(rejected) | std::views::transform([](auto&& e) { return nova_bark_format("!{}", meta::estr(e)); });
+			auto ban = meta::enm::bits(rejected) | std::views::transform([](auto&& e) { return nova_bark_format("!{}", meta::enm::str(e)); });
 			vrb.insert(vrb.end(), ban.begin(), ban.end());
 
 			return meta::str::join(vrb);
@@ -43,10 +43,10 @@ namespace Nova::abyss::nvk::buffer {
 		nova_bark_init("VK Buffer");
 		vk::BufferCreateInfo info_buffer{
 			.size = size,
-			.usage = static_cast<vk::BufferUsageFlagBits>(type),
+			.usage = meta::enm::to<vk::BufferUsageFlagBits>(type),
 		};
 		VmaAllocationCreateInfo info_allocation{
-			.flags = cpp::to_underlying(scope),
+			.flags = meta::enm::to<VmaAllocationCreateFlags>(scope),
 			.usage = VMA_MEMORY_USAGE_AUTO,
 		};
 
@@ -76,14 +76,14 @@ namespace Nova::abyss::nvk::buffer {
 				type,
 				info.size,
 				__I::scopes_string(scope),
-				meta::estrs(flags)
+				meta::enm::strs(flags)
 			);
 		}
 
 	}
 
 	void* Buffer::map() {
-		if (meta::def::Debug && !variant::mapped(scope))
+		if (meta::def::debug && !variant::mapped(scope))
 			scope_warn(Scope::Bind | Scope::Write | Scope::Read, Scope::None, this);
 		VmaAllocationInfo info;
 		vmaGetAllocationInfo(nova_abyss_api->vma, allocation, &info);
@@ -91,7 +91,7 @@ namespace Nova::abyss::nvk::buffer {
 	}
 
 	void* Buffer::acquire() {
-		if (meta::def::Debug && !variant::acquirable(scope))
+		if (meta::def::debug && !variant::acquirable(scope))
 			scope_warn(Scope::Write | Scope::Read, Scope::None, this);
 		void* ptr;
 		vmaMapMemory(nova_abyss_api->vma, allocation, &ptr);
@@ -99,7 +99,7 @@ namespace Nova::abyss::nvk::buffer {
 	}
 
 	void Buffer::release() {
-		if (meta::def::Debug && !variant::releasable(scope))
+		if (meta::def::debug && !variant::releasable(scope))
 			scope_warn(Scope::Write | Scope::Read, Scope::None, this);
 		vmaUnmapMemory(nova_abyss_api->vma, allocation);
 	}

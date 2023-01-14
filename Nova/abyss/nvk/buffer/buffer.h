@@ -7,8 +7,9 @@
 
 namespace Nova::abyss::nvk::buffer {
 
-	struct NOVAPI Buffer : public OPVK<Buffer, vk::Buffer> {
-		size_t size;
+	class NOVAPI Buffer : public OPVK<Buffer, vk::Buffer> {
+	public:
+		size_t size; // size in bytes
 		Type type;
 		Scope scope;
 		vk::Buffer self;
@@ -34,9 +35,9 @@ namespace Nova::abyss::nvk::buffer {
 		template<typename T>
 		concept is = !std::same_as<Buffer, T>;
 
-		inline constexpr bool acquirable(Scope scope) { return meta::etest(scope, Scope::Write | Scope::Read); }
+		inline constexpr bool acquirable(Scope scope) { return meta::enm::test(scope, Scope::Write | Scope::Read); }
 		inline constexpr bool releasable(Scope scope) { return acquirable(scope); }
-		inline constexpr bool mapped(Scope scope) { return meta::etest(scope, Scope::Bind | Scope::Write | Scope::Read); }
+		inline constexpr bool mapped(Scope scope) { return meta::enm::test(scope, Scope::Bind | Scope::Write | Scope::Read); }
 	}
 
 	//template<Type T, Scope A> struct BufferT : public Buffer {
