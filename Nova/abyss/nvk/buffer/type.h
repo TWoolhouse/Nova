@@ -8,7 +8,7 @@ namespace Nova::abyss::nvk::buffer {
 		Vertex = cpp::to_underlying(vk::BufferUsageFlagBits::eVertexBuffer),
 		Index = cpp::to_underlying(vk::BufferUsageFlagBits::eIndexBuffer),
 		TransferSrc = cpp::to_underlying(vk::BufferUsageFlagBits::eTransferSrc),
-		TransferDst = cpp::to_underlying(vk::BufferUsageFlagBits::eTransferDst)
+		TransferDst = cpp::to_underlying(vk::BufferUsageFlagBits::eTransferDst),
 	};
 
 }
