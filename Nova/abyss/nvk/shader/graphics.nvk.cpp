@@ -2,21 +2,7 @@
 #ifdef NOVA_ABYSS_VULKAN
 #include "graphics.h"
 #include "../context.h"
-
-namespace Nova::abyss::nvk {
-
-	constexpr vk::ShaderStageFlagBits shader_stage(const Shader::Stage stage) {
-		using Stage = decltype(stage);
-		switch (stage) {
-			case Stage::Vertex:	return vk::ShaderStageFlagBits::eVertex;
-			case Stage::Fragment:	return vk::ShaderStageFlagBits::eFragment;
-			default:
-				nova_bark_warn("Unknown Case: [Shader Stage]: {}", stage);
-				return vk::ShaderStageFlagBits{};
-		}
-	}
-
-}
+#include "../descriptor/layout_desc.h"
 
 namespace Nova::abyss::nvk::shader {
 
@@ -92,7 +78,17 @@ namespace Nova::abyss::nvk::shader {
 			.blendConstants = std::array{ 0.0f, 0.0f, 0.0f, 0.0f },
 		};
 
-		const std::array<vk::DescriptorSetLayout, 0> descriptors;
+		Layout::Description descirptor_layout{.bindings = {
+			{
+				vk::DescriptorType::eUniformBuffer,
+				Shader::Stage::Vertex,
+			},
+		}};
+		// FIXME: Hack to deal with copy constructor.
+		auto d = Layout(descirptor_layout);
+		std::swap(descriptor, d);
+
+		const std::array<vk::DescriptorSetLayout, 1> descriptors{ descriptor };
 		const std::array<vk::PushConstantRange, 0> push_constants;
 
 		vk::PipelineLayoutCreateInfo info_layout{
@@ -105,7 +101,7 @@ namespace Nova::abyss::nvk::shader {
 		std::vector<vk::PipelineShaderStageCreateInfo> info_stages; info_stages.reserve(stages.size());
 		for (const auto& shader : stages) {
 			info_stages.emplace_back(vk::PipelineShaderStageCreateInfo{
-				.stage = shader_stage(shader.stage),
+				.stage = meta::enm::to<vk::ShaderStageFlagBits>(shader.stage),
 				.module = shader.self,
 				// TODO: Expose entry point
 				.pName = "main",

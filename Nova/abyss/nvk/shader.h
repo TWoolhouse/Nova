@@ -1,6 +1,7 @@
 #pragma once
 #include "meta/head.h"
 #include "vk.h"
+#include "descriptor/layout.h"
 
 namespace Nova::abyss::nvk {
 
@@ -16,6 +17,7 @@ namespace Nova::abyss::nvk {
 
 		vk::Pipeline self;
 		vk::PipelineLayout layout;
+		Layout descriptor;
 	};
 
 }

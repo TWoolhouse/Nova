@@ -5,7 +5,9 @@
 
 namespace Nova::abyss::nvk {
 
-	Shader::Shader() {}
+	Shader::Shader() {
+		nova_bark_init("VK Shader");
+	}
 
 	Shader::~Shader() {
 		nova_bark_term("VK Shader");
