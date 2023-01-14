@@ -17,6 +17,10 @@ namespace Nova::abyss {
 
 	static_assert(spec::Shader<Shader>, "Shader invalidated the Spec");
 
+	namespace shader {
+		using Stage = abyss::Shader::Stage;
+	} // namespace shader
+
 } // namespace Nova::abyss
 
 nova_meta_enum_str(Nova::abyss::Shader::Stage, stage);
