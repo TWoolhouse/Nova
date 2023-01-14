@@ -19,7 +19,7 @@ struct Vertex {
 	Nova::mlb::vec3 position;
 	Nova::mlb::vec3 colour;
 };
-const std::vector<Vertex> verticies{
+std::vector<Vertex> verticies{
 	{ { 0.1, -0.6, 0.0}, {0.0, 0.0, 0.0} },
 	{ { 0.6,  0.6, 1.0}, {0.0, 0.0, 0.0} },
 	{ {-0.6,  0.6, 0.0}, {0.0, 0.0, 1.0} },
@@ -27,6 +27,10 @@ const std::vector<Vertex> verticies{
 	{ { 0.0, -0.5, 0.0}, {1.0, 0.0, 0.0} },
 	{ { 0.5,  0.5, 0.0}, {0.0, 1.0, 0.0} },
 	{ {-0.5,  0.5, 0.0}, {0.0, 0.0, 1.0} },
+};
+
+struct UBOData {
+	Nova::mlb::vec4 colour;
 };
 
 class Game : public Nova::core::Application {
@@ -41,35 +45,40 @@ public:
 		pipeline(nova_abyss_app->tower.renderpass, {
 			{ Nova::abyss::Shader::Stage::Vertex, "start/simple/.vert" },
 			{ Nova::abyss::Shader::Stage::Fragment, "start/simple/.frag" },
-		}, Nova::meta::pack<decltype(buffer_vertex)>{}),
+		}, Nova::meta::pack<Nova::abyss::buffer::Vertex<Vertex>>{}),
 		buffer_vertex(verticies.size())
 	{
-	
-		void* data = buffer_vertex.buffer.mapping();
+		void* data = buffer_vertex.buffer.map();
 		memcpy(data, verticies.data(), verticies.size() * sizeof(Vertex));
-	
 	}
 
-	void update() {}
+	void update() {
+		auto& vertex = reinterpret_cast<Vertex*>( buffer_vertex.buffer.map())[4];
+		vertex.colour.g = (Nova::mlb::sin(nova_app->clock.elapsed().count()) + 1.0f) / 2.0f;
+	}
 
 	// Temporary Graphics Stuff
 	Nova::abyss::shader::Graphics pipeline;
 	Nova::abyss::buffer::Vertex<Vertex> buffer_vertex;
 
 	void render(Nova::abyss::Flight& flight) {
-		static constexpr bool max_frames = false;
-		static constexpr auto req = 1.f / 60;
+		static constexpr size_t max_frames = 0;
+		static constexpr auto req = 1.f / 30;
 		if (clock > req)
 			nova_bark_debug("FPS: {:.1f}\tFrame Time: {:>5.1f}ms", 1 / clock, clock * 1000);
-		if ((frame_count_temp++) > 10 && max_frames) {
+		if ((frame_count_temp++) > max_frames && max_frames) {
 			nova_bark_debug("Max Frametime: {}", frame_count_temp);
 			Nova::event::WindowClose().fire();
 		}
-		
-		flight.commands.bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline);
-		flight.commands.bindVertexBuffers(0, {buffer_vertex.buffer}, {0});
-		flight.commands.draw(verticies.size(), 1, 0, 0);
+
+		update();
+
+		flight.commands.bind(pipeline);
+		flight.commands.bind(0, buffer_vertex);
+		flight.commands.self.draw(verticies.size(), 1, 0, 0);
+
 	}
+
 };
 
 #define NOVA_ENTRY Game
