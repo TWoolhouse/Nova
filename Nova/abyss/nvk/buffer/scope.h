@@ -6,11 +6,15 @@
 
 namespace Nova::abyss::nvk::buffer {
 
-	enum class Scope : VmaAllocationCreateFlags {
+	enum class Scope : VmaAllocatorCreateFlags {
+		// No Scope
 		None = 0,
-		Bind = VmaAllocationCreateFlagBits::VMA_ALLOCATION_CREATE_MAPPED_BIT,
-		Read = VmaAllocationCreateFlagBits::VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT,
-		Write = VmaAllocationCreateFlagBits::VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT,
+		// Persistently mapped data
+		Bind = cpp::to_underlying(VmaAllocationCreateFlagBits::VMA_ALLOCATION_CREATE_MAPPED_BIT),
+		// Read from the mapped data
+		Read = cpp::to_underlying(VmaAllocationCreateFlagBits::VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT),
+		// Write to the mapped data
+		Write = cpp::to_underlying(VmaAllocationCreateFlagBits::VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT),
 	};
 
 }
