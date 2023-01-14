@@ -49,4 +49,16 @@ namespace Nova::meta {
 			(std::same_as<std::tuple_element_t<0, std::tuple<Ts...>>, Ts> && ...);
 	} // namespace is
 
+
+	namespace is {
+		template<typename T>
+		concept Enum = std::is_enum_v<T>;
+
+		template<typename Derived, typename Base>
+		concept enum_from = Enum<Derived> && (
+			(Enum<Base> && std::same_as<std::underlying_type_t<Derived>, std::underlying_type_t<Base>>) || 
+			(std::same_as<std::underlying_type_t<Derived>, Base>)
+		);
+	} // namespace is
+
 } // namespace Nova::meta
