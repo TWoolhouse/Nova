@@ -1,5 +1,5 @@
 #pragma once
-#include "def_chain.h"
+#include "config.h"
 
 #define NODISCARD [[nodiscard]]
 

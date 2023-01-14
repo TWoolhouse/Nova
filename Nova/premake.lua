@@ -16,6 +16,6 @@ project "Nova"
 	pchsource "meta/pch.cpp"
 
 	-- Nova Building
-	defines { "NOVA_BUILD_EXPORT" }
+	defines { "NOVA_BUILD_SELF" }
 
 	dofile "../premake/nova_self.lua"

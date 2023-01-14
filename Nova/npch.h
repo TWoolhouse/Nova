@@ -7,8 +7,8 @@
 
 #include "mlb/mlb.h"
 
-#ifdef NOVA_BUILD_EXPORT
+#ifdef NOVA_BUILD_SELF
 	#if defined(NOVA_ABYSS_VULKAN)
-#include "abyss/nvk/_vulkan.h"
+#include "abyss/nvk/vk.h"
 	#endif // Abyss
-#endif // NOVA_BUILD_EXPORT
+#endif // NOVA_BUILD_SELF

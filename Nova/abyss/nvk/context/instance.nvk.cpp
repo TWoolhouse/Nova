@@ -45,9 +45,9 @@ namespace Nova::abyss::nvk {
 
 	Instance::Instance(const prop::Setup& properties) :
 		self(VK_NULL_HANDLE),
-		#ifdef NOVA_ABYSS_DEBUG
+		#ifdef __N_OVA_ABYSS_DEBUG
 		logger(VK_NULL_HANDLE),
-		#endif // NOVA_ABYSS_DEBUG
+		#endif // __N_OVA_ABYSS_DEBUG
 		surface(VK_NULL_HANDLE)
 	{
 		nova_bark_init("VK Instance");
@@ -77,17 +77,17 @@ namespace Nova::abyss::nvk {
 		log_requested_layers_extensions(properties);
 
 		self = NVK_CHECK(vk::createInstance(info_instance, nova_abyss_api->alloc), "Failed to create VK Instance!");
-		#ifdef NOVA_ABYSS_DEBUG
+		#ifdef __N_OVA_ABYSS_DEBUG
 		this->logger = Logger::create(self);
-		#endif // NOVA_ABYSS_DEBUG
+		#endif // __N_OVA_ABYSS_DEBUG
 		surface = Surface::create(self);
 	}
 
 	Instance::~Instance() {
 		Surface::destroy(surface, self);
-		#ifdef NOVA_ABYSS_DEBUG
+		#ifdef __N_OVA_ABYSS_DEBUG
 		Logger::destroy(this->logger, self);
-		#endif // NOVA_ABYSS_DEBUG
+		#endif // __N_OVA_ABYSS_DEBUG
 		nova_bark_term("VK Instance");
 		self.destroy(nova_abyss_api->alloc);
 	}

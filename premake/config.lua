@@ -1,5 +1,5 @@
 filter "configurations:Debug"
-	defines { "DEBUG", "_DEBUG" }
+	defines { "NOVA_BUILD_OPTIMISE_DEBUG", "DEBUG", "_DEBUG" }
 	removedefines { "NDEBUG" }
 	symbols "Full"
 	intrinsics "off"
@@ -15,7 +15,7 @@ filter { "configurations:Debug", "action:vs*" }
 	}
 
 filter "configurations:Release"
-	defines { "NDEBUG" }
+	defines { "NOVA_BUILD_OPTIMISE_RELEASE", "NDEBUG" }
 	removedefines { "DEBUG", "_DEBUG" }
 	optimize "Speed"
 	stringpooling "on"

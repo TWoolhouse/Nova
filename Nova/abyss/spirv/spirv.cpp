@@ -62,7 +62,7 @@ namespace Nova::abyss::spirv {
 		const auto shader = read_src_file(file_path);
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
-		if constexpr (Nova::meta::def::Debug) {
+		if constexpr (Nova::meta::def::debug) {
 			options.SetGenerateDebugInfo();
 			options.SetOptimizationLevel(shaderc_optimization_level::shaderc_optimization_level_zero);
 		}

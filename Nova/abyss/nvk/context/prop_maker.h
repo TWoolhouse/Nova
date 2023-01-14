@@ -8,9 +8,9 @@ namespace Nova::abyss::nvk {
 		return prop::Setup {
 			.app_name = "Application Name",
 			.layers = {
-				#ifdef NOVA_ABYSS_DEBUG
+				#ifdef __N_OVA_ABYSS_DEBUG
 				"VK_LAYER_KHRONOS_validation",
-				#endif // NOVA_ABYSS_DEBUG
+				#endif // __N_OVA_ABYSS_DEBUG
 			},
 			.extensions_instance = {
 				VK_KHR_SURFACE_EXTENSION_NAME,
@@ -21,9 +21,9 @@ namespace Nova::abyss::nvk {
 				"VK_KHR_xcb_surface",
 				#endif // OS Extensions
 
-				#ifdef NOVA_ABYSS_DEBUG
+				#ifdef __N_OVA_ABYSS_DEBUG
 				VK_EXT_DEBUG_UTILS_EXTENSION_NAME,
-				#endif // NOVA_ABYSS_DEBUG
+				#endif // __N_OVA_ABYSS_DEBUG
 			},
 			.extensions_device = {
 				VK_KHR_SWAPCHAIN_EXTENSION_NAME,

@@ -1,6 +1,7 @@
 #pragma once
 #include "lib.h"
 #include "aliases.h"
+#include "defines.h"
 
 template<typename T> requires(!requires (T o) {
 	std::format("{}"sv, o);

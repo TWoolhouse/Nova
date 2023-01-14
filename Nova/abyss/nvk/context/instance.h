@@ -9,9 +9,9 @@ namespace Nova::abyss::nvk {
 		vk::Instance self;
 		vk::SurfaceKHR surface;
 
-		#ifdef NOVA_ABYSS_DEBUG
+		#ifdef __N_OVA_ABYSS_DEBUG
 		vk::DebugUtilsMessengerEXT logger;
-		#endif // NOVA_ABYSS_DEBUG
+		#endif // __N_OVA_ABYSS_DEBUG
 
 		Instance(const prop::Setup&);
 		~Instance();

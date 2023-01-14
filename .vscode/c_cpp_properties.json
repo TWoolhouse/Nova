@@ -7,10 +7,12 @@
                 "_UNICODE",
                 "_DEBUG",
                 "DEBUG",
+                "NOVA_BUILD_SELF",
+                "NOVA_BUILD_OPTIMISE_DEBUG",
+                "NOVA_BUILD_LINK_STATIC",
                 "NOVA_ABYSS_VULKAN",
                 "NOVA_MLB_GLM",
-                "NOVA_WINDOW_NATIVE",
-                "NOVA_BUILD_EXPORT"
+                "NOVA_WINDOW_NATIVE"
             ],
             "includePath": [
                 "${workspaceFolder}/Nova",

@@ -7,16 +7,25 @@
 
 namespace Nova::bark {
 
-	inline std::ofstream log_file;
+	#ifdef __N_OVA_BARK_FILE
+		inline std::ofstream log_file;
+	#endif // __N_OVA_BARK_FILE
 
 	void Initialize() {
-		log_file = std::ofstream{ "log.log" };
+		#ifdef __N_OVA_BARK_FILE
+			log_file = std::ofstream{ "log.log" };
+		#endif // __N_OVA_BARK_FILE
 		nova_bark_init("[Bark] Done!");
 	}
 	void Terminate() {
 		nova_bark_term("[Bark] ...");
-		log_file.close();
-		std::cout << Colour::Default; std::cerr << Colour::Default;
+		#ifdef __N_OVA_BARK_FILE
+			log_file.close();
+		#endif // __N_OVA_BARK_FILE
+		#ifdef __N_OVA_BARK_CONSOLE
+			std::cout << Colour::Default; std::cerr << Colour::Default;
+		#endif // __N_OVA_BARK_CONSOLE
+
 	}
 
 	void submit(const Level level, const char* location, const std::string& msg) {
@@ -31,19 +40,23 @@ namespace Nova::bark {
 			{"Fatal",	{Colour::Black,	Colour::BRed}},
 		};
 		auto&& [name, colour] = levels[static_cast<char>(level)];
-		(level < Level::Error ? std::cout : std::cerr) << // Stream
-			colour.first << colour.second << // Colours
-			"[" << name << "] " << msg << std::endl; // Message
-		log_file << // Stream
-			nova_bark_format("{: <80}\t{}", nova_bark_format("[{}] {}", name, msg), location) << std::endl;
+		#ifdef __N_OVA_BARK_CONSOLE
+			(level < Level::Error ? std::cout : std::cerr) << // Stream
+				colour.first << colour.second << // Colours
+				"[" << name << "] " << msg << std::endl; // Message
+		#endif // __N_OVA_BARK_CONSOLE
+		#ifdef __N_OVA_BARK_FILE
+			log_file << // Stream
+				nova_bark_format("{: <80}\t{}", nova_bark_format("[{}] {}", name, msg), location) << std::endl;
+		#endif // __N_OVA_BARK_FILE
 	}
 
-#ifdef nova_assert
-	void assertion(bool condition, const std::string_view msg, const std::string_view file, const int line) {
+#ifdef __N_OVA_BARK_ASSERT
+	void assertion(bool condition, const std::string_view msg, const std::string_view location) {
 		if (condition) [[likely]]; else {
-			nova_bark_fatal("{}:{}\nAssertion: {}", file, line, msg);
+			nova_bark_fatal("{}\nAssertion: {}", location, msg);
 		}
 	}
-#endif // nova_assert
+#endif // __N_OVA_BARK_ASSERT
 
 }

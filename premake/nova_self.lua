@@ -2,9 +2,9 @@ openmp "On"
 
 -- Linkage
 if(nova_build_static) then
-	defines "NOVA_BUILD_STATIC"
+	defines "NOVA_BUILD_LINK_STATIC"
 else
-	removedefines "NOVA_BUILD_STATIC"
+	defines "NOVA_BUILD_LINK_DYNAMIC"
 end
 
 dofile "config.lua"

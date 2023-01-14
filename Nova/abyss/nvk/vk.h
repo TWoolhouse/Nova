@@ -1,6 +1,7 @@
 #pragma once
 #include "meta/head.h"
 #include "bark/bark.h"
+#include "../config.h"
 #include "_vulkan.h"
 
 #if defined(VK_API_VERSION_1_3)
@@ -13,22 +14,7 @@
 #define VK_VERSION VK_API_VERSION_1_0
 #endif // API Version
 
-namespace Nova::abyss::def {
-constexpr auto debug =
-#ifndef NOVA_ABYSS_DEBUG
-#ifdef NOVA_DEBUG
-#define NOVA_ABYSS_DEBUG
-true;
-#else // !NOVA_DEBUG
-false;
-#endif // NOVA_DEBUG
-#else // !NOVA_ABYSS_DEBUG
-#undef NOVA_ABYSS_DEBUG
-false;
-#endif // !__N_OVA_ABYSS_DEBUG
-}
-
-#ifdef NOVA_DEBUG
+#ifdef __N_OVA_ABYSS_CHECK
 // TODO: Dont' use the internal vulkan function to convert result to error as it is not part of the stable api
 #define NVK_RESULT(expr, msg) \
 	vk::resultCheck(static_cast<vk::Result>(expr), msg " : " #expr);
@@ -37,10 +23,10 @@ false;
 	nova_assert(__n_vk_check_result, msg " : " #expr); \
 	return __n_vk_check_result; \
 }()
-#else // !NOVA_DEBUG
+#else // !__N_OVA_ABYSS_CHECK
 #define NVK_RESULT(expr, msg) expr
 #define NVK_CHECK(expr, msg) expr
-#endif // NOVA_DEBUG
+#endif // __N_OVA_ABYSS_CHECK
 
 nova_meta_enum_str(vk::Result, result);
 nova_meta_enum_str(vk::PhysicalDeviceType, type);

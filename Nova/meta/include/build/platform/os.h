@@ -1,15 +1,15 @@
 #pragma once
 
-// Find the Platform
+// Find the OS
 
 namespace Nova::meta::def {
 
-	enum class OS : unsigned char {
+	enum class OS : uint8_t {
 		Windows,
 	}; // TODO add constexpr variable
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
-	// Windows
+// Windows
 #define NOVA_OS_WINDOWS
 constexpr auto os = OS::Windows;
 #ifndef _WIN64

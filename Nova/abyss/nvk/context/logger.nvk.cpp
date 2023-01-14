@@ -63,15 +63,23 @@ namespace Nova::abyss::nvk::Logger {
 	}
 
 	constexpr vk::DebugUtilsMessengerCreateInfoEXT info() {
-		// TODO: Change which message types are avalible from defines / config
-		constexpr auto log_severity
-			= vk::DebugUtilsMessageSeverityFlagBitsEXT::eError
-			| vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning
-			| vk::DebugUtilsMessageSeverityFlagBitsEXT::eInfo
-			// | vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose
-			; // log_serevrity
-		constexpr auto message_types
-			= vk::DebugUtilsMessageTypeFlagBitsEXT::eGeneral
+		// TODO: Change which message types are available from defines / config
+		constexpr auto log_severity = vk::DebugUtilsMessageSeverityFlagBitsEXT{ 0 }
+			#ifdef __N_OVA_ABYSS_BARK_ERROR
+				| vk::DebugUtilsMessageSeverityFlagBitsEXT::eError
+			#endif // __N_OVA_ABYSS_BARK_ERROR
+			#ifdef __N_OVA_ABYSS_BARK_WARN
+				| vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning
+			#endif // __N_OVA_ABYSS_BARK_WARN
+			#ifdef __N_OVA_ABYSS_BARK_INFO
+				| vk::DebugUtilsMessageSeverityFlagBitsEXT::eInfo
+			#endif // __N_OVA_ABYSS_BARK_INFO
+			#ifdef __N_OVA_ABYSS_BARK_DEBUG
+				| vk::DebugUtilsMessageSeverityFlagBitsEXT::eVerbose
+			#endif // __N_OVA_ABYSS_BARK_DEBUG
+			; // log_severity
+		constexpr auto message_types = vk::DebugUtilsMessageTypeFlagBitsEXT{ 0 }
+			| vk::DebugUtilsMessageTypeFlagBitsEXT::eGeneral
 			| vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance
 			| vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation
 			; // message_types

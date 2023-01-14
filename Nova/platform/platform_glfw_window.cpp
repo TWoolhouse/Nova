@@ -186,12 +186,12 @@ namespace Nova::platform {
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) nova_bark_fatal("GLAD Failed to initialize");
 
-#ifndef NOVA_RELEASE
+		#ifndef NOVA_DEBUG
+		glDisable(GL_DEBUG_OUTPUT);
+		#else
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback(callback_error, 0);
-#else
-		glDisable(GL_DEBUG_OUTPUT);
-#endif // !NOVA_RELEASE
+		#endif // !NOVA_DEBUG
 
 		register_callbacks();
 		nova_bark_init("[Platform] Done!");
@@ -244,7 +244,7 @@ namespace Nova::platform {
 		glfwSetWindowPosCallback(window, [](GLFWwindow*, int x, int y) {
 			Nova::event::WindowMove(x, y).fire();
 		});
-		
+
 	}
 
 }
