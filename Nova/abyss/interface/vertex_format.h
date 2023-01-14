@@ -4,7 +4,7 @@
 #include "meta/map/tv.h"
 #include "meta/concept.h"
 
-namespace Nova::abyss::buffer::interface {
+namespace Nova::abyss::interface {
 
 	template<typename ...Pairs>
 	struct Format {
