@@ -1,4 +1,5 @@
 #include "npch.h"
+#include "meta/version.h"
 #include "bark/bark.h"
 #include "application.h"
 #include "platform/application.h"
@@ -13,14 +14,23 @@ namespace Nova {
 
 namespace Nova::core {
 
-	Application::Application(const std::string_view& name) : window(720, 480) {
+	Application::Application(const Builder& builder) : window(builder.width, builder.height) {
 		nova_assert(!I, "Creating multiple Applications is not allowed!");
 		I = this;
 
 		nova_bark_timer("Startup");
 		clock.update();
 		bark::Initialize();
-		platform::Initialize(name, window);
+
+		Information info{
+			.name = builder.name,
+			.version = builder.version,
+			.window = window,
+			.window_state = builder.window_state,
+		};
+
+		nova_bark_info("{}: " nova_meta_version_string, meta::version::engine_name, nova_meta_version_args(meta::version::engine));
+		nova_bark_info("Application<{}>: " nova_meta_version_string, info.name, nova_meta_version_args(info.version));
 
 		// Events
 		event::dispatcher.subscribe({
@@ -33,7 +43,9 @@ namespace Nova::core {
 			}, }
 		).orphan();
 
-		abyss::Initialize(name);
+		nova_bark_info("Window Size<{}, {}>", info.window.width(), info.window.height());
+		platform::Initialize(info);
+		abyss::Initialize(info);
 
 		clock.update();
 		nova_bark_init("[Application] Done!");

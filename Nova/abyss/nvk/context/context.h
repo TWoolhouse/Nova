@@ -1,5 +1,7 @@
 #pragma once
 #include "vk.h"
+#include "core/info.h"
+#include "setup_props.h"
 #include "instance.h"
 #include "queues.h"
 #include "device.h"
@@ -22,7 +24,7 @@ namespace Nova::abyss::nvk {
 
 		Swapchain swapchain;
 
-		Context(const prop::Setup& properties);
+		Context(const core::Information& info, const Setup& properties);
 		~Context();
 	};
 

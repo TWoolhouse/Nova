@@ -1,6 +1,6 @@
 #pragma once
 #include "vk.h"
-#include "props.h"
+#include "setup_props.h"
 #include "queues.h"
 #include "device.h"
 
@@ -9,11 +9,11 @@ namespace Nova::abyss::nvk {
 	// Helper to obtain the physical device
 	struct PhysicalBuilder {
 	public:
-		PhysicalBuilder(const prop::Setup& properties) : properties(properties) {}
+		PhysicalBuilder(const Setup& properties) : properties(properties) {}
 
 		vk::PhysicalDevice select_device(Device::Info& info);
 	protected:
-		const prop::Setup& properties;
+		const Setup& properties;
 
 		struct Rank {
 			using Score = size_t;

@@ -8,7 +8,7 @@
 
 namespace Nova::abyss::nvk {
 
-	Device::Device(const prop::Setup& properties) :
+	Device::Device(const Setup& properties) :
 		info(),
 		physical(PhysicalBuilder(properties).select_device(info)),
 		logical(Logical::create(properties, physical, info.queues))

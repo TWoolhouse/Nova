@@ -1,6 +1,6 @@
 #pragma once
 #include "vk.h"
-#include "props.h"
+#include "setup_props.h"
 #include "queues.h"
 
 namespace Nova::abyss::nvk {
@@ -19,7 +19,7 @@ namespace Nova::abyss::nvk {
 		vk::Device logical;
 
 
-		Device(const prop::Setup& properties);
+		Device(const Setup& properties);
 		~Device();
 	};
 

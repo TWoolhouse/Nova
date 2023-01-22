@@ -1,10 +1,10 @@
 #pragma once
 #include "vk.h"
-#include "props.h"
+#include "setup_props.h"
 #include "queues.h"
 
 namespace Nova::abyss::nvk::Logical {
 
-	NODISCARD vk::Device create(const prop::Setup& properties, vk::PhysicalDevice& physical, Queues& queues);
+	NODISCARD vk::Device create(const Setup& properties, vk::PhysicalDevice& physical, Queues& queues);
 
 }

@@ -38,7 +38,7 @@ public:
 	unsigned int frame_count_temp = 0;
 	Nova::event::Ticket events;
 	Game() :
-		Application("Flask"),
+		Application(Nova::core::Builder("Flask", Nova::meta::version::make(0, 1, 0)).window_size(854, 480)),
 		events(Nova::event::dispatcher.subscribe(Nova::event::Type::KeyPress, &simple_quit)),
 
 		// Temporary Graphics Stuff

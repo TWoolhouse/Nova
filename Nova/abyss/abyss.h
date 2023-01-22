@@ -1,10 +1,11 @@
 #pragma once
 #include "meta/head.h"
 #include "app.h"
+#include "core/info.h"
 
 namespace Nova::abyss {
 
-	NOVAPI void Initialize(const std::string_view& name);
+	NOVAPI void Initialize(const core::Information& app_info);
 	NOVAPI void Terminate();
 
 }

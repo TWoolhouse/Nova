@@ -1,6 +1,5 @@
 #pragma once
 #include "vk.h"
-#include "props.h"
 #include "event/event.h"
 #include "queues.h"
 #include "../sync.h"

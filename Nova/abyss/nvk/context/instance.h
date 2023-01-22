@@ -1,6 +1,7 @@
 #pragma once
 #include "vk.h"
-#include "props.h"
+#include "core/info.h"
+#include "setup_props.h"
 
 namespace Nova::abyss::nvk {
 
@@ -13,7 +14,7 @@ namespace Nova::abyss::nvk {
 		vk::DebugUtilsMessengerEXT logger;
 		#endif // __N_OVA_ABYSS_DEBUG
 
-		Instance(const prop::Setup&);
+		Instance(const core::Information& info, const Setup&);
 		~Instance();
 	};
 

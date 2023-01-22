@@ -2,7 +2,7 @@
 #ifdef NOVA_ABYSS_VULKAN
 #include "vk.h"
 #include "device_physical.h"
-#include "props.h"
+#include "setup_props.h"
 #include "queues.h"
 #include "context.h"
 
@@ -30,7 +30,7 @@ constexpr std::string_view feature_index_name<vk::PhysicalDeviceFeatures>(size_t
 
 namespace Nova::abyss::nvk {
 
-	void log_device_info(vk::PhysicalDevice& device, const prop::Setup& properties) {
+	void log_device_info(vk::PhysicalDevice& device, const Setup& properties) {
 		if constexpr (Nova::bark::def::info) {
 			auto p = device.getProperties();
 			auto memory = device.getMemoryProperties();
@@ -112,7 +112,7 @@ namespace Nova::abyss::nvk {
 		return REJECTION;
 	}
 
-	// Selects an avalible physical device
+	// Selects an available physical device
 	// TODO: Support physical device groups
 	vk::PhysicalDevice PhysicalBuilder::select_device(Device::Info& info) {
 		nova_bark_init("VK Physical Device");

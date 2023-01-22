@@ -6,7 +6,6 @@
 #include "surface.h"
 #include "context.h"
 
-constexpr auto engine_name = "Nova"sv;
 #define VERSION_ARGS(version) \
 VK_API_VERSION_VARIANT(version), \
 VK_API_VERSION_MAJOR(version), \
@@ -14,6 +13,10 @@ VK_API_VERSION_MINOR(version), \
 VK_API_VERSION_PATCH(version)
 
 namespace Nova::abyss::nvk {
+
+	inline auto vk_version_make(meta::version::Version version) {
+		return VK_MAKE_API_VERSION(0, meta::version::major(version), meta::version::minor(version), meta::version::patch(version));
+	}
 
 	inline void log_available_layers_extensions() {
 		if constexpr (Nova::bark::def::debug) {
@@ -31,7 +34,7 @@ namespace Nova::abyss::nvk {
 		}
 	}
 
-	inline void log_requested_layers_extensions(const prop::Setup& properties) {
+	inline void log_requested_layers_extensions(const Setup& properties) {
 		if constexpr (Nova::bark::def::info) {
 			nova_bark_info("Vulkan Layers: {}", properties.layers.size());
 			for (const auto& ext : properties.layers)
@@ -43,7 +46,7 @@ namespace Nova::abyss::nvk {
 		}
 	}
 
-	Instance::Instance(const prop::Setup& properties) :
+	Instance::Instance(const core::Information& info, const Setup& properties) :
 		self(VK_NULL_HANDLE),
 		#ifdef __N_OVA_ABYSS_DEBUG
 		logger(VK_NULL_HANDLE),
@@ -53,15 +56,13 @@ namespace Nova::abyss::nvk {
 		nova_bark_init("VK Instance");
 
 		vk::ApplicationInfo info_app{
-			.pApplicationName = properties.app_name.data(),
-			.applicationVersion = VK_MAKE_API_VERSION(0, 0, 1, 0),
-			.pEngineName = engine_name.data(),
-			.engineVersion = VK_MAKE_API_VERSION(0, 0, 1, 0),
+			.pApplicationName = info.name.data(),
+			.applicationVersion = vk_version_make(info.version),
+			.pEngineName = meta::version::engine_name.data(),
+			.engineVersion = vk_version_make(meta::version::engine),
 			.apiVersion = VK_VERSION,
 		};
-		nova_bark_info("Engine: {}.{}.{}.{} {}", VERSION_ARGS(info_app.engineVersion), info_app.pEngineName);
 		nova_bark_info("Vulkan: {}.{}.{}.{}", VERSION_ARGS(info_app.apiVersion));
-		nova_bark_info("Application: {}.{}.{}.{} {}", VERSION_ARGS(info_app.applicationVersion), info_app.pApplicationName);
 
 		auto info_logger = Logger::info();
 		vk::InstanceCreateInfo info_instance{

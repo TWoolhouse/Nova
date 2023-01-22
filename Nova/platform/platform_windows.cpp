@@ -1,7 +1,7 @@
 #include "npch.h"
 #include "meta/head.h"
 #if defined(NOVA_WINDOW_NATIVE) && defined(NOVA_OS_WINDOWS)
-#include "application.h"
+#include "core/info.h"
 
 #include "events.h"
 #include "input.h"
@@ -189,7 +189,7 @@ namespace Nova::platform {
 		return check;
 	}
 
-	void Initialize(const std::string_view& name, const core::Window& window) {
+	void Initialize(const core::Information& app_info) {
 		// CONSOLE SETUP
 		HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 		if (hOut && hOut != INVALID_HANDLE_VALUE) {
@@ -224,17 +224,20 @@ namespace Nova::platform {
 			check(GetLastError() == ERROR_CLASS_ALREADY_EXISTS, "Window Registration Failed");
 		}
 
-		constexpr auto wstyle = WS_OVERLAPPED | WS_SYSMENU | WS_CAPTION | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_THICKFRAME;
+		constexpr auto wstyle_base = WS_TILEDWINDOW;
 		constexpr auto wxstyle = WS_EX_APPWINDOW;
 
-		RECT rect{ 0, 0, 0, 0 };
-		AdjustWindowRectEx(&rect, wstyle, false, wxstyle);
+		// TODO: Respect the window style requirements (fullscreen, maximised, etc).
+		auto wstyle = wstyle_base;
 
-		constexpr int x = 100, y = 100;
+		RECT rect{ 0, 0, app_info.window.width(), app_info.window.height() };
+		check(AdjustWindowRectEx(&rect, wstyle, false, wxstyle), "Window size adjustment Failed");
+
+		nova_bark_info("Window Frame Size<{}, {}>", rect.right - rect.left, rect.bottom - rect.top);
 
 		hwnd = CreateWindowExA(
-			wxstyle, wnd_cls_name.data(), name.data(),
-			wstyle, x + rect.left, y + rect.top, window.width() + rect.right - rect.left, window.height() + rect.bottom - rect.top,
+			wxstyle, wnd_cls_name.data(), app_info.name.data(),
+			wstyle, CW_USEDEFAULT, CW_USEDEFAULT, rect.right - rect.left, rect.bottom - rect.top,
 			0, 0, instance, 0
 		);
 

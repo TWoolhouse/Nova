@@ -1,12 +1,11 @@
 #pragma once
 #include "vk.h"
-#include "props.h"
+#include "setup_props.h"
 
 namespace Nova::abyss::nvk {
 
-	prop::Setup make_prop_setup() {
-		return prop::Setup {
-			.app_name = "Application Name",
+	Setup make_setup_props() {
+		return Setup {
 			.layers = {
 				#ifdef __N_OVA_ABYSS_DEBUG
 				"VK_LAYER_KHRONOS_validation",

@@ -1,5 +1,6 @@
 #pragma once
 #include "meta/head.h"
+#include "info.h"
 #include "blip/blip.h"
 #include "window.h"
 #include "abyss/flight.h"
@@ -18,7 +19,7 @@ int NOVA_MAIN(int argc, char const* argv[]);
 namespace Nova::core {
 	class NOVAPI Application {
 	public:
-		Application(const std::string_view& name);
+		Application(const Builder& information);
 		Application(const Application&) = delete;
 		Application& operator=(const Application&) = delete;
 		virtual ~Application();

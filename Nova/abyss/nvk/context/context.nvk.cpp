@@ -5,18 +5,15 @@
 
 namespace Nova::abyss::nvk {
 
-	Context::Context(const prop::Setup& properties) :
-		// Use the first param to initialise the context pointer before everything else
+	Context::Context(const core::Information& info, const Setup& properties) :
 		alloc(nullptr),
-		instance(properties),
+		instance(info, properties),
 		device(properties),
 		queues(device.info.queues),
 		dev(device.logical),
 		vma(),
 		swapchain()
-	{
-
-	}
+	{}
 
 	Context::~Context() {
 		dev.waitIdle();
