@@ -63,7 +63,6 @@ namespace Nova::abyss::nvk::Logger {
 	}
 
 	constexpr vk::DebugUtilsMessengerCreateInfoEXT info() {
-		// TODO: Change which message types are available from defines / config
 		constexpr auto log_severity = vk::DebugUtilsMessageSeverityFlagBitsEXT{ 0 }
 			#ifdef __N_OVA_ABYSS_BARK_ERROR
 				| vk::DebugUtilsMessageSeverityFlagBitsEXT::eError

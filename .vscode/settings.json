@@ -1,0 +1,16 @@
+{
+	"editor.formatOnSave": false,
+	"files.associations": {
+		"*.nsl": "glsl",
+	},
+	"todo-tree.general.tags": [
+		"BUG",
+		"HACK",
+		"FIXME",
+		"TODO",
+		"nova_bark_todo",
+	],
+	"todo-tree.general.tagGroups": {
+		"TODO": ["nova_bark_todo"]
+	},
+}

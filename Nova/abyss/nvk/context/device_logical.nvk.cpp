@@ -15,11 +15,11 @@ namespace Nova::abyss::nvk::Logical {
 		}
 	}
 	void log_device() {
-
+		nova_bark_todo("Log device information");
 	}
 
 	// TODO: Migrate to VkPhysicalDeviceFeatures2
-	vk::Device create(const prop::Setup& properties, vk::PhysicalDevice& physical, Queues& queues) {
+	vk::Device create(const Setup& properties, vk::PhysicalDevice& physical, Queues& queues) {
 		nova_bark_init("VK Logical Device");
 
 		std::array<Q::FQCount, Queues::count> qf_queue_count{0};

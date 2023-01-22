@@ -15,7 +15,7 @@
 #endif // API Version
 
 #ifdef __N_OVA_ABYSS_CHECK
-// TODO: Dont' use the internal vulkan function to convert result to error as it is not part of the stable api
+// FIXME: Dont' use the internal vulkan function to convert result to error as it is not part of the stable api
 #define NVK_RESULT(expr, msg) \
 	vk::resultCheck(static_cast<vk::Result>(expr), msg " : " #expr);
 #define NVK_CHECK(expr, msg) [&]() { \

@@ -27,9 +27,14 @@ namespace Nova::meta::enm {
 		return meta::str::join(bits(arg) | std::views::transform([](auto&& e) { return meta::enm::str(e); }));
 	}
 
+
+	// Is the value of the enum not 0
+	template<is::Enum Enum>
+	inline constexpr bool is(Enum bitset) { return cpp::to_underlying(bitset); }
+
 	// Checks if a flag is set in an enum
 	template<typename Enum> requires std::is_enum_v<Enum>
-	inline constexpr bool test(Enum bitset, Enum flag) { return cpp::to_underlying(bitset & flag); }
+	inline constexpr bool test(Enum bitset, Enum flag) { return is(bitset & flag); }
 
 	template<typename To, is::Enum From> requires is::enum_from<From, To>
 	inline constexpr To to(From from) noexcept { return static_cast<To>(from); }

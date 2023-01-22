@@ -19,7 +19,6 @@ namespace Nova::abyss::spec::buffer {
 		{ static_cast<abyss::buffer::VertexI>(buffer) };
 	};
 
-	// TODO: Define index type
 	template<template<typename...> typename T>
 	concept Vertex = _Vertex<T<_V>>;
 
