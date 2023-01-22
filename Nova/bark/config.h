@@ -67,6 +67,27 @@ constexpr bool file =
 #pragma endregion
 
 //-----------------------------------------------------------------//
+//----------------------__N_OVA_BARK_LOCATION----------------------//
+//-----------------------------------------------------------------//
+
+#pragma region __N_OVA_BARK_LOCATION
+
+#if !defined(__N_OVA_BARK_LOCATION)
+	#define __N_OVA_BARK_LOCATION
+#elif __N_OVA_BARK_LOCATION == 0
+	#undef __N_OVA_BARK_LOCATION
+#endif // __N_OVA_BARK_LOCATION
+
+constexpr bool location =
+#ifdef __N_OVA_BARK_LOCATION
+	true
+#else // !__N_OVA_BARK_LOCATION
+	false
+#endif // __N_OVA_BARK_LOCATION
+;
+#pragma endregion
+
+//-----------------------------------------------------------------//
 //-----------------------__N_OVA_BARK_FATAL------------------------//
 //-----------------------------------------------------------------//
 
@@ -102,6 +123,48 @@ constexpr bool warn =
 #else // !__N_OVA_BARK_WARN
 	false
 #endif // __N_OVA_BARK_WARN
+;
+#pragma endregion
+
+//-----------------------------------------------------------------//
+//------------------------__N_OVA_BARK_TODO------------------------//
+//-----------------------------------------------------------------//
+
+#pragma region __N_OVA_BARK_TODO
+
+#if !defined(__N_OVA_BARK_TODO)
+	#define __N_OVA_BARK_TODO
+#elif __N_OVA_BARK_TODO == 0
+	#undef __N_OVA_BARK_TODO
+#endif // __N_OVA_BARK_TODO
+
+constexpr bool todo =
+#ifdef __N_OVA_BARK_TODO
+	true
+#else // !__N_OVA_BARK_TODO
+	false
+#endif // __N_OVA_BARK_TODO
+;
+#pragma endregion
+
+//-----------------------------------------------------------------//
+//-------------------__N_OVA_BARK_UNIMPLEMENTED--------------------//
+//-----------------------------------------------------------------//
+
+#pragma region __N_OVA_BARK_UNIMPLEMENTED
+
+#if !defined(__N_OVA_BARK_UNIMPLEMENTED)
+	#define __N_OVA_BARK_UNIMPLEMENTED
+#elif __N_OVA_BARK_UNIMPLEMENTED == 0
+	#undef __N_OVA_BARK_UNIMPLEMENTED
+#endif // __N_OVA_BARK_UNIMPLEMENTED
+
+constexpr bool unimplemented =
+#ifdef __N_OVA_BARK_UNIMPLEMENTED
+	true
+#else // !__N_OVA_BARK_UNIMPLEMENTED
+	false
+#endif // __N_OVA_BARK_UNIMPLEMENTED
 ;
 #pragma endregion
 
@@ -186,6 +249,27 @@ constexpr bool debug =
 #else // !__N_OVA_BARK_DEBUG
 	false
 #endif // __N_OVA_BARK_DEBUG
+;
+#pragma endregion
+
+//-----------------------------------------------------------------//
+//------------------------__N_OVA_BARK_TEMP------------------------//
+//-----------------------------------------------------------------//
+
+#pragma region __N_OVA_BARK_TEMP
+
+#if !defined(__N_OVA_BARK_TEMP)
+	#define __N_OVA_BARK_TEMP
+#elif __N_OVA_BARK_TEMP == 0
+	#undef __N_OVA_BARK_TEMP
+#endif // __N_OVA_BARK_TEMP
+
+constexpr bool temp =
+#ifdef __N_OVA_BARK_TEMP
+	true
+#else // !__N_OVA_BARK_TEMP
+	false
+#endif // __N_OVA_BARK_TEMP
 ;
 #pragma endregion
 

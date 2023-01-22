@@ -36,12 +36,16 @@
 
 #define __N_OVA_BARK_FILE 0 / 1
 #define __N_OVA_BARK_CONSOLE 0 / 1
+#define __N_OVA_BARK_LOCATION 0 / 1
 
 #define __N_OVA_BARK_WARN 0 / 1
+#define __N_OVA_BARK_TODO 0 / 1
+#define __N_OVA_BARK_UNIMPLEMENTED 0 / 1
 #define __N_OVA_BARK_INIT 0 / 1
 #define __N_OVA_BARK_INFO 0 / 1
 #define __N_OVA_BARK_TRACE 0 / 1
 #define __N_OVA_BARK_DEBUG 0 / 1
+#define __N_OVA_BARK_TEMP 0 / 1
 
 //-----<ABYSS>-----//
 
@@ -62,12 +66,17 @@
 
 	// BARK
 	#define __N_OVA_BARK_ASSERT 0
+	#define __N_OVA_BARK_FILE 1
 	#define __N_OVA_BARK_CONSOLE 0
+	#define __N_OVA_BARK_LOCATION 1
 
+	#define __N_OVA_BARK_TODO 1
+	#define __N_OVA_BARK_UNIMPLEMENTED 1
+	#define __N_OVA_BARK_INFO 1
 	#define __N_OVA_BARK_INIT 0
-	#define __N_OVA_BARK_INFO 0
 	#define __N_OVA_BARK_TRACE 0
 	#define __N_OVA_BARK_DEBUG 0
+	#define __N_OVA_BARK_TEMP 0
 
 	// ABYSS
 	#define __N_OVA_ABYSS_DEBUG 0

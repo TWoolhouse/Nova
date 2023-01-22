@@ -74,12 +74,33 @@ Writes the logging output to a file.
 
 Writes the logging output to the console.
 
+#### __N_OVA_BARK_LOCATION
+`#define __N_OVA_BARK_LOCATION <BOOL>`:
+- `0`
+- `1` - Default
+
+Enables outputting the location of the bark message in the output, which adds the information to the binary.
+
 #### __N_OVA_BARK_WARN
 `#define __N_OVA_BARK_WARN <BOOL>`:
 - `0`
 - `1` - Default
 
 Enables warning messages.
+
+#### __N_OVA_BARK_TODO
+`#define __N_OVA_BARK_TODO <BOOL>`:
+- `0`
+- `1` - Default
+
+Enables todo messages.
+
+#### __N_OVA_BARK_UNIMPLEMENTED
+`#define __N_OVA_BARK_UNIMPLEMENTED <BOOL>`:
+- `0`
+- `1` - Default
+
+Enables "unimplemented" messages, which cause a breakpoint to be triggered.
 
 #### __N_OVA_BARK_INFO
 `#define __N_OVA_BARK_INFO <BOOL>`:
@@ -108,6 +129,13 @@ Enables trace messages.
 - `1` - Default
 
 Enables debug messages.
+
+#### __N_OVA_BARK_TEMP
+`#define __N_OVA_BARK_TEMP <BOOL>`:
+- `0`
+- `1` - Default
+
+Enables temporary debug messages.
 
 ### Abyss
 

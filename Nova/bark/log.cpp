@@ -25,19 +25,28 @@ namespace Nova::bark {
 		#ifdef __N_OVA_BARK_CONSOLE
 			std::cout << Colour::Default; std::cerr << Colour::Default;
 		#endif // __N_OVA_BARK_CONSOLE
-
 	}
 
-	void submit(const Level level, const char* location, const std::string& msg) {
+	auto location_string(const Location& location) {
+		#ifdef __N_OVA_BARK_LOCATION
+			return nova_bark_format("{}:{}:{} `{}`", location.file_name(), location.line(), location.column(), location.function_name());
+		#else // !__N_OVA_BARK_LOCATION
+			return "{LOCATION DISABLED}";
+		#endif // __N_OVA_BARK_LOCATION
+	}
+
+	void submit(const Level level, const Location& location, const std::string& msg) {
 		static constexpr std::pair<std::string_view, std::pair<Colour, Colour>> levels[static_cast<char>(Level::MAX)] = {
-			{"Debug",	{Colour::Green,	Colour::BDefault}},
-			{"Trace",	{Colour::Cyan,	Colour::BDefault}},
-			{"Info",	{Colour::White,	Colour::BDefault}},
-			{"Init",	{Colour::Blue,	Colour::BDefault}},
-			{"Term",	{Colour::Magenta,	Colour::BDefault}},
+			{"Fatal",	{Colour::Black,		Colour::BRed}},
+			{"Error",	{Colour::White,		Colour::BRed}},
 			{"Warn",	{Colour::Yellow,	Colour::BDefault}},
-			{"Error",	{Colour::Red,		Colour::BDefault}},
-			{"Fatal",	{Colour::Black,	Colour::BRed}},
+			{"Todo",	{Colour::Black,		Colour::BYellow}},
+			{"Info",	{Colour::White,		Colour::BDefault}},
+			{"Init",	{Colour::Blue,		Colour::BDefault}},
+			{"Term",	{Colour::Magenta,	Colour::BDefault}},
+			{"Trace",	{Colour::Cyan,		Colour::BDefault}},
+			{"Debug",	{Colour::Green,		Colour::BDefault}},
+			{"Temp",	{Colour::Black,		Colour::BWhite}},
 		};
 		auto&& [name, colour] = levels[static_cast<char>(level)];
 		#ifdef __N_OVA_BARK_CONSOLE
@@ -47,14 +56,14 @@ namespace Nova::bark {
 		#endif // __N_OVA_BARK_CONSOLE
 		#ifdef __N_OVA_BARK_FILE
 			log_file << // Stream
-				nova_bark_format("{: <80}\t{}", nova_bark_format("[{}] {}", name, msg), location) << std::endl;
+				nova_bark_format("{: <80}\t{}", nova_bark_format("[{}] {}", name, msg), location_string(location)) << std::endl;
 		#endif // __N_OVA_BARK_FILE
 	}
 
 #ifdef __N_OVA_BARK_ASSERT
-	void assertion(bool condition, const std::string_view msg, const std::string_view location) {
+	void assertion(bool condition, const std::string_view msg, const Location location) {
 		if (condition) [[likely]]; else {
-			nova_bark_fatal("{}\nAssertion: {}", location, msg);
+			nova_bark_fatal("{}\nAssertion: {}", location_string(location), msg);
 		}
 	}
 #endif // __N_OVA_BARK_ASSERT

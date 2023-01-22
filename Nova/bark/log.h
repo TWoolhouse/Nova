@@ -3,10 +3,18 @@
 #include "config.h"
 #include <format>
 
-#define __N_OVA_LOCATION CONCAT(__FILE__, CONCAT(":", STRINGIFY(__LINE__)))
+namespace Nova::bark {
+	#ifdef __N_OVA_BARK_LOCATION
+		using Location = std::source_location;
+	#else // !__N_OVA_BARK_LOCATION
+		struct Location {
+			static consteval Location current() noexcept { return {}; }
+		};
+	#endif // __N_OVA_BARK_LOCATION
+} // namespace Nova::bark
 
 #ifdef __N_OVA_BARK_ASSERT
-#define nova_assert(cond, msg) ::Nova::bark::assertion(cond, msg, __N_OVA_LOCATION)
+#define nova_assert(cond, msg) ::Nova::bark::assertion(cond, msg, ::Nova::bark::Location::current())
 #else // !__N_OVA_BARK_ASSERT
 #define nova_assert(cond, msg)
 #endif // __N_OVA_BARK_ASSERT
@@ -15,11 +23,13 @@
 
 namespace Nova::bark {
 	enum class Level : char {
-		Debug = 0,
-		Trace,
-		Info, Init, Term,
+		Fatal, Error,
 		Warn,
-		Error, Fatal,
+		Todo,
+		Info, Init, Term,
+		Trace,
+		Debug,
+		Temporary,
 
 		MAX
 	};
@@ -27,19 +37,19 @@ namespace Nova::bark {
 	NOVAPI void Initialize();
 	NOVAPI void Terminate();
 
-	NOVAPI void submit(const Level level, const char* location, const std::string& msg);
+	NOVAPI void submit(const Level level, const Location& location, const std::string& msg);
 
 	template<typename ...Args>
-	void report(const Level level, const char* location, const std::string_view msg, Args&&... args) {
+	void report(const Level level, const Location location, const std::string_view msg, Args&&... args) {
 		return submit(level, location, nova_bark_format(msg, args...));
 	}
 
 #ifdef __N_OVA_BARK_ASSERT
-	NOVAPI void assertion(bool condition, const std::string_view msg, const std::string_view location);
+	NOVAPI void assertion(bool condition, const std::string_view msg, const Location location);
 #endif // __N_OVA_BARK_ASSERT
 }
 
-#define __n_ova_bark_log(level, message, ...) ::Nova::bark::report(::Nova::bark::Level::level, __N_OVA_LOCATION, message, ##__VA_ARGS__)
+#define __n_ova_bark_log(level, message, ...) ::Nova::bark::report(::Nova::bark::Level::level, ::Nova::bark::Location::current(), message, ##__VA_ARGS__)
 
 #ifdef __N_OVA_BARK_FATAL
 #define nova_bark_fatal(message, ...) { __n_ova_bark_log(Fatal, message, ##__VA_ARGS__); NOVA_BREAKPOINT(); }
@@ -84,3 +94,21 @@ namespace Nova::bark {
 #else
 #define nova_bark_debug(message, ...)
 #endif // __N_OVA_BARK_DEBUG
+
+#ifdef __N_OVA_BARK_TODO
+#define nova_bark_todo(message, ...) __n_ova_bark_log(Todo, message, ##__VA_ARGS__)
+#else
+#define nova_bark_todo(message, ...)
+#endif // __N_OVA_BARK_TODO
+
+#ifdef __N_OVA_BARK_UNIMPLEMENTED
+#define nova_bark_unimplemented(message, ...) { __n_ova_bark_log(Todo, message, ##__VA_ARGS__); NOVA_BREAKPOINT(); }
+#else
+#define nova_bark_unimplemented(message, ...)
+#endif // __N_OVA_BARK_UNIMPLEMENTED
+
+#ifdef __N_OVA_BARK_TEMP
+#define nova_bark_temp(message, ...) __n_ova_bark_log(Temporary, message, ##__VA_ARGS__)
+#else
+#define nova_bark_temp(message, ...)
+#endif // __N_OVA_BARK_TEMP
