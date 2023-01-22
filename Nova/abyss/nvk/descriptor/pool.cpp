@@ -18,7 +18,7 @@ namespace Nova::abyss::nvk::descriptor {
 			.pPoolSizes = sizes.data(),
 		};
 
-		self = NVK_CHECK(nova_abyss_api->dev.createDescriptorPool(info, nova_abyss_api->alloc));
+		self = NVK_CHECK(nova_abyss_api->dev.createDescriptorPool(info, nova_abyss_api->alloc), "Failed to create Descriptor Pool");
 	}
 
 	Pool::~Pool() {

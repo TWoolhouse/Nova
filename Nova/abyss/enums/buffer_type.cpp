@@ -1,7 +1,7 @@
 #include "npch.h"
 #include "abyss/buffer_type.h"
 
-nova_meta_enum_str(Nova::abyss::buffer::Type type) {
+nova_meta_enum_str(Nova::abyss::buffer::Type, type) {
 	using Type = decltype(type);
 	switch (type) {
 		case Type::Vertex:	return "Vertex";

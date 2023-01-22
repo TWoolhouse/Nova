@@ -28,7 +28,7 @@ namespace Nova::abyss::nvk {
 			.pBindings = bindings.data(),
 		};
 
-		self = NVK_CHECK(nova_abyss_api->dev.createDescriptorSetLayout(info, nova_abyss_api->alloc));
+		self = NVK_CHECK(nova_abyss_api->dev.createDescriptorSetLayout(info, nova_abyss_api->alloc), "Failed to create Descriptor Set Layout");
 	}
 
 	Layout::~Layout() {
