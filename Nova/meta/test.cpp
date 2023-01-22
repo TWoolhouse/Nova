@@ -8,7 +8,9 @@ namespace Nova {
 	void test() {
 		nova_bark_debug("Test...");
 
-		// Code Here
+		{
+			// Code Here
+		}
 
 		nova_bark_debug("Test!");
 	}
