@@ -1,16 +1,14 @@
 #pragma once
 #include "meta/head.h"
 #include "vk.h"
+#include "shader/stage.h"
 #include "descriptor/layout.h"
 
 namespace Nova::abyss::nvk {
 
 	class NOVAPI Shader : public OPVK<Shader, vk::Pipeline> {
 	public:
-		enum class Stage : std::underlying_type_t<vk::ShaderStageFlagBits> {
-			Vertex = cpp::to_underlying(vk::ShaderStageFlagBits::eVertex),
-			Fragment = cpp::to_underlying(vk::ShaderStageFlagBits::eFragment),
-		};
+		using Stage = shader::Stage;
 
 		Shader();
 		virtual ~Shader();
@@ -18,8 +16,7 @@ namespace Nova::abyss::nvk {
 		vk::Pipeline self;
 		vk::PipelineLayout layout;
 		Layout descriptor;
+		vk::DescriptorSet descriptor_set;
 	};
 
 }
-
-nova_meta_enum_str(Nova::abyss::nvk::Shader::Stage, stage);

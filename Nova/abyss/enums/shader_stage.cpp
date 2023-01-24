@@ -1,7 +1,7 @@
 #include "npch.h"
 #include "abyss/shader.h"
 
-nova_meta_enum_str(Nova::abyss::Shader::Stage, stage) {
+nova_meta_enum_str(Nova::abyss::shader::Stage, stage) {
 	using Stage = decltype(stage);
 	switch (stage) {
 		case Stage::Vertex:	return "Vertex";
