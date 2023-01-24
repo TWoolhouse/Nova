@@ -2,11 +2,10 @@
 #ifdef NOVA_ABYSS_VULKAN
 #include "layout.h"
 #include "../context.h"
-#include "layout_desc.h"
 
 namespace Nova::abyss::nvk {
 
-	Layout::Layout(Layout::Description& layout) {
+	Layout::Layout(const Description& layout) {
 		nova_bark_init("VK Descriptor Layout");
 
 		std::vector<vk::DescriptorSetLayoutBinding> bindings{};

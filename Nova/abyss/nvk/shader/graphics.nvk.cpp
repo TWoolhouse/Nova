@@ -2,7 +2,6 @@
 #ifdef NOVA_ABYSS_VULKAN
 #include "graphics.h"
 #include "../context.h"
-#include "../descriptor/layout_desc.h"
 
 namespace Nova::abyss::nvk::shader {
 
@@ -78,15 +77,23 @@ namespace Nova::abyss::nvk::shader {
 			.blendConstants = std::array{ 0.0f, 0.0f, 0.0f, 0.0f },
 		};
 
-		Layout::Description descirptor_layout{.bindings = {
-			{
-				vk::DescriptorType::eUniformBuffer,
-				Shader::Stage::Vertex,
+		// TODO: Extract the layout description from the shader. spriv-cross / spriv-reflection
+		Layout::Description descriptor_layout{
+			.bindings = {
+				{
+					vk::DescriptorType::eUniformBuffer,
+					Shader::Stage::Vertex,
+				},
 			},
-		}};
-		// FIXME: Hack to deal with copy constructor.
-		auto d = Layout(descirptor_layout);
-		std::swap(descriptor, d);
+		};
+		// Load the layout from a cache.
+		descriptor = descriptor_layout;
+		vk::DescriptorSetAllocateInfo info_descriptor_set{
+			.descriptorPool = nova_abyss_api->descriptor_pool,
+			.descriptorSetCount = 1,
+			.pSetLayouts = &descriptor.self,
+		};
+		NVK_RESULT(nova_abyss_api->dev.allocateDescriptorSets(&info_descriptor_set, &descriptor_set), "Failed to allocate descriptor set");
 
 		const std::array<vk::DescriptorSetLayout, 1> descriptors{ descriptor };
 		const std::array<vk::PushConstantRange, 0> push_constants;
@@ -138,6 +145,8 @@ namespace Nova::abyss::nvk::shader {
 	}
 
 	Graphics::~Graphics() {
+		// FIXME: Objects should not prevent the GPU from going brr.
+		// The objects requiring the barrier should be explicitly queued.
 		nova_abyss_api->queues.graphics.self.waitIdle();
 	}
 
