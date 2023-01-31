@@ -1,6 +1,7 @@
 #pragma once
 #include "head.h"
 #include "meta/bit.h"
+#include "bark/assert.h"
 
 #define nova_meta_version_args(Version) \
 	::Nova::meta::version::major(Version), ::Nova::meta::version::minor(Version), ::Nova::meta::version::patch(Version)
@@ -18,10 +19,9 @@ namespace Nova::meta::version {
 	using Version = uint32_t;
 
 	NODISCARD constexpr Version make(T::Major major, T::Minor minor, T::Patch patch) noexcept {
-		// constexpr issue
-		//nova_assert(patch < meta::bit(12), "Patch number must be < 4096");
-		//nova_assert(minor < meta::bit(10), "Patch number must be < 1024");
-		//nova_assert(major < meta::bit(10), "Patch number must be < 1024");
+		nova_cassert(patch < meta::bit(12), "Patch number must be < 4096");
+		nova_cassert(minor < meta::bit(10), "Patch number must be < 1024");
+		nova_cassert(major < meta::bit(10), "Patch number must be < 1024");
 		return
 			( (major << 22)
 			| (minor << 12)
