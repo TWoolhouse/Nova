@@ -9,6 +9,7 @@ namespace Nova::abyss::nvk::buffer {
 		Index = cpp::to_underlying(vk::BufferUsageFlagBits::eIndexBuffer),
 		TransferSrc = cpp::to_underlying(vk::BufferUsageFlagBits::eTransferSrc),
 		TransferDst = cpp::to_underlying(vk::BufferUsageFlagBits::eTransferDst),
+		Uniform = cpp::to_underlying(vk::BufferUsageFlagBits::eUniformBuffer),
 	};
 
 }

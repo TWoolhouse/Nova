@@ -8,6 +8,7 @@ nova_meta_enum_str(Nova::abyss::buffer::Type, type) {
 		case Type::Index:	return "Index";
 		case Type::TransferSrc:	return "TransferSrc";
 		case Type::TransferDst:	return "TransferDst";
+		case Type::Uniform:	return "Uniform";
 		default:
 			nova_bark_warn("Unknown Case: [Buffer Type]: {}", cpp::to_underlying(type));
 			return "Unknown";
