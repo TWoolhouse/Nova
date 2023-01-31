@@ -38,5 +38,3 @@ namespace Nova::event {
 	}
 
 }
-
-formatter_enum(Nova::event::Type);

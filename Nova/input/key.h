@@ -27,5 +27,3 @@ namespace Nova::input {
 	};
 
 }
-
-formatter_enum(Nova::input::Key);

@@ -18,7 +18,7 @@ namespace Nova::bark {
 }
 
 #if __N_OVA_BARK_STATE_DEBUG == 1
-#define nova_bark_timer(message) ::Nova::bark::Timer CONCAT(__b_ark__t_imer_, __COUNTER__) {message}
+#define nova_bark_timer(message) ::Nova::bark::Timer NOVA_MC_CONCAT(__b_ark__t_imer_, __COUNTER__) {message}
 #else // !__N_OVA_BARK_STATE_DEBUG
 #define nova_bark_timer(message)
 #endif // __N_OVA_BARK_STATE_DEBUG
