@@ -8,7 +8,7 @@ namespace Nova::abyss::interface {
 
 	template<typename ...Pairs>
 	struct Format {
-	protected:
+	public:
 		using Map = meta::map::TV<Pairs...>;
 		static_assert(Map::value_types::template is<nova_meta_concept(meta::is::all_same)>(), "All Pairs must have the same value type");
 	protected:

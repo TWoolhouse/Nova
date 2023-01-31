@@ -5,6 +5,8 @@
 namespace Nova::abyss {
 
 	struct Flight {
+		// FIXME: Refactor w/ tower
+		// TODO: Flight index
 		CommandQueue commands;
 	};
 
