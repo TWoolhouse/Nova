@@ -7,7 +7,7 @@ namespace Nova::abyss::nvk {
 
 	Renderpass::Renderpass() :
 		self(VK_NULL_HANDLE),
-		event_ticket(event::dispatcher.subscribe(event::Type::WindowResizeFrame, [&](event::Handle& event) {
+		event_ticket(event::dispatcher.subscribe(event::Type::WindowResizeFrame, [&](event::Handle&) {
 			target.clear();
 			create_targets();
 			return true;

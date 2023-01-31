@@ -14,6 +14,7 @@ namespace Nova::abyss::nvk::shader {
 			.pVertexAttributeDescriptions = attributes.data(),
 		};
 
+		// TODO: Expose primative type.
 		vk::PipelineInputAssemblyStateCreateInfo info_input_assembly{
 			.topology = vk::PrimitiveTopology::eTriangleList,
 			.primitiveRestartEnable = VK_FALSE,
@@ -43,6 +44,7 @@ namespace Nova::abyss::nvk::shader {
 			.pScissors = &scissor,
 		};
 
+		// TODO: Expose rasterisation options
 		vk::PipelineRasterizationStateCreateInfo info_rasterizer{
 			.depthClampEnable = VK_FALSE,
 			.rasterizerDiscardEnable = VK_FALSE,
@@ -53,11 +55,13 @@ namespace Nova::abyss::nvk::shader {
 			.lineWidth = 1.0f,
 		};
 
+		// TODO: Expose multisampling options
 		vk::PipelineMultisampleStateCreateInfo info_multisampling{
 			.rasterizationSamples = vk::SampleCountFlagBits::e1,
 			.sampleShadingEnable = VK_FALSE,
 		};
 
+		// TODO: Expose colour blending options.
 		vk::PipelineColorBlendAttachmentState colour_blend_attachment{
 			.blendEnable = VK_FALSE,
 			.colorWriteMask
@@ -78,26 +82,20 @@ namespace Nova::abyss::nvk::shader {
 		};
 
 		// TODO: Extract the layout description from the shader. spriv-cross / spriv-reflection
-		Layout::Description descriptor_layout{
+		/*descriptor::Layout::Description descriptor_layout{
 			.bindings = {
 				{
 					vk::DescriptorType::eUniformBuffer,
 					Shader::Stage::Vertex,
 				},
 			},
-		};
+		};*/
 		// Load the layout from a cache.
-		descriptor = descriptor_layout;
-		vk::DescriptorSetAllocateInfo info_descriptor_set{
-			.descriptorPool = nova_abyss_api->descriptor_pool,
-			.descriptorSetCount = 1,
-			.pSetLayouts = &descriptor.self,
-		};
-		NVK_RESULT(nova_abyss_api->dev.allocateDescriptorSets(&info_descriptor_set, &descriptor_set), "Failed to allocate descriptor set");
-
-		const std::array<vk::DescriptorSetLayout, 1> descriptors{ descriptor };
+		//descriptor = descriptor_layout;
+		const std::array<vk::DescriptorSetLayout, 0> descriptors;
 		const std::array<vk::PushConstantRange, 0> push_constants;
 
+		// TODO: Extract to base to share with compute shader
 		vk::PipelineLayoutCreateInfo info_layout{
 			.setLayoutCount = static_cast<uint32_t>(descriptors.size()),
 			.pSetLayouts = descriptors.data(),

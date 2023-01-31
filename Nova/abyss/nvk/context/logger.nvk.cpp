@@ -40,6 +40,8 @@ namespace Nova::abyss::nvk::Logger {
 		VkDebugUtilsMessengerCallbackDataEXT const* pCallbackData,
 		void* /*pUserData*/
 	) {
+		NOVA_MC_UNUSED(messageTypes);
+
 		// TODO: Change messaged based on the message type.
 		static constexpr auto header = "[VK] {}"sv;
 		switch (static_cast<vk::DebugUtilsMessageSeverityFlagBitsEXT>(messageSeverity)) {

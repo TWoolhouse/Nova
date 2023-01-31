@@ -5,9 +5,13 @@
 
 #ifdef NOVA_ENTRY
 int NOVA_MAIN(int argc, char const* argv[]) {
+
+	NOVA_MC_UNUSED(argc);
+	NOVA_MC_UNUSED(argv);
+
 	using EntryApp = ::NOVA_ENTRY;
 	static_assert(std::is_base_of_v<Nova::core::Application, EntryApp> && std::is_default_constructible_v<EntryApp>,
-		"NOVA_ENTRY must be a default constructible sub class of application");
+		"NOVA_ENTRY must be a default constructible sub class of Nova::core::Application");
 	EntryApp app;
 	app.execute();
 	return 0;

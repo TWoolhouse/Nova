@@ -111,9 +111,11 @@ namespace Nova::abyss::nvk {
 	}
 
 	Swapchain::FrameIndex Swapchain::acquire_frame(Fence& in_flight, Semaphore& image_avalible) {
+		// FIXME: Hardcoded Timeout, make part of the build
 		constexpr size_t TIME_OUT = 0.25e+9; // Nanoseconds
 
 		// Wait until the flight has finished rendering and is free again
+		// FIXME: Read return value
 		nova_abyss_api->dev.waitForFences(reinterpret_cast<vk::Fence&>(in_flight), VK_TRUE, TIME_OUT);
 
 		try {
@@ -127,7 +129,7 @@ namespace Nova::abyss::nvk {
 			default:
 				throw std::runtime_error{ "Unable to acquire next swapchain image!" };
 			}
-		} catch (const vk::OutOfDateKHRError& e) {
+		} catch (const vk::OutOfDateKHRError&) {
 			this->resize();
 			throw exc::FrameResize{};
 		}

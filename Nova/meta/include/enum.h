@@ -14,12 +14,13 @@ namespace Nova::meta::enm {
 
 	template<typename Enum> requires std::is_enum_v<Enum>
 	auto bits(Enum arg) {
+		static_assert(sizeof(Enum) * 8 <= meta::bit(sizeof(uint8_t) * 8), "meta::bit only supports uint8_t sized indicies!");
 		constexpr auto bits = sizeof(Enum) * 8;
 		std::bitset<bits> bitset(cpp::to_underlying(arg));
 		auto iterator = std::views::iota(static_cast<decltype(bits)>(0), bits);
 		return iterator
 			| std::views::filter([bitset](auto&& index) { return bitset.test(index); })
-			| std::views::transform([bitset](auto&& index) { return static_cast<Enum>(meta::bit(index + 1)); });
+			| std::views::transform([bitset](auto&& index) { return static_cast<Enum>(meta::bit(static_cast<uint8_t>(index + 1))); });
 	}
 
 	template<typename Enum>

@@ -62,7 +62,7 @@ namespace Nova::abyss::nvk {
 				case vk::Result::eSuboptimalKHR:
 					return;
 			}
-		} catch (const vk::OutOfDateKHRError& e) {
+		} catch (const vk::OutOfDateKHRError&) {
 			nova_abyss_api->swapchain.resize();
 			throw exc::FrameResize{};
 		}

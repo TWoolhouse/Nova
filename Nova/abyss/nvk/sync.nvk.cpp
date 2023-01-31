@@ -14,7 +14,7 @@ namespace Nova::abyss::nvk {
 			.flags = vk::FenceCreateFlagBits::eSignaled,
 			}, nova_abyss_api->alloc)
 		)
-	{}
+	{ NOVA_MC_UNUSED(signal); }
 	Fence::~Fence() { nova_abyss_api->dev.destroyFence(self, nova_abyss_api->alloc); }
 
 }

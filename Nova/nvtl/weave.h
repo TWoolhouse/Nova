@@ -292,7 +292,7 @@ namespace Nova::nvtl {
 		}
 
 		constexpr void clear() {
-			auto ptr = reinterpret_cast<Tracker*>(threads[Count].next);
+			auto ptr = static_cast<Tracker*>(threads[Count].next);
 			const auto end = reinterpret_cast<Tracker*>(&threads[Count]);
 			while (ptr != end) {
 				auto next = ptr->next;

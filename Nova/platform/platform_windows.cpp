@@ -230,7 +230,7 @@ namespace Nova::platform {
 		// TODO: Respect the window style requirements (fullscreen, maximised, etc).
 		auto wstyle = wstyle_base;
 
-		RECT rect{ 0, 0, app_info.window.width(), app_info.window.height() };
+		RECT rect{ 0, 0, static_cast<LONG>(app_info.window.width()), static_cast<LONG>(app_info.window.height()) };
 		check(AdjustWindowRectEx(&rect, wstyle, false, wxstyle), "Window size adjustment Failed");
 
 		nova_bark_info("Window Frame Size<{}, {}>", rect.right - rect.left, rect.bottom - rect.top);
@@ -285,11 +285,11 @@ LRESULT CALLBACK proc_message(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		} break;
 		[[likely]] case WM_KEYDOWN:
 		[[likely]] case WM_SYSKEYDOWN:
-			Nova::platform::event::key_down(Nova::platform::input::key(wparam));
+			Nova::platform::event::key_down(Nova::platform::input::key(static_cast<uint32_t>(wparam)));
 			break;
 		[[likely]] case WM_KEYUP:
 		[[likely]] case WM_SYSKEYUP:
-			Nova::platform::event::key_up(Nova::platform::input::key(wparam));
+			Nova::platform::event::key_up(Nova::platform::input::key(static_cast<uint32_t>(wparam)));
 			break;
 		[[likely]] case WM_MOUSEMOVE:
 			Nova::platform::event::mouse_move(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
