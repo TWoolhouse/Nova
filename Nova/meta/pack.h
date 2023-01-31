@@ -116,7 +116,7 @@ namespace Nova::meta {
 	public:
 		template<auto Concept>
 		// Check if every type of the pack matches the concept
-		NODISCARD static consteval auto is() { return nova_meta_concept_exec(Concept, Ts...); }
+		NODISCARD static consteval auto is() { return (nova_meta_concept_exec(Concept, Ts) && ...); }
 
 	public:
 		// Highest alignment requirement of every type in the pack
@@ -144,6 +144,16 @@ namespace Nova::meta {
 			else return align_to(_size_align(), alignment);
 		}();
 
+	protected:
+		template<auto Concept, typename ...Packs, size_t ...Is>
+		NODISCARD static consteval auto _apply(std::index_sequence<Is...>) { return (_apply<Concept, Is, Packs...>() && ...); }
+		template<auto Concept, size_t I, typename ...Packs>
+		NODISCARD static consteval auto _apply() { return (_apply_element<Concept, typename Packs::template get<I>...>()); }
+		template<auto Concept, typename ...Ts>
+		NODISCARD static consteval auto _apply_element() { return nova_meta_concept_exec(Concept, Ts...); }
+	public:
+		template<auto Concept, typename Pack, typename ...Packs>
+		NODISCARD static consteval auto apply() { return ((Pack::count == Packs::count) && ...) && _apply<Concept, Pack, Packs...>(std::make_index_sequence<Pack::count>{}); }
 	};
 
 	namespace is {
