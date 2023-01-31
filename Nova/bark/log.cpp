@@ -2,6 +2,8 @@
 #include "log.h"
 
 #include "colours.h"
+#include "location_str.h"
+
 #include <iostream>
 #include <fstream>
 
@@ -27,13 +29,7 @@ namespace Nova::bark {
 		#endif // __N_OVA_BARK_CONSOLE
 	}
 
-	auto location_string(const Location& location) {
-		#ifdef __N_OVA_BARK_LOCATION
-			return nova_bark_format("{}:{}:{} `{}`", location.file_name(), location.line(), location.column(), location.function_name());
-		#else // !__N_OVA_BARK_LOCATION
-			return "{LOCATION DISABLED}";
-		#endif // __N_OVA_BARK_LOCATION
-	}
+
 
 	void submit(const Level level, const Location& location, const std::string& msg) {
 		static constexpr std::pair<std::string_view, std::pair<Colour, Colour>> levels[static_cast<char>(Level::MAX)] = {
@@ -59,13 +55,5 @@ namespace Nova::bark {
 				nova_bark_format("{: <80}\t{}", nova_bark_format("[{}] {}", name, msg), location_string(location)) << std::endl;
 		#endif // __N_OVA_BARK_FILE
 	}
-
-#ifdef __N_OVA_BARK_ASSERT
-	void assertion(bool condition, const std::string_view msg, const Location location) {
-		if (condition) [[likely]]; else {
-			nova_bark_fatal("{}\nAssertion: {}", location_string(location), msg);
-		}
-	}
-#endif // __N_OVA_BARK_ASSERT
 
 }

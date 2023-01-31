@@ -1,23 +1,8 @@
 #pragma once
 #include "meta/head.h"
 #include "config.h"
+#include "location.h"
 #include <format>
-
-namespace Nova::bark {
-	#ifdef __N_OVA_BARK_LOCATION
-		using Location = std::source_location;
-	#else // !__N_OVA_BARK_LOCATION
-		struct Location {
-			static consteval Location current() noexcept { return {}; }
-		};
-	#endif // __N_OVA_BARK_LOCATION
-} // namespace Nova::bark
-
-#ifdef __N_OVA_BARK_ASSERT
-#define nova_assert(cond, msg) ::Nova::bark::assertion(cond, msg, ::Nova::bark::Location::current())
-#else // !__N_OVA_BARK_ASSERT
-#define nova_assert(cond, msg)
-#endif // __N_OVA_BARK_ASSERT
 
 #define nova_bark_format(message, ...) std::vformat(message, std::make_format_args(##__VA_ARGS__))
 
@@ -44,10 +29,7 @@ namespace Nova::bark {
 		return submit(level, location, nova_bark_format(msg, args...));
 	}
 
-#ifdef __N_OVA_BARK_ASSERT
-	NOVAPI void assertion(bool condition, const std::string_view msg, const Location location);
-#endif // __N_OVA_BARK_ASSERT
-}
+} // namespace Nova::bark
 
 #define __n_ova_bark_log(level, message, ...) ::Nova::bark::report(::Nova::bark::Level::level, ::Nova::bark::Location::current(), message, ##__VA_ARGS__)
 
