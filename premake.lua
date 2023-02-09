@@ -24,7 +24,7 @@ workspace "Nova"
 local projects = {
 	"Nova",
 	"Flask",
-	-- "Flask.Test",
+	"Flask.Test",
 }
 
 for i,prj in ipairs(projects) do
