@@ -3,16 +3,16 @@
 #include "layout.h"
 #include "../context.h"
 
-namespace Nova::abyss::nvk {
+namespace Nova::abyss::nvk::descriptor {
 
-	Layout::Layout(const Description& layout) {
+	Layout::Layout(const shader::Layout& layout) {
 		nova_bark_init("VK Descriptor Layout");
 
 		std::vector<vk::DescriptorSetLayoutBinding> bindings{};
-		bindings.reserve(layout.bindings.size());
+		bindings.reserve(layout.points.size());
 		{
 			uint32_t index = 0;
-			for (const auto& binding : layout.bindings) {
+			for (const auto& binding : layout.points) {
 				bindings.emplace_back(vk::DescriptorSetLayoutBinding{
 					.binding = index++,
 					.descriptorType = meta::enm::to<vk::DescriptorType>(binding.type),

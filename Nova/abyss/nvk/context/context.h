@@ -8,6 +8,8 @@
 #include "vma.h"
 #include "swapchain.h"
 
+//#include "../descriptor/manager.h"
+
 namespace Nova::abyss::nvk {
 
 	class Context {
@@ -23,6 +25,8 @@ namespace Nova::abyss::nvk {
 		VMA vma;
 
 		Swapchain swapchain;
+
+		//descriptor::Manager descriptors;
 
 		Context(const core::Information& info, const Setup& properties);
 		~Context();

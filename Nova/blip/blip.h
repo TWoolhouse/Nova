@@ -33,7 +33,9 @@ namespace Nova::blip {
 		inline void update() noexcept {
 			last = now();
 		}
-	};
+
+		NODISCARD inline constexpr operator Unit() const noexcept { return elapsed(); }
+		NODISCARD inline constexpr operator double() const noexcept { return elapsed().count(); }	};
 
 	struct Clock : public Delta {
 		Time start;

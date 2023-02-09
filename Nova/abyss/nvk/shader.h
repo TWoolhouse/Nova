@@ -15,8 +15,7 @@ namespace Nova::abyss::nvk {
 
 		vk::Pipeline self;
 		vk::PipelineLayout layout;
-		Layout descriptor;
-		vk::DescriptorSet descriptor_set;
+		descriptor::Layout descriptor;
 	};
 
 }

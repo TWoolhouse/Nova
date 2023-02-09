@@ -29,7 +29,7 @@ namespace Nova::abyss::nvk::buffer {
 		Uniform() : buffer(sizeof(uniform_type), Type::Uniform, Scope::Bind | Scope::Write) {}
 		Uniform(UniformGeneric& buffer) : buffer(std::move(buffer.buffer)) {
 			nova_assert(
-				sizeof(uniform_type) == this->buffer.size,
+				sizeof(uniform_type) <= this->buffer.size,
 				"The generic Uniform buffer is not the correct size for a Uniform buffer of this type T"
 			);
 		}

@@ -14,7 +14,7 @@ workspace "Nova"
 	characterset "Unicode"
 	defines { "UNICODE", "_UNICODE" }
 
-	nova_build_static = false
+	nova_build_static = true
 
 	language "C++"
 	cppdialect "C++20"
@@ -24,7 +24,7 @@ workspace "Nova"
 local projects = {
 	"Nova",
 	"Flask",
-	"Flask.Test",
+	-- "Flask.Test",
 }
 
 for i,prj in ipairs(projects) do

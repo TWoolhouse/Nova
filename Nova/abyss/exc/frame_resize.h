@@ -3,7 +3,7 @@
 
 namespace Nova::abyss::exc {
 	struct FrameResize : public std::exception {
-		virtual const char* what() const noexcept {
+		virtual const char* what() const noexcept override {
 			return "The Flight is invalid as the Frame is resizing!";
 		}
 	};

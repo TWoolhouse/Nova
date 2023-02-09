@@ -5,6 +5,12 @@
 #include "abyss/shader_graphics.h"
 #include "abyss/buffer_vertex.h"
 
+#include "abyss/flock.h"
+#include "abyss/nvk/buffer/uniform.h"
+
+#include "abyss/nvk/descriptor/manager.h"
+#include "verglas/shader.tmp.h"
+
 bool simple_quit(Nova::event::Handle& event) {
 	if (auto e = event.cast<Nova::event::KeyPress>()) {
 		nova_bark_trace("Key: {} {}", e->key, static_cast<char>(e->key));
@@ -46,10 +52,16 @@ public:
 			{ Nova::abyss::Shader::Stage::Vertex, "start/simple/.vert" },
 			{ Nova::abyss::Shader::Stage::Fragment, "start/simple/.frag" },
 		}, Nova::meta::pack<Nova::abyss::buffer::Vertex<Vertex>>{}),
-		buffer_vertex(verticies.size())
+		buffer_vertex(verticies.size()),
+		descriptor_manager(),
+		shader_layout({
+			{ Nova::abyss::nvk::shader::Layout::BindPoint::Type::Uniform, 1, Nova::abyss::shader::Stage::Vertex }
+		}),
+		shader(descriptor_manager.cache[shader_layout])
 	{
 		void* data = buffer_vertex.buffer.map();
 		memcpy(data, verticies.data(), verticies.size() * sizeof(Vertex));
+
 	}
 
 	void update() {
@@ -60,6 +72,10 @@ public:
 	// Temporary Graphics Stuff
 	Nova::abyss::shader::Graphics pipeline;
 	Nova::abyss::buffer::Vertex<Vertex> buffer_vertex;
+	Nova::abyss::Flock<Nova::abyss::nvk::buffer::Uniform<int>> buffers_uniform{};
+	Nova::abyss::nvk::descriptor::Manager descriptor_manager;
+	Nova::abyss::nvk::shader::Layout shader_layout;
+	Nova::verglas::Shader<Vertex> shader;
 
 	void render(Nova::abyss::Flight& flight) {
 		static constexpr size_t max_frames = 0;
@@ -73,6 +89,9 @@ public:
 
 		update();
 
+		auto& buffer_uniform = buffers_uniform[flight].buffer;
+		auto uniform = static_cast<decltype(buffers_uniform)::value_type::uniform_type*>(buffer_uniform.map());
+
 		flight.commands.bind(pipeline);
 		flight.commands.bind(0, buffer_vertex);
 		flight.commands.self.draw(verticies.size(), 1, 0, 0);
@@ -82,4 +101,6 @@ public:
 };
 
 #define NOVA_ENTRY Game
-#include <nova_entry.h>
+//#include <nova_entry.h>
+
+
