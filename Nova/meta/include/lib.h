@@ -8,6 +8,7 @@
 #include <ranges>
 #include <array>
 #include <deque>
+#include <stack>
 #include <set>
 #include <map>
 #include <unordered_set>
