@@ -50,6 +50,7 @@ namespace Nova::nvtl {
 			constexpr Iterator operator-(ptrdiff_t n) const { return ptr - n; }
 			constexpr Iterator& operator+=(ptrdiff_t n) { ptr += n; return *this; }
 			constexpr Iterator& operator-=(ptrdiff_t n) { ptr -= n; return *this; }
+			constexpr ptrdiff_t operator-(Iterator other) const { return ptr - other.ptr; }
 			constexpr reference operator[](ptrdiff_t n) const { return ptr[n]; };
 
 		protected:
@@ -89,6 +90,7 @@ namespace Nova::nvtl {
 			constexpr ConstIterator operator-(ptrdiff_t n) const { return ptr - n; }
 			constexpr ConstIterator& operator+=(ptrdiff_t n) { ptr += n; return *this; }
 			constexpr ConstIterator& operator-=(ptrdiff_t n) { ptr -= n; return *this; }
+			constexpr ptrdiff_t operator-(ConstIterator other) const { return ptr - other.ptr; }
 			constexpr reference operator[](ptrdiff_t n) const { return ptr[n]; };
 
 		protected:
@@ -101,11 +103,15 @@ namespace Nova::nvtl {
 		 using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
 	public:
-		constexpr Cector(size_type size) : m_size(size), array(allocator_type{}.allocate(m_size)) {
-			auto it = array;
-			auto end = it + m_size;
-			for (; it < end; ++it)
-				std::construct_at(it);
+		template<typename Construct = std::true_type> requires std::derived_from<Construct, std::true_type> || std::derived_from<Construct, std::false_type>
+		constexpr Cector(size_type size, Construct construct = {}) : m_size(size), array(allocator_type{}.allocate(m_size)) {
+			NOVA_MC_UNUSED(construct);
+			if constexpr (std::derived_from<Construct, std::true_type>) {
+				auto it = array;
+				auto end = it + m_size;
+				for (; it < end; ++it)
+					std::construct_at(it);
+			}
 		}
 		constexpr Cector(std::initializer_list<value_type> il) : m_size(il.size()), array(allocator_type{}.allocate(m_size)) {
 			std::copy_n(std::data(il), il.size(), array);
@@ -175,6 +181,13 @@ namespace Nova::nvtl {
 		constexpr const_reverse_iterator rend() const { return cbegin(); }
 		constexpr const_reverse_iterator crbegin() const { return cend(); }
 		constexpr const_reverse_iterator crend() const { return cbegin(); }
+
+		constexpr bool operator==(const Cector& other) const {
+			return std::equal(begin(), end(), other.begin(), other.end());
+		}
+		constexpr auto operator<=>(const Cector& other) const {
+			return std::lexicographical_compare_three_way(cbegin(), cend(), other.cbegin(), other.cend());
+		};
 
 	protected:
 		constexpr void destroy() {
