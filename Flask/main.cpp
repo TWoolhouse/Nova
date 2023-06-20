@@ -95,12 +95,9 @@ public:
 		flight.commands.bind(pipeline);
 		flight.commands.bind(0, buffer_vertex);
 		flight.commands.self.draw(verticies.size(), 1, 0, 0);
-
 	}
 
 };
 
 #define NOVA_ENTRY Game
-//#include <nova_entry.h>
-
-
+#include <nova_entry.h>

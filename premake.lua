@@ -3,6 +3,7 @@ workspace "Nova"
 	configurations { "Debug", "Release" }
 	platforms { "Vulkan" } -- "OpenGL"
 	architecture "x86_64"
+	locale "en-GB"
 
 	toolset "clang"
 	filter { "system:Windows" }
@@ -26,6 +27,8 @@ local projects = {
 	"Flask",
 	"Flask.Test",
 }
+
+startproject "Flask"
 
 for i,prj in ipairs(projects) do
 	include(prj .. "/premake.lua")

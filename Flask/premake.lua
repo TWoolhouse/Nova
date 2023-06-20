@@ -17,6 +17,3 @@ project "Flask"
 
 	-- defines { }
 	dofile "../premake/nova.lua"
-
-project "*"
-startproject "Flask"

@@ -30,3 +30,4 @@ filter { "configurations:Release", "action:vs*" }
 	buildoptions { "/Ot" }
 
 filter {}
+buildcustomizations { "../../../../../../../../../../../../../../../../$(MSBuildProjectDirectoryNoRoot)/../premake/custom" }
