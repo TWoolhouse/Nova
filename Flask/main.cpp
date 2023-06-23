@@ -36,7 +36,7 @@ std::vector<Vertex> verticies{
 };
 
 struct UBOData {
-	Nova::mlb::vec4 colour;
+	Nova::mlb::vec1 strength;
 };
 
 class Game : public Nova::core::Application {
@@ -48,20 +48,24 @@ public:
 		events(Nova::event::dispatcher.subscribe(Nova::event::Type::KeyPress, &simple_quit)),
 
 		// Temporary Graphics Stuff
-		pipeline(nova_abyss_app->tower.renderpass, {
-			{ Nova::abyss::Shader::Stage::Vertex, "start/simple/.vert" },
-			{ Nova::abyss::Shader::Stage::Fragment, "start/simple/.frag" },
-		}, Nova::meta::pack<Nova::abyss::buffer::Vertex<Vertex>>{}),
 		buffer_vertex(verticies.size()),
 		descriptor_manager(),
 		shader_layout({
 			{ Nova::abyss::nvk::shader::Layout::BindPoint::Type::Uniform, 1, Nova::abyss::shader::Stage::Vertex }
 		}),
-		shader(descriptor_manager.cache[shader_layout])
+		shader(descriptor_manager.cache[shader_layout], shader_layout),
+		pipeline(nova_abyss_app->tower.renderpass, {
+			{ Nova::abyss::Shader::Stage::Vertex, "start/simple/.vert" },
+			{ Nova::abyss::Shader::Stage::Fragment, "start/simple/.frag" },
+		}, Nova::meta::pack<Nova::abyss::buffer::Vertex<Vertex>>{},
+		shader_layout)
 	{
 		void* data = buffer_vertex.buffer.map();
 		memcpy(data, verticies.data(), verticies.size() * sizeof(Vertex));
 
+		for (size_t i = 0; i < buffers_uniform.size(); ++i) {
+			shader.descriptors.data()[i].set().point(0, buffers_uniform.data()[i]).done();
+		}
 	}
 
 	void update() {
@@ -70,12 +74,12 @@ public:
 	}
 
 	// Temporary Graphics Stuff
-	Nova::abyss::shader::Graphics pipeline;
 	Nova::abyss::buffer::Vertex<Vertex> buffer_vertex;
-	Nova::abyss::Flock<Nova::abyss::nvk::buffer::Uniform<int>> buffers_uniform{};
+	Nova::abyss::Flock<Nova::abyss::nvk::buffer::Uniform<UBOData>> buffers_uniform{};
 	Nova::abyss::nvk::descriptor::Manager descriptor_manager;
 	Nova::abyss::nvk::shader::Layout shader_layout;
 	Nova::verglas::Shader<Vertex> shader;
+	Nova::abyss::shader::Graphics pipeline;
 
 	void render(Nova::abyss::Flight& flight) {
 		static constexpr size_t max_frames = 0;
@@ -89,11 +93,14 @@ public:
 
 		update();
 
-		auto& buffer_uniform = buffers_uniform[flight].buffer;
-		auto uniform = static_cast<decltype(buffers_uniform)::value_type::uniform_type*>(buffer_uniform.map());
+		auto& uniform = *reinterpret_cast<UBOData*>(buffers_uniform[flight].buffer.map());
+		uniform.strength.x = (Nova::mlb::sin(nova_app->clock.elapsed().count()) + 1.0f) / 2.0f;
+
+		auto& descriptor = shader.descriptors[flight];
 
 		flight.commands.bind(pipeline);
 		flight.commands.bind(0, buffer_vertex);
+		flight.commands.self.bindDescriptorSets(vk::PipelineBindPoint::eGraphics, pipeline.layout, 0, {descriptor}, {});
 		flight.commands.self.draw(verticies.size(), 1, 0, 0);
 	}
 

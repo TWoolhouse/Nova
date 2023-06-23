@@ -5,7 +5,7 @@
 
 namespace Nova::abyss::nvk::shader {
 
-	Graphics::Graphics(const abyss::Renderpass& renderpass, const std::initializer_list<abyss::ShaderCode>& stages, vk::VertexInputBindingDescription binding, std::span<vk::VertexInputAttributeDescription> attributes) {
+	Graphics::Graphics(const abyss::Renderpass& renderpass, const std::initializer_list<abyss::ShaderCode>& stages, vk::VertexInputBindingDescription binding, std::span<vk::VertexInputAttributeDescription> attributes, Layout& descriptor_layout) {
 
 		vk::PipelineVertexInputStateCreateInfo info_input_vertex{
 			.vertexBindingDescriptionCount = 1,
@@ -81,18 +81,8 @@ namespace Nova::abyss::nvk::shader {
 			.blendConstants = std::array{ 0.0f, 0.0f, 0.0f, 0.0f },
 		};
 
-		// TODO: Extract the layout description from the shader. spriv-cross / spriv-reflection
-		/*descriptor::Layout::Description descriptor_layout{
-			.bindings = {
-				{
-					vk::DescriptorType::eUniformBuffer,
-					Shader::Stage::Vertex,
-				},
-			},
-		};*/
-		// Load the layout from a cache.
-		//descriptor = descriptor_layout;
-		const std::array<vk::DescriptorSetLayout, 0> descriptors;
+		descriptor::Layout descriptor{ descriptor_layout };
+		const std::array<vk::DescriptorSetLayout, 1> descriptors{ descriptor };
 		const std::array<vk::PushConstantRange, 0> push_constants;
 
 		// TODO: Extract to base to share with compute shader

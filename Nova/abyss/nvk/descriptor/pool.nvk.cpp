@@ -14,7 +14,8 @@ namespace Nova::abyss::nvk::descriptor {
 	}
 
 	Set::~Set() {
-		chunk->release(self);
+		if (self)
+			chunk->release(self);
 	}
 
 	Chunk::Chunk(Pool& parent) :
@@ -31,11 +32,14 @@ namespace Nova::abyss::nvk::descriptor {
 		if (!free_list.empty()) {
 			auto set = free_list.top();
 			free_list.pop();
+			++count;
 			return { *this, set };
 		}
 		try {
+			++count;
 			return Chunk::allocate();
 		} catch (vk::OutOfPoolMemoryError exec) {
+			--count;
 			throw exc::ChunkCapacity();
 		}
 	}

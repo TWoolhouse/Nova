@@ -13,16 +13,16 @@ namespace Nova::verglas {
 	public:
 		using vertex_type = Vertex;
 
-		Shader(std::shared_ptr<abyss::nvk::descriptor::Manager::LayoutPool> descriptor_pool) :
+		Shader(std::shared_ptr<abyss::nvk::descriptor::Manager::LayoutPool> descriptor_pool, abyss::nvk::shader::Layout& layout) :
 			graphics(nova_abyss_app->tower.renderpass, {
 				{ abyss::Shader::Stage::Vertex, "start/simple/.vert" },
 				{ abyss::Shader::Stage::Fragment, "start/simple/.frag" },
-			}, meta::pack<abyss::buffer::Vertex<vertex_type>>{}),
+			}, meta::pack<abyss::buffer::Vertex<vertex_type>>{}, layout),
 			lp(descriptor_pool),
 			descriptors(lp->pool)
 		{}
 
-	protected:
+	public:
 		abyss::shader::Graphics graphics;
 		std::shared_ptr<abyss::nvk::descriptor::Manager::LayoutPool> lp;
 		abyss::Flock<abyss::nvk::descriptor::Set> descriptors;

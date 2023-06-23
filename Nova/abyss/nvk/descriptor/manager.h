@@ -2,6 +2,7 @@
 #include "meta/head.h"
 #include "layout.h"
 #include "pool.h"
+#include "set_update.h"
 #include "nvtl/cache.h"
 
 namespace Nova::abyss::nvk::descriptor {

@@ -3,6 +3,7 @@
 #include "../vk.h"
 #include "layout.h"
 #include "abyss/flock.h"
+#include "../flight.h"
 
 namespace Nova::abyss::nvk::descriptor {
 
@@ -85,7 +86,7 @@ namespace Nova::abyss::nvk::descriptor {
 namespace Nova::abyss {
 
 	template<>
-	struct Flock<nvk::descriptor::Set> : protected nvtl::Cector<nvk::descriptor::Set> {
+	struct Flock<nvk::descriptor::Set> : public nvtl::Cector<nvk::descriptor::Set> {
 		// FIXME: Make this in the abyss section without reference to nvk?
 	protected:
 		using Super = nvtl::Cector<nvk::descriptor::Set>;
@@ -97,7 +98,9 @@ namespace Nova::abyss {
 		}
 
 		Super::reference operator[](abyss::Flight& flight) {
-			return Super::operator[](0);
+			// return Super::operator[](0);
+			// FIXME: See flock.h
+			return Super::operator[](static_cast<nvk::Flight&>(flight).swapchain_frame_index% interface::flock_size());
 		}
 	};
 

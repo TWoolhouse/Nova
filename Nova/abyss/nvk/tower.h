@@ -8,7 +8,7 @@ namespace Nova::abyss::nvk {
 
 	class Tower {
 	public:
-		static constexpr uint8_t MAX_FLIGHTS = 2;
+		static constexpr uint8_t MAX_FLIGHTS = 3;
 
 		Tower();
 		~Tower();

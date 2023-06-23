@@ -10,7 +10,7 @@ namespace Nova::abyss::nvk {
 	public:
 		using FrameIndex = uint8_t;
 		// Number of frames that can be drawn to.
-		constexpr static FrameIndex IMAGE_BUFFERING = 3;
+		constexpr static FrameIndex IMAGE_BUFFERING = 2;
 
 		vk::SwapchainKHR self;
 		vk::Format format;

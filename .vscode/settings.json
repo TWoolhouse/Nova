@@ -44,7 +44,8 @@
 		"xmemory": "cpp",
 		"xstring": "cpp",
 		"xtree": "cpp",
-		"xutility": "cpp"
+		"xutility": "cpp",
+		"xiosbase": "cpp"
 	},
 	"todo-tree.general.tags": [
 		"BUG",
@@ -57,4 +58,7 @@
 	"todo-tree.general.tagGroups": {
 		"TODO": ["nova_bark_todo"]
 	},
+	"cSpell.words": [
+		"verglas"
+	],
 }
