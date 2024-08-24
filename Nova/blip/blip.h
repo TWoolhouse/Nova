@@ -52,14 +52,14 @@ namespace Nova::blip {
 template<typename CharT>
 struct std::formatter<Nova::blip::Delta, CharT> : public std::formatter<Nova::blip::Unit, CharT> {
 	template<typename FormatContext>
-	auto format(Nova::blip::Delta time, FormatContext& fc) {
+	auto format(Nova::blip::Delta time, FormatContext& fc) const {
 		return std::formatter<Nova::blip::Unit, CharT>::format(time.delta, fc);
 	}
 };
 template<typename CharT>
 struct std::formatter<Nova::blip::Timer, CharT> : public std::formatter<Nova::blip::Unit, CharT> {
 	template<typename FormatContext>
-	auto format(Nova::blip::Timer time, FormatContext& fc) {
+	auto format(Nova::blip::Timer time, FormatContext& fc) const {
 		return std::formatter<Nova::blip::Unit, CharT>::format(time.elapsed(), fc);
 	}
 };

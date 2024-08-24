@@ -4,7 +4,10 @@
 #include "location.h"
 #include <format>
 
-#define nova_bark_format(message, ...) std::vformat(message, std::make_format_args(##__VA_ARGS__))
+template<typename ...Args>
+std::string nova_bark_format(const std::string_view fmt, Args&&... args) {
+	return std::vformat(fmt, std::make_format_args(args...));
+}
 
 namespace Nova::bark {
 	enum class Level : char {

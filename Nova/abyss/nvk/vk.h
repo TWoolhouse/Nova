@@ -63,7 +63,7 @@ namespace Nova::abyss::nvk {
 template<typename CharT>
 struct std::formatter<vk::ArrayWrapper1D<CharT, 256>, CharT> : public std::formatter<CharT*, CharT> {
 	template<typename FormatContext>
-	auto format(vk::ArrayWrapper1D<CharT, 256> string, FormatContext& fc) {
+	auto format(vk::ArrayWrapper1D<CharT, 256> string, FormatContext& fc) const {
 		return std::formatter<CharT*, CharT>::format(string.data(), fc);
 	}
 };

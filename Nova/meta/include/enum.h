@@ -47,7 +47,7 @@ template<typename Enum, class CharT> requires std::is_enum_v<Enum> && requires (
 }
 struct std::formatter<Enum, CharT> : public std::formatter<std::string_view, CharT> {
 	template<class FormatContext>
-	auto format(Enum arg, FormatContext& fc) {
+	auto format(Enum arg, FormatContext& fc) const {
 		return formatter<std::string_view, CharT>::format(Nova::meta::enm::str(arg), fc);
 	}
 };
@@ -57,7 +57,7 @@ template<typename Enum, class CharT> requires std::is_enum_v<Enum> && (!requires
 })
 struct std::formatter<Enum, CharT> : public std::formatter<std::underlying_type_t<Enum>, CharT> {
 	template<class FormatContext>
-	auto format(Enum arg, FormatContext& fc) {
+	auto format(Enum arg, FormatContext& fc) const {
 		return formatter<std::underlying_type_t<Enum>, CharT>::format(cpp::to_underlying(arg), fc);
 	}
 };
